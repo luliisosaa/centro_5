@@ -826,15 +826,40 @@ document.querySelectorAll('.rbtn').forEach(b=>b.addEventListener('click',()=>{
 }));
 
 // ════════════════ LOGIN ════════════════
-function doLogin(){
-  user={...ROLES[role]};avUrl=null;
-  document.getElementById('login-screen').classList.remove('active');
-  document.getElementById('main-screen').classList.add('active');
-  applyRole();nav('home');renderCal();renderAlumnos();buildNotifs();
-}
-function doLogout(){
-  document.getElementById('main-screen').classList.remove('active');
-  document.getElementById('login-screen').classList.add('active');
+async function doLogin() {
+  const dni = document.getElementById("l-user").value;
+  const pass = document.getElementById("l-pass").value;
+  const rolSeleccionado = document.querySelector(".rbtn.active").dataset.r;
+
+  const res = await fetch("usuarios.json");
+  const usuarios = await res.json();
+
+  const user = usuarios.find(u =>
+    u.dni === dni &&
+    u.password === pass &&
+    u.rol === rolSeleccionado
+  );
+
+  if (user) {
+    // 🔹 Guardar sesión
+    localStorage.setItem("usuario", JSON.stringify(user));
+
+    // 🔥 IMPORTANTE: actualizar el rol global
+    role = user.rol;
+
+    // 🔹 Actualizar UI
+    iniciarSesionUI(user);
+
+    // 🔥 IMPORTANTE: aplicar permisos
+    applyRole();
+
+    // 🔹 Cambiar de pantalla
+    document.getElementById("login-screen").classList.remove("active");
+    document.getElementById("main-screen").classList.add("active");
+
+  } else {
+    alert("Datos incorrectos");
+  }
 }
 
 // ════════════════ APPLY ROLE ════════════════
@@ -1360,6 +1385,31 @@ let toastT;
 function toast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
   clearTimeout(toastT);toastT=setTimeout(()=>t.style.display='none',3000);
+}
+function iniciarSesionUI(user) {
+  document.getElementById("s-name").textContent = user.nombre;
+  document.getElementById("s-role").textContent = user.rol;
+
+  // Avatar simple (inicial)
+  document.getElementById("s-av").textContent = user.nombre.charAt(0);
+}
+window.onload = function () {
+  const user = JSON.parse(localStorage.getItem("usuario"));
+
+  if (user) {
+    iniciarSesionUI(user);
+
+    document.getElementById("login-screen").classList.remove("active");
+    document.getElementById("main-screen").classList.add("active");
+  }
+};
+function doLogout() {
+  // borrar sesión
+  localStorage.removeItem("usuario");
+
+  // volver al login
+  document.getElementById("main-screen").classList.remove("active");
+  document.getElementById("login-screen").classList.add("active");
 }
 </script>
 </body>
