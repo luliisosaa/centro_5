@@ -534,8 +534,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
       <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
         <div><h2>Calendario Académico</h2>
           <p>
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--success);margin-right:.3rem"></span>Verde = públicas &nbsp;
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--primary);margin-right:.3rem"></span>Azul = mis fechas privadas
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#16a34a;margin-right:.3rem"></span>Verde = fechas públicas de docentes &nbsp;
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc2626;margin-right:.3rem"></span>Rojo = feriados (dirección)
           </p>
         </div>
         <button class="badd" onclick="tp('pnl-cal')"><i class="bi bi-plus-lg"></i>Agregar fecha</button>
@@ -545,16 +545,11 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
         <div class="row g-2 mb-2">
           <div class="col-md-5"><label class="flabel">Título</label><input class="finput" id="cal-tit" placeholder="Ej: Final de Inglés"/></div>
           <div class="col-md-3"><label class="flabel">Fecha</label><input class="finput" id="cal-fec" type="date"/></div>
-          <div class="col-md-4"><label class="flabel">Tipo</label><select class="fselect" id="cal-tipo" onchange="calTipoChange()"><option value="privada">Privada (solo yo, azul)</option><option value="publica">Pública (todos, verde)</option></select></div>
-        </div>
-        <div id="cal-notif-sec">
-          <label class="flabel mt-1">Recordatorios</label>
-          <div class="nsbox">
-            <label><input type="checkbox" id="cn15">15 días antes</label>
-            <label><input type="checkbox" id="cn7">7 días antes</label>
-            <label><input type="checkbox" id="cn3" checked>3 días antes</label>
-            <label><input type="checkbox" id="cn0" checked>El mismo día</label>
-            <label><input type="checkbox" id="cnall" onchange="cnAll(this)">Todas las anteriores</label>
+          <div class="col-md-4"><label class="flabel">Tipo</label>
+            <select class="fselect" id="cal-tipo">
+              <option value="publica">Pública (docentes, verde)</option>
+              <option value="feriado">Feriado (dirección, rojo)</option>
+            </select>
           </div>
         </div>
         <div class="d-flex gap-2 mt-3"><button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="addCalFecha()">Agregar</button><button class="btns" style="width:auto;padding:.45rem 1rem" onclick="tp('pnl-cal')">Cancelar</button></div>
@@ -568,8 +563,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
         <div class="cgrid"><div class="cdh">Dom</div><div class="cdh">Lun</div><div class="cdh">Mar</div><div class="cdh">Mié</div><div class="cdh">Jue</div><div class="cdh">Vie</div><div class="cdh">Sáb</div></div>
         <div class="cgrid" id="cal-grid"></div>
         <div class="cleg">
-          <span><span class="clegdot" style="background:#16a34a"></span>Público (todos lo ven)</span>
-          <span><span class="clegdot" style="background:var(--primary)"></span>Privado (solo yo, azul)</span>
+          <span><span class="clegdot" style="background:#16a34a"></span>Fecha pública (docentes)</span>
+          <span><span class="clegdot" style="background:#dc2626"></span>Feriado (dirección)</span>
         </div>
       </div>
       <div class="cc mt-3">
@@ -811,7 +806,7 @@ const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8'
 let role='alumno',user={...ROLES.alumno},avUrl=null;
 let calDate=new Date(2025,3,1);
 let pubDates={'2025-3-18':'Parcial de Matemáticas','2025-3-25':'Jornada Ciencia de Datos','2025-4-10':'Asamblea General','2025-6-20':'Inscripción Materias'};
-let privDates={};  // private dates keyed by "y-m-d"
+let feriadoDates={};  // feriados puestos por dirección (rojo)
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
@@ -1078,6 +1073,15 @@ function publishPost(){
   POSTS.unshift(newPost);
   if(pendingImgUrls.length>0){pendingImgUrls.forEach((url,i)=>{IG_ITEMS.unshift({id:Date.now()+i,type:'img',album:'general',desc:`${tit} — img ${i+1}`,realUrl:url,likes:0,time:'Ahora mismo'});});}
   if(pendingDocs.length>0){pendingDocs.forEach((d,i)=>{IG_ITEMS.unshift({id:Date.now()+100+i,type:'doc',album:'docs',desc:d,ext:d.split('.').pop().toUpperCase(),likes:0,time:'Ahora mismo'});});}
+// Si el docente indicó una fecha en el título, intentar parsearla y agregarla al calendario
+  const dateMatch=tit.match(/(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);
+  if(dateMatch&&['docente','delegado','admin'].includes(role)){
+    const dd=parseInt(dateMatch[1]),mm=parseInt(dateMatch[2])-1,yy=dateMatch[3]?parseInt(dateMatch[3]):new Date().getFullYear();
+    const ky=`${yy}-${mm}-${dd}`;
+    pubDates[ky]=tit;
+    lastCalEntry={title:tit,fecha:`${yy}-${String(mm+1).padStart(2,'0')}-${String(dd).padStart(2,'0')}`,author:user.nombre};
+    updateLastCal();renderCal();
+  }
   renderFeed();renderHomeFeed();renderGallery();
   tp('pnl-nov');
   document.getElementById('np-tit').value='';document.getElementById('np-body').value='';
@@ -1152,16 +1156,15 @@ function renderCal(){
     const el=document.createElement('div');el.className='cd';
     const num=document.createElement('span');num.textContent=d;el.appendChild(num);
     const k=`${y}-${m}-${d}`;
-    const hP=!!pubDates[k],hV=!!privDates[k];
+    const hP=!!pubDates[k],hF=!!feriadoDates[k];
     const dw=document.createElement('div');dw.className='cdots';
     if(hP){el.classList.add('hp');const dt=document.createElement('div');dt.className='cdt p';dw.appendChild(dt);}
-    // PRIVATE dates get BLUE class (hv) — visible just like public ones
-    if(hV){el.classList.add('hv');const dt=document.createElement('div');dt.className='cdt v';dw.appendChild(dt);}
-    if(hP&&hV)el.classList.add('hb');
+    if(hF){el.classList.add('hv');const dt=document.createElement('div');dt.className='cdt v';dw.appendChild(dt);}
+    if(hP&&hF)el.classList.add('hb');
     if(dw.children.length)el.appendChild(dw);
     if(d===td.getDate()&&m===td.getMonth()&&y===td.getFullYear())el.classList.add('td');
     const tip=document.createElement('div');tip.className='cttip';
-    const tt=[pubDates[k]&&`📅 ${pubDates[k]}`,privDates[k]&&`🔵 ${privDates[k]}`].filter(Boolean).join(' · ');
+    const tt=[pubDates[k]&&`📅 ${pubDates[k]}`,feriadoDates[k]&&`🔴 ${feriadoDates[k]}`].filter(Boolean).join(' · ');
     if(tt){tip.textContent=tt;el.appendChild(tip);}
     grid.appendChild(el);
   }
@@ -1173,20 +1176,20 @@ function renderCalList(y,m){
   for(let d=1;d<=new Date(y,m+1,0).getDate();d++){
     const k=`${y}-${m}-${d}`;
     if(pubDates[k])items.push({d,label:pubDates[k],type:'pub'});
-    if(privDates[k])items.push({d,label:privDates[k],type:'priv'});
+    if(feriadoDates[k])items.push({d,label:feriadoDates[k],type:'feriado'});
   }
   if(!items.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem">Sin eventos este mes.</p>';return;}
   el.innerHTML=items.map(i=>`
 <div style="display:flex;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--border)">
-  <div style="width:34px;height:34px;border-radius:9px;background:${i.type==='pub'?'#e8fdf0':'#e8f0fd'};color:${i.type==='pub'?'var(--success)':'var(--primary)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">${i.d}</div>
+  <div style="width:34px;height:34px;border-radius:9px;background:${i.type==='pub'?'#e8fdf0':'#fff0f0'};color:${i.type==='pub'?'#16a34a':'#dc2626'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">${i.d}</div>
   <div style="font-size:.87rem;font-weight:500;flex:1">${i.label}</div>
-  <span style="font-size:.72rem;padding:.18rem .55rem;border-radius:20px;font-weight:600;background:${i.type==='pub'?'#e8fdf0':'#e8f0fd'};color:${i.type==='pub'?'var(--success)':'var(--primary)'}">
-    ${i.type==='pub'?'📅 Público':'🔵 Privado'}
+  <span style="font-size:.72rem;padding:.18rem .55rem;border-radius:20px;font-weight:600;background:${i.type==='pub'?'#e8fdf0':'#fff0f0'};color:${i.type==='pub'?'#16a34a':'#dc2626'}">
+    ${i.type==='pub'?'📅 Público':'🔴 Feriado'}
   </span>
 </div>`).join('');
 }
 function calNav(dir){calDate.setMonth(calDate.getMonth()+dir);renderCal();}
-function calTipoChange(){document.getElementById('cal-notif-sec').style.display=document.getElementById('cal-tipo').value==='privada'?'':'none';}
+function calTipoChange(){}
 function cnAll(cb){['cn15','cn7','cn3','cn0'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=cb.checked;});}
 
 function addCalFecha(){
@@ -1198,21 +1201,18 @@ function addCalFecha(){
 
   if(tipo==='publica'){
     pubDates[k]=tit;
-    // If teacher/admin adds public date → show in home "Último agregado"
-    if(['docente','delegado','admin'].includes(role)){
-      lastCalEntry={title:tit,fecha:fec,author:user.nombre};
-      updateLastCal();
-      pushN('cal',`📅 <strong>${user.nombre}</strong> agregó al calendario: "${tit}"`);
-    }
+    lastCalEntry={title:tit,fecha:fec,author:user.nombre};
+    updateLastCal();
+    pushN('cal',`📅 <strong>${user.nombre}</strong> agregó al calendario: "${tit}"`);
   } else {
-    // PRIVATE dates → stored separately, shown in BLUE
-    privDates[k]=tit;
-    pushN('priv',`🔵 Fecha privada agregada: "<strong>${tit}</strong>"`);
+    // Feriado → rojo, solo directivos/admin
+    feriadoDates[k]=tit;
+    pushN('pub',`🔴 Feriado agregado por dirección: "<strong>${tit}</strong>"`);
   }
 
   renderCal();tp('pnl-cal');
   document.getElementById('cal-tit').value='';document.getElementById('cal-fec').value='';
-  toast(`Fecha "${tit}" agregada como ${tipo==='publica'?'pública (verde)':'privada (azul)'} ✓`);
+  toast(`Fecha "${tit}" agregada como ${tipo==='publica'?'pública (verde)':'feriado (rojo)'} ✓`);
 }
 
 // ════════════════ REGLAMENTO ════════════════
