@@ -1,6 +1,6 @@
 [
-  { "dni": "41999333", "password": "1234", "rol": "alumno", "nombre": "Juan Pérez" },
+  { "dni": "41999333", "password": "1234", "rol": "estudiante", "nombre": "Juan Pérez" },
   { "dni": "42888222", "password": "1234", "rol": "docente", "nombre": "Ana López" },
   { "dni": "43000111", "password": "1234", "rol": "delegado", "nombre": "Centro Estudiantes" },
-  { "dni": "44777555", "password": "admin", "rol": "admin", "nombre": "Administrador" }
+  { "dni": "44777555", "password": "admin", "rol": "directivo", "nombre": "Directivo" }
 ]
