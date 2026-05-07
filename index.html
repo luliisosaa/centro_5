@@ -289,47 +289,149 @@
     </div>
 
     <!-- REGLAMENTO -->
-    <div class="page" id="page-reglamento">
-      <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
-        <div><h2>Reglamentación</h2><p>Documentos oficiales del instituto</p></div>
-        <button class="badd can-admin" style="display:none" onclick="tp('pnl-doc')"><i class="bi bi-plus-lg"></i>Subir Documento</button>
-      </div>
-      <div class="ipanel" id="pnl-doc">
-        <div class="iph"><h5><i class="bi bi-upload me-2 text-primary"></i>Subir Documento</h5><button class="bcp" onclick="tp('pnl-doc')"><i class="bi bi-x-lg"></i></button></div>
-        <div class="row g-2 mb-2"><div class="col-md-6"><label class="flabel">Nombre</label><input class="finput"/></div><div class="col-md-6"><label class="flabel">Categoría</label><select class="fselect"><option>Régimen académico</option><option>Convivencia</option><option>Becas</option></select></div></div>
-        <div class="mb-2"><label class="flabel">Archivo PDF</label><input class="finput" type="file" accept=".pdf"/></div>
-        <div class="d-flex gap-2 mt-2"><button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="toast('Documento subido ✓');tp('pnl-doc')">Subir</button><button class="btns" style="width:auto;padding:.45rem 1rem" onclick="tp('pnl-doc')">Cancelar</button></div>
-      </div>
-      <!-- Reglamento search results -->
-      <div id="regl-search-results" style="display:none" class="cc mb-3">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span style="font-size:.85rem;font-weight:700;color:var(--primary)" id="regl-sr-label">Resultados</span>
-          <button onclick="clearReglSearch()" style="background:none;border:none;font-size:.78rem;color:var(--muted);cursor:pointer">✕ Cerrar</button>
-        </div>
-        <div id="regl-sr-list"></div>
-      </div>
-      <div id="regl-content">
-        <div class="cc mb-3"><div class="mb-2" style="font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">Horario</div>
-          <div class="ditem" onclick="dview('dv-hor')"><div class="dic"><i class="bi bi-clock-fill"></i></div><div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">Horario Institucional</div><div style="font-size:.77rem;color:var(--muted)">17:30 a 21:40 hs</div></div><i class="bi bi-chevron-down" style="color:var(--muted)"></i></div>
-          <div class="dvw" id="dv-hor" data-text="Horario de cursada: Lunes a Viernes 17:30 a 21:40 hs. Tolerancia de 10 minutos. Sábados en casos especiales según calendario académico.">Horario de cursada: Lunes a Viernes 17:30 a 21:40 hs. Tolerancia de 10 minutos. Sábados en casos especiales según calendario académico.</div>
-        </div>
-        <div class="cc mb-3"><div class="mb-2" style="font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">Pautas y Convivencia</div>
-          <div class="ditem" onclick="dview('dv-con')"><div class="dic"><i class="bi bi-file-earmark-text-fill"></i></div><div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">Pautas de Convivencia</div><div style="font-size:.77rem;color:var(--muted)">v2.1</div></div><i class="bi bi-chevron-down" style="color:var(--muted)"></i></div>
-          <div class="dvw" id="dv-con" data-text="Respetar a compañeros y docentes en todo momento. Mantener limpio el espacio común. Puntualidad requerida. No uso de celulares durante las clases sin autorización del docente. Ante cualquier conflicto, acudir al gabinete de convivencia.">Respetar a compañeros y docentes en todo momento. Mantener limpio el espacio común. Puntualidad requerida. No uso de celulares durante las clases sin autorización del docente. Ante cualquier conflicto, acudir al gabinete de convivencia.</div>
-          <div class="ditem" onclick="dview('dv-cur')"><div class="dic"><i class="bi bi-file-earmark-text-fill"></i></div><div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">Régimen de Cursada</div><div style="font-size:.77rem;color:var(--muted)">v3.0</div></div><i class="bi bi-chevron-down" style="color:var(--muted)"></i></div>
-          <div class="dvw" id="dv-cur" data-text="Asistencia mínima requerida: 75%. Nota mínima de 6 para regularizar la materia. Recuperatorios disponibles una vez por materia. Finales en los turnos del calendario académico establecido.">Asistencia mínima requerida: 75%. Nota mínima de 6 para regularizar la materia. Recuperatorios disponibles una vez por materia. Finales en los turnos del calendario académico establecido.</div>
-          <div class="ditem" onclick="dview('dv-bec')"><div class="dic"><i class="bi bi-file-earmark-text-fill"></i></div><div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">Reglamento de Becas</div><div style="font-size:.77rem;color:var(--muted)">v1.0</div></div><i class="bi bi-chevron-down" style="color:var(--muted)"></i></div>
-          <div class="dvw" id="dv-bec" data-text="Las becas cubren el 50% o 100% del arancel institucional. Requisitos: promedio mayor a 7 y situación socioeconómica acreditada. Solicitar antes del 31 de marzo en Secretaría Académica. Incluye descuento en cuotas y exención de matrícula.">Las becas cubren el 50% o 100% del arancel institucional. Requisitos: promedio mayor a 7 y situación socioeconómica acreditada. Solicitar antes del 31 de marzo en Secretaría Académica. Incluye descuento en cuotas y exención de matrícula.</div>
-        </div>
-        <div class="cc"><div class="mb-2" style="font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">Preguntas Frecuentes</div>
-          <div class="ditem" onclick="dview('dv-f1')"><div class="dic" style="background:var(--surf2);color:var(--primary)"><i class="bi bi-question-circle-fill"></i></div><div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">¿Cómo me inscribo a materias?</div></div><i class="bi bi-chevron-down" style="color:var(--muted)"></i></div>
-          <div class="dvw" id="dv-f1" data-text="Para inscribirte a materias, accedé a la sección Eventos y usá los chips de materias. También podés inscribirte directamente a los eventos de inscripción disponibles. El período de inscripción abre al inicio de cada cuatrimestre.">Para inscribirte a materias, accedé a la sección Eventos y usá los chips de materias. También podés inscribirte directamente a los eventos de inscripción disponibles. El período de inscripción abre al inicio de cada cuatrimestre.</div>
-          <div class="ditem" onclick="dview('dv-f2')"><div class="dic" style="background:var(--surf2);color:var(--primary)"><i class="bi bi-question-circle-fill"></i></div><div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">¿Cómo contacto al Centro de Estudiantes?</div></div><i class="bi bi-chevron-down" style="color:var(--muted)"></i></div>
-          <div class="dvw" id="dv-f2" data-text="Podés acercarte al aula de delegados en el 2do piso del instituto, o escribir al correo: centro@instituto57.edu.ar. También podés comunicarte a través de este sistema de novedades publicando un mensaje.">Podés acercarte al aula de delegados en el 2do piso del instituto, o escribir al correo: centro@instituto57.edu.ar. También podés comunicarte a través de este sistema de novedades publicando un mensaje.</div>
-        </div>
+    <!-- REGLAMENTO -->
+<div class="page" id="page-reglamento">
+
+  <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <div>
+      <h2>Reglamentación</h2>
+      <p>Documentos oficiales del instituto</p>
+    </div>
+    <button class="badd can-admin" style="display:none" onclick="tp('pnl-doc')">
+      <i class="bi bi-plus-lg"></i>Subir Documento
+    </button>
+  </div>
+
+  <!-- PANEL SUBIR DOC -->
+  <div class="ipanel" id="pnl-doc">
+    <div class="iph">
+      <h5><i class="bi bi-upload me-2 text-primary"></i>Subir Documento</h5>
+      <button class="bcp" onclick="tp('pnl-doc')"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="row g-2 mb-2">
+
+  <!-- TÍTULO -->
+  <div class="col-md-6">
+    <label class="flabel">Nombre</label>
+    <input class="finput" id="doc-nombre"/>
+  </div>
+
+  <!-- CATEGORÍA -->
+  <div class="col-md-6">
+    <label class="flabel">Categoría</label>
+    <select class="fselect" id="doc-categoria" onchange="toggleReglamentoFields()">
+      <option value="documento">Documentación oficial</option>
+      <option value="faq">Preguntas frecuentes</option>
+    </select>
+  </div>
+
+</div>
+
+<!-- RESPUESTA FAQ -->
+<div class="mb-2" id="faq-box" style="display:none">
+  <label class="flabel">Respuesta</label>
+  <textarea 
+    class="finput" 
+    id="faq-respuesta"
+    rows="4"
+    placeholder="Escriba aquí la respuesta de la pregunta frecuente..."
+    style="resize:none"></textarea>
+</div>
+
+<!-- PDF -->
+<div class="mb-2" id="pdf-box">
+  <label class="flabel">Archivo PDF</label>
+  <input class="finput" type="file" accept=".pdf"/>
+</div>
+
+    <div class="d-flex gap-2 mt-2">
+      <button class="btnp" style="width:auto;padding:.45rem 1.2rem"
+onclick="addReglamentoItem()">Subir</button>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div id="regl-search-results" style="display:none" class="cc mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span style="font-size:.85rem;font-weight:700;color:var(--primary)" id="regl-sr-label">Resultados</span>
+      <button onclick="clearReglSearch()" style="background:none;border:none;font-size:.78rem;color:var(--muted);cursor:pointer">✕ Cerrar</button>
+    </div>
+    <div id="regl-sr-list"></div>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div id="regl-content">
+
+    <!-- DOCUMENTOS -->
+    <div class="cc mb-3 d-flex justify-content-between align-items-center">
+      <div><div style="font-weight:600">Reglamento Institutos Superiores</div></div>
+      <div class="d-flex gap-2">
+        <a href="Docs/Reglamento.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+        <a href="Docs/Reglamento.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
       </div>
     </div>
 
+    <div class="cc mb-3 d-flex justify-content-between align-items-center">
+      <div><div style="font-weight:600">Centro de Estudiantes</div></div>
+      <div class="d-flex gap-2">
+        <a href="Docs/Centro.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+        <a href="Docs/Centro.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
+      </div>
+    </div>
+
+    <div class="cc mb-3 d-flex justify-content-between align-items-center">
+      <div><div style="font-weight:600">Régimen Académico Institucional</div></div>
+      <div class="d-flex gap-2">
+        <a href="Docs/Regimen.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+        <a href="Docs/Regimen.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
+      </div>
+    </div>
+
+    <div class="cc mb-3 d-flex justify-content-between align-items-center">
+      <div><div style="font-weight:600">Acuerdo Institucional de Convivencia</div></div>
+      <div class="d-flex gap-2">
+        <a href="Docs/Acuerdo.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+        <a href="Docs/Acuerdo.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
+      </div>
+    </div>
+
+    <div class="cc mb-3 d-flex justify-content-between align-items-center">
+      <div><div style="font-weight:600">Estructura curricular</div></div>
+      <div class="d-flex gap-2">
+        <a href="Docs/Estructura.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+        <a href="Docs/Estructura.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="cc">
+      <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
+        Preguntas Frecuentes
+      </div>
+
+      <div class="ditem" onclick="dview('dv-f1')">
+<div class="dic" style="background:#dbeafe;color:#2563eb">
+  <i class="bi bi-question-circle-fill"></i>
+</div>        <div class="flex-grow-1">¿Cómo me inscribo a materias?</div>
+      </div>
+      <div class="dvw" id="dv-f1">
+        Accedé a la sección Eventos y utilizá los chips de materias disponibles.
+      </div>
+
+      <div class="ditem" onclick="dview('dv-f2')">
+<div class="dic" style="background:#dbeafe;color:#2563eb">
+  <i class="bi bi-question-circle-fill"></i>
+</div>        <div class="flex-grow-1">¿Cómo contacto al Centro de Estudiantes?</div>
+      </div>
+      <div class="dvw" id="dv-f2">
+        Podés acercarte al aula de delegados o enviar un correo institucional.
+      </div>
+    </div>
+
+  </div> <!-- FIN regl-content -->
+
+</div> <!-- FIN page-reglamento -->
     <!-- GALERÍA — layout que matchea la foto: botón Subir + espacio blanco + tabs + grilla -->
     <div class="page" id="page-galeria">
       <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">

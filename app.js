@@ -642,3 +642,127 @@ function doLogout() {
   document.getElementById("main-screen").classList.remove("active");
   document.getElementById("login-screen").classList.add("active");
 }
+function toggleReglamentoFields() {
+
+  const categoria = document.getElementById("doc-categoria").value;
+
+  const faqBox = document.getElementById("faq-box");
+  const pdfBox = document.getElementById("pdf-box");
+
+  if(categoria === "faq") {
+    faqBox.style.display = "block";
+    pdfBox.style.display = "none";
+  } else {
+    faqBox.style.display = "none";
+    pdfBox.style.display = "block";
+  }
+
+}
+function addReglamentoItem() {
+
+  const categoria = document.getElementById("doc-categoria").value;
+  const nombre = document.getElementById("doc-nombre").value;
+
+  if(!nombre.trim()) {
+    toast("Escriba un título");
+    return;
+  }
+
+  // =========================
+  // PREGUNTAS FRECUENTES
+  // =========================
+  if(categoria === "faq") {
+
+    const respuesta = document.getElementById("faq-respuesta").value;
+
+    if(!respuesta.trim()) {
+      toast("Escriba una respuesta");
+      return;
+    }
+
+    const faqContainer = document.querySelector("#regl-content .cc:last-child");
+
+    const preguntaHTML = `
+      <div class="ditem" onclick="dview('faq-${Date.now()}')">
+<div class="dic" style="background:#dbeafe;color:#2563eb">          <i class="bi bi-question-circle-fill"></i>
+        </div>
+
+        <div class="flex-grow-1">
+          <div style="font-weight:600;font-size:.9rem">
+            ${nombre}
+          </div>
+        </div>
+
+        <i class="bi bi-chevron-down" style="color:var(--muted)"></i>
+      </div>
+
+      <div class="dvw" id="faq-${Date.now()}">
+        ${respuesta}
+      </div>
+    `;
+
+    faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
+
+    toast("Pregunta agregada ✓");
+
+  }
+
+  // =========================
+  // DOCUMENTOS
+  // =========================
+  else {
+
+    const pdfInput = document.querySelector("#pdf-box input[type='file']");
+
+    if(!pdfInput.files.length) {
+      toast("Seleccione un PDF");
+      return;
+    }
+
+    const archivo = pdfInput.files[0];
+
+    const reglContent = document.getElementById("regl-content");
+
+    const documentoHTML = `
+      <div class="cc mb-3 d-flex justify-content-between align-items-center">
+
+        <div>
+          <div style="font-weight:600;font-size:.95rem">
+            ${nombre}
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+
+          <a href="#" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-eye"></i>
+          </a>
+
+          <a href="#" class="btn btn-sm btn-primary">
+            <i class="bi bi-download"></i>
+          </a>
+
+        </div>
+
+      </div>
+    `;
+
+    reglContent.insertAdjacentHTML("afterbegin", documentoHTML);
+
+    toast("Documento agregado ✓");
+
+  }
+
+  // cerrar panel
+  tp("pnl-doc");
+
+  // limpiar campos
+  document.getElementById("doc-nombre").value = "";
+
+  const faqRespuesta = document.getElementById("faq-respuesta");
+
+  if(faqRespuesta) {
+    faqRespuesta.value = "";
+  }
+
+}
