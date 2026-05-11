@@ -118,9 +118,9 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 .nitem:hover{background:var(--surf)}
 .nitem:last-child{border-bottom:none}
 .ndot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.ndot.pub{background:var(--success)}
+.ndot.pub{background:#f59e0b}
 .ndot.priv{background:var(--primary)}
-.ndot.cal{background:var(--accent)}
+.ndot.cal{background:#f59e0b}
 .ntext{font-size:.82rem;line-height:1.45}
 .ntime{font-size:.72rem;color:var(--muted);margin-top:.1rem}
 
@@ -228,13 +228,13 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 .cd:hover{background:var(--surf2);border-color:var(--border)}
 .cd.om{opacity:.3}
 .cd.td{background:var(--primary-l);border-color:var(--primary);font-weight:700;color:var(--primary)}
-.cd.hp{background:#e8fdf0;border-color:#86efac}
-.cd.hv{background:#e8f0fd;border-color:#93c5fd}
-.cd.hb{background:linear-gradient(135deg,#e8fdf0 50%,#e8f0fd 50%);border-color:#93c5fd}
+.cd.hp{background:#fff3cd;border-color:#f59e0b}
+.cd.hv{background:#fce7f3;border-color:#ec4899}
+.cd.hb{background:linear-gradient(135deg,#fff3cd 50%,#fce7f3 50%);border-color:#ec4899}
 .cdots{display:flex;gap:2px;margin-top:2px}
 .cdt{width:6px;height:6px;border-radius:50%}
-.cdt.p{background:var(--success)}
-.cdt.v{background:var(--primary)}
+.cdt.p{background:#f59e0b}
+.cdt.v{background:#ec4899}
 .cttip{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#1a2340;color:#fff;border-radius:6px;padding:.22rem .5rem;font-size:.68rem;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10}
 .cd:hover .cttip{opacity:1}
 .cleg{display:flex;gap:1rem;margin-top:.7rem;font-size:.8rem;align-items:center;color:var(--muted);flex-wrap:wrap}
@@ -534,8 +534,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
       <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
         <div><h2>Calendario Académico</h2>
           <p>
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#16a34a;margin-right:.3rem"></span>Verde = fechas públicas de docentes &nbsp;
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc2626;margin-right:.3rem"></span>Rojo = feriados (dirección)
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;margin-right:.3rem"></span>Naranja = fechas públicas de docentes &nbsp;
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ec4899;margin-right:.3rem"></span>Rosa = feriados (dirección)
           </p>
         </div>
         <button class="badd" onclick="tp('pnl-cal')"><i class="bi bi-plus-lg"></i>Agregar fecha</button>
@@ -563,8 +563,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
         <div class="cgrid"><div class="cdh">Dom</div><div class="cdh">Lun</div><div class="cdh">Mar</div><div class="cdh">Mié</div><div class="cdh">Jue</div><div class="cdh">Vie</div><div class="cdh">Sáb</div></div>
         <div class="cgrid" id="cal-grid"></div>
         <div class="cleg">
-          <span><span class="clegdot" style="background:#16a34a"></span>Fecha pública (docentes)</span>
-          <span><span class="clegdot" style="background:#dc2626"></span>Feriado (dirección)</span>
+          <span><span class="clegdot" style="background:#f59e0b"></span>Público (todos lo ven)</span>
+<span><span class="clegdot" style="background:#ec4899"></span>Feriado (rojo/rosa)</span>
         </div>
       </div>
       <div class="cc mt-3">
@@ -804,7 +804,7 @@ let EVENTS=[
 
 const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8','#7c3aed'];
 let role='alumno',user={...ROLES.alumno},avUrl=null;
-let calDate=new Date(2026,0,1);
+let calDate=new Date();
 let pubDates={'2025-3-18':'Parcial de Matemáticas','2025-3-25':'Jornada Ciencia de Datos','2025-4-10':'Asamblea General','2025-6-20':'Inscripción Materias'};
 let feriadoDates={};  // feriados puestos por dirección (rojo)
 let notifs=[];
@@ -1181,9 +1181,9 @@ function renderCalList(y,m){
   if(!items.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem">Sin eventos este mes.</p>';return;}
   el.innerHTML=items.map(i=>`
 <div style="display:flex;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--border)">
-  <div style="width:34px;height:34px;border-radius:9px;background:${i.type==='pub'?'#e8fdf0':'#fff0f0'};color:${i.type==='pub'?'#16a34a':'#dc2626'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">${i.d}</div>
+  <div style="width:34px;height:34px;border-radius:9px;background:${i.type==='pub'?'#fff3cd':'#fce7f3'};color:${i.type==='pub'?'#b45309':'#be185d'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">${i.d}</div>
   <div style="font-size:.87rem;font-weight:500;flex:1">${i.label}</div>
-  <span style="font-size:.72rem;padding:.18rem .55rem;border-radius:20px;font-weight:600;background:${i.type==='pub'?'#e8fdf0':'#fff0f0'};color:${i.type==='pub'?'#16a34a':'#dc2626'}">
+  <span style="font-size:.72rem;padding:.18rem .55rem;border-radius:20px;font-weight:600;background:${i.type==='pub'?'#fff3cd':'#fce7f3'};color:${i.type==='pub'?'#b45309':'#be185d'}">
     ${i.type==='pub'?'📅 Público':'🔴 Feriado'}
   </span>
 </div>`).join('');
@@ -1197,17 +1197,20 @@ function addCalFecha(){
   const fec=document.getElementById('cal-fec').value;
   const tipo=document.getElementById('cal-tipo').value;
   if(!tit||!fec){toast('Completá el título y la fecha');return;}
-  const d=new Date(fec);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  const parts=fec.split('-');const k=`${parts[0]}-${parseInt(parts[1])-1}-${parseInt(parts[2])}`;
 
-  if(tipo==='publica'){
+ if(tipo==='publica'){
     pubDates[k]=tit;
     lastCalEntry={title:tit,fecha:fec,author:user.nombre};
     updateLastCal();
     pushN('cal',`📅 <strong>${user.nombre}</strong> agregó al calendario: "${tit}"`);
+    POSTS.unshift({id:Date.now(),author:user.nombre,role:{docente:'Docente',delegado:'Delegado',admin:'Admin'}[role]||'Docente',cat:'ac',car:'todas',title:`📅 Nueva fecha en el Calendario: ${tit}`,body:`${user.nombre} agregó "${tit}" al calendario académico.`,time:'Ahora mismo',likes:0,liked:false,comments:0,emoji:'📅',bg:'linear-gradient(135deg,#fff3cd,#fde68a)',imgUrls:[],docs:[],isNew:true});
+    renderFeed();renderHomeFeed();
   } else {
-    // Feriado → rojo, solo directivos/admin
     feriadoDates[k]=tit;
     pushN('pub',`🔴 Feriado agregado por dirección: "<strong>${tit}</strong>"`);
+    POSTS.unshift({id:Date.now(),author:user.nombre,role:{docente:'Docente',delegado:'Delegado',admin:'Admin'}[role]||'Docente',cat:'in',car:'todas',title:`🔴 Feriado en el Calendario: ${tit}`,body:`${user.nombre} marcó "${tit}" como feriado en el calendario.`,time:'Ahora mismo',likes:0,liked:false,comments:0,emoji:'🔴',bg:'linear-gradient(135deg,#fce7f3,#fbcfe8)',imgUrls:[],docs:[],isNew:true});
+    renderFeed();renderHomeFeed();
   }
 
   renderCal();tp('pnl-cal');
