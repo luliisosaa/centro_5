@@ -683,23 +683,39 @@ function addReglamentoItem() {
     const faqContainer = document.querySelector("#regl-content .cc:last-child");
 
     const preguntaHTML = `
-      <div class="ditem" onclick="dview('faq-${Date.now()}')">
-<div class="dic" style="background:#dbeafe;color:#2563eb">          <i class="bi bi-question-circle-fill"></i>
-        </div>
 
-        <div class="flex-grow-1">
-          <div style="font-weight:600;font-size:.9rem">
-            ${nombre}
-          </div>
-        </div>
+<div class="ditem d-flex align-items-center justify-content-between">
 
-        <i class="bi bi-chevron-down" style="color:var(--muted)"></i>
+  <div class="d-flex align-items-center flex-grow-1"
+       onclick="dview('faq-${Date.now()}')"
+       style="cursor:pointer">
+
+    <div class="dic" style="background:#dbeafe;color:#2563eb">
+      <i class="bi bi-question-circle-fill"></i>
+    </div>
+
+    <div class="flex-grow-1">
+      <div style="font-weight:600;font-size:.9rem">
+        ${nombre}
       </div>
+    </div>
 
-      <div class="dvw" id="faq-${Date.now()}">
-        ${respuesta}
-      </div>
-    `;
+  </div>
+
+  <button class="btn btn-sm btn-danger can-admin ms-2"
+    style="display:none"
+    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
+
+<div class="dvw" id="faq-${Date.now()}">
+  ${respuesta}
+</div>
+`;
 
     faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
 
@@ -724,28 +740,37 @@ function addReglamentoItem() {
     const reglContent = document.getElementById("regl-content");
 
     const documentoHTML = `
-      <div class="cc mb-3 d-flex justify-content-between align-items-center">
 
-        <div>
-          <div style="font-weight:600;font-size:.95rem">
-            ${nombre}
-          </div>
-        </div>
+<div class="cc mb-3 d-flex justify-content-between align-items-center">
 
-        <div class="d-flex gap-2">
+  <div>
+    <div style="font-weight:600;font-size:.95rem">
+      ${nombre}
+    </div>
+  </div>
 
-          <a href="#" class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-eye"></i>
-          </a>
+  <div class="d-flex gap-2">
 
-          <a href="#" class="btn btn-sm btn-primary">
-            <i class="bi bi-download"></i>
-          </a>
+    <a href="#" class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-eye"></i>
+    </a>
 
-        </div>
+    <a href="#" class="btn btn-sm btn-primary">
+      <i class="bi bi-download"></i>
+    </a>
 
-      </div>
-    `;
+    <button class="btn btn-sm btn-danger can-admin"
+      style="display:none"
+      onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+      <i class="bi bi-trash"></i>
+
+    </button>
+
+  </div>
+
+</div>
+`;
 
     reglContent.insertAdjacentHTML("afterbegin", documentoHTML);
 

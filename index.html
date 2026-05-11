@@ -367,41 +367,116 @@ onclick="addReglamentoItem()">Subir</button>
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Reglamento Institutos Superiores</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Reglamento.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Reglamento.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Reglamento.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Reglamento.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Centro de Estudiantes</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Centro.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Centro.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Centro.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Centro.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Régimen Académico Institucional</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Regimen.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Regimen.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Regimen.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Regimen.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Acuerdo Institucional de Convivencia</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Acuerdo.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Acuerdo.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Acuerdo.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Acuerdo.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Estructura curricular</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Estructura.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Estructura.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Estructura.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Estructura.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <!-- FAQ -->
@@ -410,20 +485,60 @@ onclick="addReglamentoItem()">Subir</button>
         Preguntas Frecuentes
       </div>
 
-      <div class="ditem" onclick="dview('dv-f1')">
-<div class="dic" style="background:#dbeafe;color:#2563eb">
-  <i class="bi bi-question-circle-fill"></i>
-</div>        <div class="flex-grow-1">¿Cómo me inscribo a materias?</div>
-      </div>
+      <div class="ditem d-flex align-items-center justify-content-between">
+
+  <div class="d-flex align-items-center flex-grow-1"
+       onclick="dview('dv-f1')"
+       style="cursor:pointer">
+
+    <div class="dic" style="background:#dbeafe;color:#2563eb">
+      <i class="bi bi-question-circle-fill"></i>
+    </div>
+
+    <div class="flex-grow-1">
+      ¿Cómo me inscribo a materias?
+    </div>
+
+  </div>
+
+  <button class="btn btn-sm btn-danger can-admin ms-2"
+    style="display:none"
+    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
       <div class="dvw" id="dv-f1">
         Accedé a la sección Eventos y utilizá los chips de materias disponibles.
       </div>
 
-      <div class="ditem" onclick="dview('dv-f2')">
-<div class="dic" style="background:#dbeafe;color:#2563eb">
-  <i class="bi bi-question-circle-fill"></i>
-</div>        <div class="flex-grow-1">¿Cómo contacto al Centro de Estudiantes?</div>
-      </div>
+      <div class="ditem d-flex align-items-center justify-content-between">
+
+  <div class="d-flex align-items-center flex-grow-1"
+       onclick="dview('dv-f2')"
+       style="cursor:pointer">
+
+    <div class="dic" style="background:#dbeafe;color:#2563eb">
+      <i class="bi bi-question-circle-fill"></i>
+    </div>
+
+    <div class="flex-grow-1">
+      ¿Cómo contacto al Centro de Estudiantes?
+    </div>
+
+  </div>
+
+  <button class="btn btn-sm btn-danger can-admin ms-2"
+    style="display:none"
+    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
       <div class="dvw" id="dv-f2">
         Podés acercarte al aula de delegados o enviar un correo institucional.
       </div>
