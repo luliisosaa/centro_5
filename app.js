@@ -719,8 +719,9 @@ function addReglamentoItem() {
 
     faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
 
-    toast("Pregunta agregada ✓");
+toast("Pregunta agregada ✓");
 
+applyRole();
   }
 
   // =========================
@@ -774,8 +775,9 @@ function addReglamentoItem() {
 
     reglContent.insertAdjacentHTML("afterbegin", documentoHTML);
 
-    toast("Documento agregado ✓");
+toast("Documento agregado ✓");
 
+applyRole();
   }
 
   // cerrar panel
