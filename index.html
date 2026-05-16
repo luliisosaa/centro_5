@@ -479,70 +479,12 @@ onclick="addReglamentoItem()">Subir</button>
 </div>
     </div>
 
-    <!-- FAQ -->
-    <div class="cc">
-      <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
-        Preguntas Frecuentes
-      </div>
-
-      <div class="ditem d-flex align-items-center justify-content-between">
-
-  <div class="d-flex align-items-center flex-grow-1"
-       onclick="dview('dv-f1')"
-       style="cursor:pointer">
-
-    <div class="dic" style="background:#dbeafe;color:#2563eb">
-      <i class="bi bi-question-circle-fill"></i>
-    </div>
-
-    <div class="flex-grow-1">
-      ¿Cómo me inscribo a materias?
-    </div>
-
+   <!-- FAQ -->
+<div class="cc" id="faq-container">
+  <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
+    Preguntas Frecuentes
   </div>
-
-  <button class="btn btn-sm btn-danger can-admin ms-2"
-    style="display:none"
-    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
-
-    <i class="bi bi-trash"></i>
-
-  </button>
-
 </div>
-      <div class="dvw" id="dv-f1">
-        Accedé a la sección Eventos y utilizá los chips de materias disponibles.
-      </div>
-
-      <div class="ditem d-flex align-items-center justify-content-between">
-
-  <div class="d-flex align-items-center flex-grow-1"
-       onclick="dview('dv-f2')"
-       style="cursor:pointer">
-
-    <div class="dic" style="background:#dbeafe;color:#2563eb">
-      <i class="bi bi-question-circle-fill"></i>
-    </div>
-
-    <div class="flex-grow-1">
-      ¿Cómo contacto al Centro de Estudiantes?
-    </div>
-
-  </div>
-
-  <button class="btn btn-sm btn-danger can-admin ms-2"
-    style="display:none"
-    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
-
-    <i class="bi bi-trash"></i>
-
-  </button>
-
-</div>
-      <div class="dvw" id="dv-f2">
-        Podés acercarte al aula de delegados o enviar un correo institucional.
-      </div>
-    </div>
 
   </div> <!-- FIN regl-content -->
 

@@ -89,6 +89,7 @@ async function doLogin() {
     role = foundUser.rol;
     iniciarSesionUI(foundUser);
     applyRole();
+    cargarPreguntasFrecuentes();
     buildNotifs();
     renderCal();
     renderAlumnos();
@@ -629,6 +630,7 @@ window.onload = function () {
     role = savedUser.rol;
     iniciarSesionUI(savedUser);
     applyRole();
+    cargarPreguntasFrecuentes();
     buildNotifs();
     renderCal();
     renderAlumnos();
@@ -792,4 +794,45 @@ applyRole();
     faqRespuesta.value = "";
   }
 
+}
+async function cargarPreguntasFrecuentes() {
+  const res = await fetch("preguntas.json");
+  const preguntas = await res.json();
+
+  const faqContainer = document.getElementById("faq-container");
+
+  faqContainer.innerHTML = `
+    <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
+      Preguntas Frecuentes
+    </div>
+  `;
+
+  preguntas.forEach(p => {
+    const preguntaHTML = `
+      <div class="ditem d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center flex-grow-1"
+             onclick="dview('${p.id}')"
+             style="cursor:pointer">
+          <div class="dic" style="background:#dbeafe;color:#2563eb">
+            <i class="bi bi-question-circle-fill"></i>
+          </div>
+          <div class="flex-grow-1">${p.pregunta}</div>
+        </div>
+
+        <button class="btn btn-sm btn-danger can-admin ms-2"
+          style="display:none"
+          onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+
+      <div class="dvw" id="${p.id}">
+        ${p.respuesta}
+      </div>
+    `;
+
+    faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
+  });
+
+  applyRole();
 }
