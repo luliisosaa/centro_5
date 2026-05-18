@@ -829,8 +829,43 @@ let EVENTS=[
 const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8','#7c3aed'];
 let role='alumno',user={...ROLES.alumno},avUrl=null;
 let calDate=new Date();
+const savedFeriados=localStorage.getItem('feriadoDates');
+if(savedFeriados)feriadoDates=Object.assign({},FERIADOS_2026,JSON.parse(savedFeriados));
 let pubDates={'2025-3-18':'Parcial de Matemáticas','2025-3-25':'Jornada Ciencia de Datos','2025-4-10':'Asamblea General','2025-6-20':'Inscripción Materias'};
-let feriadoDates={};  // feriados puestos por dirección (rojo)
+const FERIADOS_2026={
+  // Enero
+  '2026-0-1':'Año Nuevo',
+  // Febrero
+  '2026-1-16':'Carnaval',
+  '2026-1-17':'Carnaval',
+  // Marzo
+  '2026-2-23':'Feriado puente turístico',
+  '2026-2-24':'Día Nacional de la Memoria por la Verdad y la Justicia',
+  // Abril
+  '2026-3-2':'Día del Veterano y Caídos en Malvinas',
+  '2026-3-3':'Viernes Santo',
+  // Mayo
+  '2026-4-1':'Día del Trabajador',
+  '2026-4-25':'Día de la Revolución de Mayo',
+  '2026-4-30':'Aniversario de Chascomús 🏙️',
+  // Junio
+  '2026-5-15':'Paso a la Inmortalidad del Gral. Güemes',
+  '2026-5-20':'Paso a la Inmortalidad del Gral. Belgrano',
+  // Julio
+  '2026-6-9':'Día de la Independencia',
+  '2026-6-10':'Feriado puente turístico',
+  // Agosto
+  '2026-7-17':'Paso a la Inmortalidad del Gral. San Martín',
+  // Octubre
+  '2026-9-12':'Día del Respeto a la Diversidad Cultural',
+  // Noviembre
+  '2026-10-23':'Día de la Soberanía Nacional',
+  // Diciembre
+  '2026-11-7':'Feriado puente turístico',
+  '2026-11-8':'Día de la Inmaculada Concepción de María',
+  '2026-11-25':'Navidad'
+};
+let feriadoDates=Object.assign({},FERIADOS_2026);  // feriados puestos por dirección (rojo)
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
