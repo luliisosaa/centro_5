@@ -70,33 +70,52 @@ document.querySelectorAll('.rbtn').forEach(b=>b.addEventListener('click',()=>{
 
 // ════════════════ LOGIN ════════════════
 async function doLogin() {
-  const dni = document.getElementById("l-user").value;
-  const pass = document.getElementById("l-pass").value;
+  const dni = document.getElementById("l-user").value.trim();
+  const pass = document.getElementById("l-pass").value.trim();
   const rolSeleccionado = document.querySelector(".rbtn.active").dataset.r;
 
-  const res = await fetch("usuarios.json");
-  const usuarios = await res.json();
+  try {
+    const usuarios = await obtenerUsuariosAPI();
 
-  const foundUser = usuarios.find(u =>
-    u.dni === dni &&
-    u.password === pass &&
-    u.rol === rolSeleccionado
-  );
+    console.table(usuarios);
 
-  if (foundUser) {
-    localStorage.setItem("usuario", JSON.stringify(foundUser));
-    user = foundUser;
-    role = foundUser.rol;
-    iniciarSesionUI(foundUser);
-    applyRole();
-    cargarPreguntasFrecuentes();
-    buildNotifs();
-    renderCal();
-    renderAlumnos();
-    document.getElementById("login-screen").classList.remove("active");
-    document.getElementById("main-screen").classList.add("active");
-  } else {
-    alert("Datos incorrectos");
+    const foundUser = usuarios.find(u =>
+      String(u.dni) === dni &&
+      String(u.usuario) === pass &&
+      u.activo === true
+    );
+
+    if (foundUser) {
+      localStorage.setItem("usuario", JSON.stringify(foundUser));
+
+      user = foundUser;
+
+      // Relación temporal entre perfil_id y roles de tu app
+      const perfiles = {
+        1: "estudiante",
+        2: "docente",
+        3: "centro",
+        4: "directivo"
+      };
+
+      role = perfiles[foundUser.perfil_id] || rolSeleccionado;
+
+      iniciarSesionUI(foundUser);
+      applyRole();
+      cargarPreguntasFrecuentes();
+      buildNotifs();
+      renderCal();
+      renderAlumnos();
+
+      document.getElementById("login-screen").classList.remove("active");
+      document.getElementById("main-screen").classList.add("active");
+    } else {
+      alert("DNI, usuario o perfil incorrecto");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("No se pudo conectar con la API");
   }
 }
 
