@@ -837,14 +837,19 @@ let EVENTS=[
   {id:3,day:'25',mon:'Jun',title:'Jornada Ciencia de Datos e IA',meta:'Salón Principal · 9:00 hs · Cupo: 80',car:'datos',calKey:'2025-4-25',done:false,bs:'background:#fff0e6;color:var(--accent)'},
   {id:4,day:'10',mon:'Jul',title:'Asamblea General',meta:'Aula Magna · 18:00 hs · Todas',car:'general',calKey:'2025-5-10',done:false,bs:'background:#f0fdf4;color:var(--success)'},
   {id:5,day:'15',mon:'Jul',title:'Parcial de Contabilidad',meta:'Aula 7 · 19:00 hs · Cupo: 35',car:'admin',calKey:'2025-5-15',done:false,bs:'background:#fdf2f8;color:#9d174d'},
+
+
 ];
+
 
 const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8','#7c3aed'];
 let role='alumno',user={...ROLES.alumno},avUrl=null;
 let calDate=new Date(2025,3,1);
 let pubDates={'2025-3-18':'Parcial de Matemáticas','2025-3-25':'Jornada Ciencia de Datos','2025-4-10':'Asamblea General','2025-6-20':'Inscripción Materias'};
-let privDates={};  // private dates keyed by "y-m-d"
-let notifs=[];
+const _savedInscr=JSON.parse(localStorage.getItem('inscriptions')||'[]');
+_savedInscr.forEach(id=>{const e=EVENTS.find(x=>x.id===id);if(e){e.done=true;pubDates[e.calKey]=e.title;}});
+let privDates={}; // private dates keyed by "y-m-d"
+let notifs=JSON.parse(localStorage.getItem('notifs')||'[]');
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
 let pendingImgUrls=[],pendingDocs=[];
@@ -1129,7 +1134,10 @@ function inscr(id,btn){
   const e=EVENTS.find(x=>x.id===id);if(!e||e.done)return;
   e.done=true;btn.classList.add('done');btn.textContent='✓ Inscripto';btn.disabled=true;
   pubDates[e.calKey]=e.title;renderCal();
-  pushN('pub',`Inscripto en <strong>${e.title}</strong> — en el calendario.`);
+  const saved=JSON.parse(localStorage.getItem('inscriptions')||'[]');
+  if(!saved.includes(id))saved.push(id);
+  localStorage.setItem('inscriptions',JSON.stringify(saved));
+  pushN('pub',`Te inscribiste en <strong>${e.title}</strong> — marcado en el calendario.`);
   toast(`✓ Inscripto en "${e.title}" — marcado en el calendario`);renderEvents();
 }
 function fCEv(car,el){document.querySelectorAll('#page-eventos .ctag').forEach(t=>t.classList.remove('on'));el.classList.add('on');evCar=car;renderEvents();}
@@ -1380,6 +1388,41 @@ function lbConfirmEdit(){
 }
 function lbCancelEdit(){
   document.getElementById('modal-edit').style.display='none';
+}
+// ════════════════ NOTIFICATIONS ════════════════
+function pushN(type,label){
+  if(role!=='alumno')return;
+  notifs.unshift({type,label,time:'Ahora mismo'});
+  localStorage.setItem('notifs',JSON.stringify(notifs));
+  renderN();
+}
+function buildNotifs(){
+  notifs=JSON.parse(localStorage.getItem('notifs')||'[]');
+  renderN();
+}
+function renderN(){
+  const list=document.getElementById('nlist');
+  const badge=document.getElementById('nbadge');
+  if(!list)return;
+  if(!notifs.length){
+    list.innerHTML='<div style="padding:1rem;text-align:center;color:var(--muted);font-size:.85rem">Sin notificaciones</div>';
+    if(badge)badge.style.display='none';
+    return;
+  }
+  if(badge){badge.style.display='flex';badge.textContent=notifs.length>9?'9+':notifs.length;}
+  list.innerHTML=notifs.map(n=>`
+<div class="nitem">
+  <div class="ndot pub"></div>
+  <div><div class="ntext">${n.label}</div><div class="ntime">${n.time}</div></div>
+</div>`).join('');
+}
+function clearN(){
+  notifs=[];
+  localStorage.removeItem('notifs');
+  renderN();
+}
+function toggleNP(){
+  document.getElementById('npanel').classList.toggle('open');
 }
 // ════════════════ STUDENTS ════════════════
 function renderAlumnos(){
