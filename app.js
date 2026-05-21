@@ -70,7 +70,7 @@ document.querySelectorAll('.rbtn').forEach(b=>b.addEventListener('click',()=>{
 
 // ════════════════ LOGIN ════════════════
 async function doLogin() {
-  const dni = document.getElementById("l-user").value.trim();
+  const usuarioInput = document.getElementById("l-user").value.trim();
   const pass = document.getElementById("l-pass").value.trim();
   const rolSeleccionado = document.querySelector(".rbtn.active").dataset.r;
 
@@ -80,25 +80,15 @@ async function doLogin() {
     console.table(usuarios);
 
     const foundUser = usuarios.find(u =>
-      String(u.dni) === dni &&
-      String(u.usuario) === pass &&
-      u.activo === true
+      String(u.email) === usuarioInput &&
+      String(u.id) === pass
     );
 
     if (foundUser) {
       localStorage.setItem("usuario", JSON.stringify(foundUser));
 
       user = foundUser;
-
-      // Relación temporal entre perfil_id y roles de tu app
-      const perfiles = {
-        1: "estudiante",
-        2: "docente",
-        3: "centro",
-        4: "directivo"
-      };
-
-      role = perfiles[foundUser.perfil_id] || rolSeleccionado;
+      role = rolSeleccionado;
 
       iniciarSesionUI(foundUser);
       applyRole();
@@ -110,7 +100,7 @@ async function doLogin() {
       document.getElementById("login-screen").classList.remove("active");
       document.getElementById("main-screen").classList.add("active");
     } else {
-      alert("DNI, usuario o perfil incorrecto");
+      alert("Email o contraseña incorrectos");
     }
 
   } catch (error) {
