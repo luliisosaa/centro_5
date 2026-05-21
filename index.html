@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
 <style>
-  
+
 :root{
   --primary:#2D6BE4;--primary-d:#1a4fb5;--primary-l:#dce8ff;
   --accent:#F97316;--success:#16A34A;
@@ -310,6 +310,18 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 
 /* TOAST */
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a2340;color:#fff;border-radius:12px;padding:.75rem 1.2rem;font-size:.88rem;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:fslide .25s ease;max-width:320px}
+
+/* Modales flotantes galería */
+.gal-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;display:flex;align-items:center;justify-content:center;animation:fslide .18s ease}
+.gal-modal{background:#fff;border-radius:16px;padding:1.5rem 1.75rem;width:100%;max-width:360px;box-shadow:0 16px 50px rgba(0,0,0,.25);position:relative}
+.gal-modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin:0 auto .9rem}
+.gal-modal h5{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;text-align:center;margin-bottom:.35rem}
+.gal-modal p{font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:1.1rem}
+.gal-modal-btns{display:flex;gap:.6rem}
+.gal-modal-btns button{flex:1;border:none;border-radius:10px;padding:.55rem;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s}
+.gal-modal-btns button:hover{opacity:.85}
+.gal-modal input{width:100%;border-radius:10px;border:1.5px solid var(--border);padding:.55rem .85rem;font-size:.92rem;background:var(--surf);margin-bottom:.9rem;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border .2s}
+.gal-modal input:focus{border-color:var(--primary);background:#fff}
 </style>
 </head>
 <body>
@@ -744,10 +756,39 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
     <div class="lb-info">
       <div style="font-weight:700;font-size:.95rem" id="lb-title"></div>
       <div style="font-size:.82rem;color:var(--muted);margin-top:.2rem" id="lb-meta"></div>
-      <div style="margin-top:.7rem;display:flex;gap:.5rem">
+      <div style="margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap">
         <button class="btnp" style="width:auto;padding:.35rem 1rem;font-size:.82rem" onclick="toast('¡Guardado!')"><i class="bi bi-download me-1"></i>Guardar</button>
         <button class="btns" style="width:auto;padding:.35rem 1rem;font-size:.82rem" onclick="toast('¡Compartido!')"><i class="bi bi-share me-1"></i>Compartir</button>
+        <button class="btns" id="lb-edit-btn" style="width:auto;padding:.35rem 1rem;font-size:.82rem;display:none" onclick="lbEditDesc()"><i class="bi bi-pencil me-1"></i>Editar</button>
+        <button class="btns" id="lb-del-btn" style="width:auto;padding:.35rem 1rem;font-size:.82rem;color:#dc2626;border-color:#dc2626;display:none" onclick="lbDelete()"><i class="bi bi-trash me-1"></i>Eliminar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="gal-modal-ov" id="modal-del" style="display:none" onclick="if(event.target===this)lbCancelDelete()">
+  <div class="gal-modal">
+    <div class="gal-modal-icon" style="background:#fef2f2;color:#dc2626"><i class="bi bi-trash-fill"></i></div>
+    <h5>¿Eliminar imagen?</h5>
+    <p>Esta acción no se puede deshacer.</p>
+    <div class="gal-modal-btns">
+      <button onclick="lbCancelDelete()" style="background:var(--surf2);color:var(--text);border:1.5px solid var(--border)">Cancelar</button>
+      <button onclick="lbConfirmDelete()" style="background:#dc2626;color:#fff">Sí, eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="gal-modal-ov" id="modal-edit" style="display:none" onclick="if(event.target===this)lbCancelEdit()">
+  <div class="gal-modal">
+    <div class="gal-modal-icon" style="background:var(--primary-l);color:var(--primary)"><i class="bi bi-pencil-fill"></i></div>
+    <h5>Editar descripción</h5>
+    <p>Ingresá la nueva descripción para esta imagen.</p>
+    <input id="lb-edit-input" placeholder="Descripción..." onkeydown="if(event.key==='Enter')lbConfirmEdit()"/>
+    <div class="gal-modal-btns">
+      <button onclick="lbCancelEdit()" style="background:var(--surf2);color:var(--text);border:1.5px solid var(--border)">Cancelar</button>
+      <button onclick="lbConfirmEdit()" style="background:var(--primary);color:#fff">Guardar</button>
     </div>
   </div>
 </div>
@@ -778,17 +819,7 @@ const ALUMNOS=[
 ];
 
 // Gallery items
-let IG_ITEMS=[
-  {id:1,type:'img',album:'jornada',desc:'Jornada IA — Exposición Final',emoji:'🤖',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',likes:24,time:'Hace 3 días'},
-  {id:2,type:'img',album:'jornada',desc:'Presentación de Proyectos',emoji:'💻',bg:'linear-gradient(135deg,#f0fdf4,#86efac)',likes:18,time:'Hace 3 días'},
-  {id:3,type:'img',album:'jornada',desc:'Workshop de Programación',emoji:'🎓',bg:'linear-gradient(135deg,#fff0e6,#fdba74)',likes:31,time:'Hace 4 días'},
-  {id:4,type:'img',album:'bienvenida',desc:'Recepción de Ingresantes',emoji:'🎉',bg:'linear-gradient(135deg,#fef9c3,#fde047)',likes:47,time:'Hace 1 semana'},
-  {id:5,type:'img',album:'bienvenida',desc:'Primera jornada',emoji:'👋',bg:'linear-gradient(135deg,#fdf2f8,#f0abfc)',likes:29,time:'Hace 1 semana'},
-  {id:6,type:'img',album:'examen',desc:'Mesa de Examen — Junio 2025',emoji:'📝',bg:'linear-gradient(135deg,#dcfce7,#4ade80)',likes:11,time:'Hace 5 días'},
-  {id:7,type:'doc',album:'docs',desc:'Programa de Matemáticas 2025',ext:'PDF',likes:6,time:'Hace 2 días'},
-  {id:8,type:'img',album:'examen',desc:'Parcial de Programación',emoji:'⌨️',bg:'linear-gradient(135deg,#eff6ff,#93c5fd)',likes:15,time:'Hace 6 días'},
-  {id:9,type:'doc',album:'docs',desc:'Material de Inglés — Unidad 3',ext:'DOCX',likes:9,time:'Hace 1 día'},
-];
+ let IG_ITEMS=JSON.parse(localStorage.getItem('IG_ITEMS')||'[]');
 let galTab='grid', igTempUrl=null, igTempType='img';
 
 // Posts feed
@@ -977,26 +1008,11 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('.topbar-right'))document.getElementById('npanel').classList.remove('open');
 });
 
-// ════════════════ NOTIFICATIONS ════════════════
-function buildNotifs(){
-  notifs=[
-    {dot:'pub',text:'Nuevo evento: <strong>Jornada de Ciencia de Datos</strong> — 25 Jun',time:'Hace 1 hora',read:false},
-    {dot:'pub',text:'Nueva novedad de Prof. García: <strong>Inscripción a Materias</strong>',time:'Hace 2 horas',read:false},
-    {dot:'priv',text:'Recordatorio: <strong>Parcial de Matemáticas</strong> en 3 días',time:'Hoy',read:false},
-  ];renderNotifs();
-}
-function renderNotifs(){
-  const list=document.getElementById('nlist');
-  const u=notifs.filter(n=>!n.read).length;
-  const b=document.getElementById('nbadge');b.textContent=u;b.style.display=u?'flex':'none';
-  if(!notifs.length){list.innerHTML='<div style="padding:1rem;text-align:center;color:var(--muted);font-size:.85rem">Sin notificaciones</div>';return;}
-  list.innerHTML=notifs.map((n,i)=>`<div class="nitem" onclick="mread(${i})" style="${n.read?'opacity:.5':''}"><div class="ndot ${n.dot}"></div><div><div class="ntext">${n.text}</div><div class="ntime">${n.time}</div></div></div>`).join('');
-}
-function toggleNP(){document.getElementById('npanel').classList.toggle('open');}
-function mread(i){notifs[i].read=true;renderNotifs();}
-function clearN(){notifs=[];renderNotifs();}
-function pushN(dot,text){notifs.unshift({dot,text,time:'Ahora',read:false});renderNotifs();}
-
+IG_ITEMS = JSON.parse(localStorage.getItem('IG_ITEMS') || 'null') || [
+  {id:1, type:'img', album:'actos', desc:'Acto del 25 de Mayo', emoji:'🎉', bg:'linear-gradient(135deg,#dce8ff,#93c5fd)', likes:12, time:'hace 3 días'},
+  {id:2, type:'img', album:'deportes', desc:'Torneo de fútbol', emoji:'⚽', bg:'linear-gradient(135deg,#dcfce7,#86efac)', likes:8, time:'hace 1 semana'},
+  {id:3, type:'img', album:'cultura', desc:'Muestra de arte', emoji:'🎨', bg:'linear-gradient(135deg,#fef9c3,#fde68a)', likes:5, time:'hace 2 semanas'},
+];
 // ════════════════ LAST CAL ENTRY (home banner) ════════════════
 function updateLastCal(){
   const sec=document.getElementById('last-cal-section');
@@ -1079,7 +1095,8 @@ function publishPost(){
   POSTS.unshift(newPost);
   if(pendingImgUrls.length>0){pendingImgUrls.forEach((url,i)=>{IG_ITEMS.unshift({id:Date.now()+i,type:'img',album:'general',desc:`${tit} — img ${i+1}`,realUrl:url,likes:0,time:'Ahora mismo'});});}
   if(pendingDocs.length>0){pendingDocs.forEach((d,i)=>{IG_ITEMS.unshift({id:Date.now()+100+i,type:'doc',album:'docs',desc:d,ext:d.split('.').pop().toUpperCase(),likes:0,time:'Ahora mismo'});});}
-  renderFeed();renderHomeFeed();renderGallery();
+ localStorage.setItem('IG_ITEMS', JSON.stringify(IG_ITEMS));
+renderFeed();renderHomeFeed();renderGallery(); renderFeed();renderHomeFeed();renderGallery();
   tp('pnl-nov');
   document.getElementById('np-tit').value='';document.getElementById('np-body').value='';
   document.getElementById('np-imgprev').innerHTML='';document.getElementById('np-docprev').innerHTML='';
@@ -1300,6 +1317,7 @@ function igUpload(){
     const ext=(igTempUrl+'').split('.').pop().toUpperCase();
     IG_ITEMS.unshift({id:Date.now(),type:'doc',album:'docs',desc,ext,likes:0,time:'Ahora mismo'});
   }
+  localStorage.setItem('IG_ITEMS', JSON.stringify(IG_ITEMS)); // ← AGREGAR ESTA LÍNEA
   // Publish to feed too
   const roleLabel={alumno:'Alumno',docente:'Docente',delegado:'Delegado',admin:'Admin'}[role];
   POSTS.unshift({id:Date.now()+1,author:user.nombre,role:roleLabel,cat:'so',car:'todas',title:`📸 Nueva publicación en Galería: ${desc}`,body:`${user.nombre} publicó "${desc}" en la Galería del Centro.`,time:'Ahora mismo',likes:0,liked:false,comments:0,emoji:'🖼️',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',imgUrls:type==='img'&&igTempUrl?[igTempUrl]:[],docs:type==='doc'&&igTempUrl?[igTempUrl]:[],isNew:true});
@@ -1311,18 +1329,58 @@ function igUpload(){
   toast('✓ Publicado en la Galería y en Novedades');
 }
 
+let lbCurrentId=null;
 function openLB(id){
   const item=IG_ITEMS.find(x=>x.id===id);if(!item)return;
+  lbCurrentId=id;
   const hasReal=!!item.realUrl;
   document.getElementById('lb-media').innerHTML=hasReal
     ?`<img src="${item.realUrl}" class="lb-media-img"/>`
     :`<div class="lb-media-emoji" style="background:${item.bg||'var(--surf2)'}">${item.emoji||'🖼️'}</div>`;
   document.getElementById('lb-title').textContent=item.desc;
   document.getElementById('lb-meta').textContent=`❤️ ${item.likes} · ${item.time}`;
+  const canManage=['docente','delegado','admin'].includes(role);
+  document.getElementById('lb-del-btn').style.display=canManage?'':'none';
+  document.getElementById('lb-edit-btn').style.display=canManage?'':'none';
   document.getElementById('lb-ov').classList.add('open');
 }
 function closeLB(e){if(e.target===document.getElementById('lb-ov'))document.getElementById('lb-ov').classList.remove('open');}
-
+function lbDelete(){
+  if(!lbCurrentId)return;
+  document.getElementById('modal-del').style.display='flex';
+}
+function lbConfirmDelete(){
+  IG_ITEMS=IG_ITEMS.filter(x=>x.id!==lbCurrentId);
+  localStorage.setItem('IG_ITEMS',JSON.stringify(IG_ITEMS));
+  document.getElementById('modal-del').style.display='none';
+  document.getElementById('lb-ov').classList.remove('open');
+  renderGallery();
+  toast('Imagen eliminada');
+}
+function lbCancelDelete(){
+  document.getElementById('modal-del').style.display='none';
+}
+function lbEditDesc(){
+  if(!lbCurrentId)return;
+  const item=IG_ITEMS.find(x=>x.id===lbCurrentId);if(!item)return;
+  document.getElementById('lb-edit-input').value=item.desc;
+  document.getElementById('modal-edit').style.display='flex';
+  setTimeout(()=>document.getElementById('lb-edit-input').focus(),50);
+}
+function lbConfirmEdit(){
+  const item=IG_ITEMS.find(x=>x.id===lbCurrentId);if(!item)return;
+  const nueva=document.getElementById('lb-edit-input').value.trim();
+  if(!nueva)return;
+  item.desc=nueva;
+  localStorage.setItem('IG_ITEMS',JSON.stringify(IG_ITEMS));
+  document.getElementById('lb-title').textContent=nueva;
+  document.getElementById('modal-edit').style.display='none';
+  renderGallery();
+  toast('Descripción actualizada ✓');
+}
+function lbCancelEdit(){
+  document.getElementById('modal-edit').style.display='none';
+}
 // ════════════════ STUDENTS ════════════════
 function renderAlumnos(){
   const tb=document.getElementById('stu-tbody');if(!tb)return;
