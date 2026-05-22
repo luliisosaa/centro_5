@@ -41,8 +41,12 @@
       </div>
     </div>
     <button class="btnp" onclick="doLogin()">Iniciar Sesión</button>
-    <button type="button" onclick="mostrarRegistro()">
-  Crear usuario
+    <button
+  type="button"
+  class="w-100 mb-2"
+  id="btn-crear"
+  onclick="mostrarRegistro()">
+  Crear Usuario
 </button>
 
 <div id="registro-box" style="display:none; margin-top:15px;">
@@ -50,9 +54,13 @@
   <input id="reg-email" class="form-control mb-2" placeholder="Email">
   <input id="reg-carrera" class="form-control mb-2" placeholder="Carrera">
 
-  <button type="button" onclick="registrarUsuario()">
-    Registrarme
-  </button>
+  <button
+  type="button"
+  class="w-100"
+  id="btn-registrar"
+  onclick="registrarUsuario()">
+  Registrarme
+</button>
 </div>
     <button class="btns" onclick="doLogin()">Entrar</button>
   </div>

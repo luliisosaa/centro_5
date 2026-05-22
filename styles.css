@@ -274,3 +274,36 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 
 /* TOAST */
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a2340;color:#fff;border-radius:12px;padding:.75rem 1.2rem;font-size:.88rem;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:fslide .25s ease;max-width:320px}
+/* ════════════════ BOTONES REGISTRO ════════════════ */
+
+#btn-crear,
+#btn-registrar {
+
+  width: 100%;
+
+  border: none;
+
+  border-radius: 14px;
+
+  padding: 12px;
+
+  font-weight: 700;
+
+  transition: .2s;
+
+  background: linear-gradient(
+    135deg,
+    #3b82f6,
+    #2563eb
+  );
+
+  color: white;
+}
+
+#btn-crear:hover,
+#btn-registrar:hover {
+
+  transform: translateY(-1px);
+
+  filter: brightness(1.05);
+}
