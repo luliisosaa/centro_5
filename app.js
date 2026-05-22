@@ -73,16 +73,26 @@ async function doLogin() {
   const usuarioInput = document.getElementById("l-user").value.trim();
   const pass = document.getElementById("l-pass").value.trim();
   const rolSeleccionado = document.querySelector(".rbtn.active").dataset.r;
+  const perfiles = {
+  estudiante: 1,
+  docente: 2,
+  centro: 3,
+  directivo: 4
+};
 
   try {
     const usuarios = await obtenerUsuariosAPI();
 
     console.table(usuarios);
 
-    const foundUser = usuarios.find(u =>
-      String(u.email) === usuarioInput &&
-      String(u.id) === pass
-    );
+    const perfilID = perfiles[rolSeleccionado];
+
+const foundUser = usuarios.find(u =>
+  String(u.dni) === usuarioInput &&
+  String(u.usuario) === pass &&
+  Number(u.perfil_id) === perfilID &&
+  u.activo === true
+);
 
     if (foundUser) {
       localStorage.setItem("usuario", JSON.stringify(foundUser));
@@ -844,4 +854,52 @@ async function cargarPreguntasFrecuentes() {
   });
 
   applyRole();
+}
+function mostrarRegistro() {
+  const box = document.getElementById("registro-box");
+
+  if (box.style.display === "none") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+
+async function registrarUsuario() {
+  const nombre = document.getElementById("reg-nombre").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+  const carrera = document.getElementById("reg-carrera").value.trim();
+
+  if (!nombre || !email || !carrera) {
+    alert("Completa todos los campos");
+    return;
+  }
+
+  const nuevoUsuario = {
+  dni: Number(dni),
+  nombre: nombre,
+  usuario: usuario,
+  email: email,
+  perfil_id: Number(perfil),
+  carrera_id: Number(carrera),
+  activo: true
+};
+
+  try {
+    const usuarioCreado = await crearUsuarioAPI(nuevoUsuario);
+
+    console.log("Usuario creado:", usuarioCreado);
+
+    alert("Usuario creado correctamente. Ahora puedes iniciar sesión.");
+
+    document.getElementById("reg-nombre").value = "";
+    document.getElementById("reg-email").value = "";
+    document.getElementById("reg-carrera").value = "";
+
+    document.getElementById("registro-box").style.display = "none";
+
+  } catch (error) {
+    console.error(error);
+    alert("No se pudo crear el usuario");
+  }
 }

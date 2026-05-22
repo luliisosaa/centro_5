@@ -33,3 +33,6 @@ const response = await fetch(url, options);
 async function obtenerUsuariosAPI() {
   return await apiRequest("/usuarios");
 }
+async function crearUsuarioAPI(nuevoUsuario) {
+  return await apiRequest("/usuarios", "POST", nuevoUsuario);
+}

@@ -41,6 +41,19 @@
       </div>
     </div>
     <button class="btnp" onclick="doLogin()">Iniciar Sesión</button>
+    <button type="button" onclick="mostrarRegistro()">
+  Crear usuario
+</button>
+
+<div id="registro-box" style="display:none; margin-top:15px;">
+  <input id="reg-nombre" class="form-control mb-2" placeholder="Nombre">
+  <input id="reg-email" class="form-control mb-2" placeholder="Email">
+  <input id="reg-carrera" class="form-control mb-2" placeholder="Carrera">
+
+  <button type="button" onclick="registrarUsuario()">
+    Registrarme
+  </button>
+</div>
     <button class="btns" onclick="doLogin()">Entrar</button>
   </div>
 </div>
