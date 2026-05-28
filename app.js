@@ -866,37 +866,44 @@ function mostrarRegistro() {
 }
 
 async function registrarUsuario() {
+  const dni = document.getElementById("reg-dni").value.trim();
+  const usuario = document.getElementById("reg-usuario").value.trim();
   const nombre = document.getElementById("reg-nombre").value.trim();
   const email = document.getElementById("reg-email").value.trim();
   const carrera = document.getElementById("reg-carrera").value.trim();
 
-  if (!nombre || !email || !carrera) {
+  const rolSeleccionado = document.querySelector(".rbtn.active").dataset.r;
+
+  const perfiles = {
+    estudiante: 1,
+    docente: 2,
+    centro: 3,
+    directivo: 4
+  };
+
+  const perfilID = perfiles[rolSeleccionado];
+
+  if (!dni || !usuario || !nombre || !email || !carrera) {
     alert("Completa todos los campos");
     return;
   }
 
   const nuevoUsuario = {
-  dni: Number(dni),
-  nombre: nombre,
-  usuario: usuario,
-  email: email,
-  perfil_id: Number(perfil),
-  carrera_id: Number(carrera),
-  activo: true
-};
+    dni: Number(dni),
+    nombre: nombre,
+    usuario: usuario,
+    email: email,
+    perfil_id: perfilID,
+    carrera_id: Number(carrera),
+    activo: true
+  };
 
   try {
     const usuarioCreado = await crearUsuarioAPI(nuevoUsuario);
 
     console.log("Usuario creado:", usuarioCreado);
 
-    alert("Usuario creado correctamente. Ahora puedes iniciar sesión.");
-
-    document.getElementById("reg-nombre").value = "";
-    document.getElementById("reg-email").value = "";
-    document.getElementById("reg-carrera").value = "";
-
-    document.getElementById("registro-box").style.display = "none";
+    alert("Usuario creado correctamente. Ahora puedes iniciar sesión con tu DNI y usuario.");
 
   } catch (error) {
     console.error(error);
