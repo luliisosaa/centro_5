@@ -274,3 +274,43 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 
 /* TOAST */
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a2340;color:#fff;border-radius:12px;padding:.75rem 1.2rem;font-size:.88rem;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:fslide .25s ease;max-width:320px}
+/* ───────── MENSAJES ESTUDIANTES ───────── */
+
+.msg-box{
+  position:relative;
+}
+
+.clip-btn{
+
+  position:absolute;
+
+  right:.8rem;
+  bottom:.8rem;
+
+  width:36px;
+  height:36px;
+
+  border-radius:50%;
+
+  background:var(--surf2);
+
+  color:var(--primary);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  transition:all .2s;
+}
+
+.clip-btn:hover{
+
+  background:var(--primary);
+
+  color:white;
+}
+#page-estudiantes .ctag{
+  font-size:.72rem;
+}

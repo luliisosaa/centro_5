@@ -6,18 +6,18 @@ const ROLES={
   directivo:   {nombre:'Admin Instituto',email:'admin@instituto.edu',   dni:'99887766',usr:'@admin57', carrera:''},
 };
 const ALUMNOS=[
-  {n:'Ana Martínez',    d:'30111222',e:'ana@instituto.edu',    c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Lucas Rodríguez', d:'32333444',e:'lucas@instituto.edu',  c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Sofía López',     d:'34555666',e:'sofia@instituto.edu',  c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Facundo Peralta', d:'27334455',e:'facu@instituto.edu',   c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Nicolás Vega',    d:'31990011',e:'nico@instituto.edu',   c:'Ciencia de Datos e IA',est:'Libre'},
-  {n:'Mateo Díaz',      d:'29777888',e:'mateo@instituto.edu',  c:'Administración',        est:'Regular'},
-  {n:'Valentina Torres',d:'33999000',e:'valen@instituto.edu',  c:'Administración',        est:'Libre'},
-  {n:'Tomás Fernández', d:'31112233',e:'tomas@instituto.edu',  c:'Administración',        est:'Regular'},
-  {n:'Luciana Castro',  d:'38667788',e:'luci@instituto.edu',   c:'Administración',        est:'Regular'},
-  {n:'Camila Suárez',   d:'35445566',e:'camila@instituto.edu', c:'Enfermería',            est:'Regular'},
-  {n:'Agustín Romero',  d:'28778899',e:'agustin@instituto.edu',c:'Enfermería',            est:'Recursante'},
-  {n:'Julieta Morales', d:'36001122',e:'julieta@instituto.edu',c:'Enfermería',            est:'Regular'},
+  {n:'Ana Martínez',    d:'30111222',e:'ana@instituto.edu',    c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Lucas Rodríguez', d:'32333444',e:'lucas@instituto.edu',  c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Sofía López',     d:'34555666',e:'sofia@instituto.edu',  c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Facundo Peralta', d:'27334455',e:'facu@instituto.edu',   c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Nicolás Vega',    d:'31990011',e:'nico@instituto.edu',   c:'Tecnicatura en Administración con Orientación en Marketing',est:'Libre'},
+  {n:'Mateo Díaz',      d:'29777888',e:'mateo@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Regular'},
+  {n:'Valentina Torres',d:'33999000',e:'valen@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Libre'},
+  {n:'Tomás Fernández', d:'31112233',e:'tomas@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Regular'},
+  {n:'Luciana Castro',  d:'38667788',e:'luci@instituto.edu',   c:'Profesorado de Ed. Secundaria en Matemática',        est:'Regular'},
+  {n:'Camila Suárez',   d:'35445566',e:'camila@instituto.edu', c:'Tecnicatura en Enfermería',            est:'Regular'},
+  {n:'Agustín Romero',  d:'28778899',e:'agustin@instituto.edu',c:'Tecnicatura en Enfermería',            est:'Recursante'},
+  {n:'Julieta Morales', d:'36001122',e:'julieta@instituto.edu',c:'Profesorado de Ed. Secundaria en Lengua y Literatura',            est:'Regular'},
 ];
 
 // Gallery items
@@ -89,6 +89,7 @@ async function doLogin() {
     role = foundUser.rol;
     iniciarSesionUI(foundUser);
     applyRole();
+    cargarPreguntasFrecuentes();
     buildNotifs();
     renderCal();
     renderAlumnos();
@@ -576,18 +577,59 @@ function closeLB(e){if(e.target===document.getElementById('lb-ov'))document.getE
 
 // ════════════════ STUDENTS ════════════════
 function renderAlumnos(){
-  const tb=document.getElementById('stu-tbody');if(!tb)return;
-  const fil=ALUMNOS.filter(a=>{
-    const mQ=!stuQ||a.n.toLowerCase().includes(stuQ.toLowerCase())||a.d.includes(stuQ);
-    const mC=stuC==='todas'||a.c===stuC;return mQ&&mC;
+  const tb = document.getElementById('stu-tbody');
+  if(!tb) return;
+
+  const fil = ALUMNOS.filter(a => {
+    const mQ = !stuQ || a.n.toLowerCase().includes(stuQ.toLowerCase()) || a.d.includes(stuQ);
+    const mC = stuC === 'todas' || a.c === stuC;
+    return mQ && mC;
   });
-  document.getElementById('stu-cnt').textContent=`${fil.length} alumno${fil.length!==1?'s':''}`;
-  tb.innerHTML=fil.map((a,i)=>{
-    const ini=initials(a.n);const col=AVC[i%AVC.length];
-    const sb=a.est==='Regular'?'#dcfce7':a.est==='Libre'?'#fef2f2':'#fff7ed';
-    const sc=a.est==='Regular'?'#16a34a':a.est==='Libre'?'#dc2626':'#c2410c';
-    return `<tr><td><div style="display:flex;align-items:center;gap:.6rem"><div class="sav" style="background:${col}">${ini}</div><span>${a.n}</span></div></td><td>${a.d}</td><td style="font-size:.82rem;color:var(--muted)">${a.e}</td><td style="font-size:.83rem">${a.c}</td><td><span style="padding:.15rem .55rem;border-radius:20px;font-size:.72rem;font-weight:600;background:${sb};color:${sc}">${a.est}</span></td></tr>`;
-  }).join('')||'<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--muted)">Sin resultados</td></tr>';
+
+  document.getElementById('stu-cnt').textContent = `${fil.length} alumno${fil.length !== 1 ? 's' : ''}`;
+
+  tb.innerHTML = fil.map((a, i) => {
+    const ini = initials(a.n);
+    const col = AVC[i % AVC.length];
+
+    const sb = a.est === 'Regular' ? '#dcfce7' : a.est === 'Libre' ? '#fef2f2' : '#fff7ed';
+    const sc = a.est === 'Regular' ? '#16a34a' : a.est === 'Libre' ? '#dc2626' : '#c2410c';
+
+    return `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:.6rem">
+            <div class="sav" style="background:${col}">${ini}</div>
+            <span>${a.n}</span>
+          </div>
+        </td>
+
+        <td>${a.d}</td>
+
+        <td style="font-size:.82rem;color:var(--muted)">
+          ${a.e}
+        </td>
+
+        <td style="font-size:.83rem">
+          ${a.c}
+        </td>
+
+        <td>
+          <span style="padding:.15rem .55rem;border-radius:20px;font-size:.72rem;font-weight:600;background:${sb};color:${sc}">
+            ${a.est}
+          </span>
+        </td>
+
+        <td>
+          <button
+            class="btn btn-sm btn-outline-primary"
+            onclick="abrirMensajeEstudiante('${a.e}')">
+            <i class="bi bi-envelope"></i> Enviar
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('') || '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--muted)">Sin resultados</td></tr>';
 }
 function fStu(q){stuQ=q;renderAlumnos();}
 function fStuC(v){stuC=v;renderAlumnos();}
@@ -629,6 +671,7 @@ window.onload = function () {
     role = savedUser.rol;
     iniciarSesionUI(savedUser);
     applyRole();
+    cargarPreguntasFrecuentes();
     buildNotifs();
     renderCal();
     renderAlumnos();
@@ -683,28 +726,45 @@ function addReglamentoItem() {
     const faqContainer = document.querySelector("#regl-content .cc:last-child");
 
     const preguntaHTML = `
-      <div class="ditem" onclick="dview('faq-${Date.now()}')">
-<div class="dic" style="background:#dbeafe;color:#2563eb">          <i class="bi bi-question-circle-fill"></i>
-        </div>
 
-        <div class="flex-grow-1">
-          <div style="font-weight:600;font-size:.9rem">
-            ${nombre}
-          </div>
-        </div>
+<div class="ditem d-flex align-items-center justify-content-between">
 
-        <i class="bi bi-chevron-down" style="color:var(--muted)"></i>
+  <div class="d-flex align-items-center flex-grow-1"
+       onclick="dview('faq-${Date.now()}')"
+       style="cursor:pointer">
+
+    <div class="dic" style="background:#dbeafe;color:#2563eb">
+      <i class="bi bi-question-circle-fill"></i>
+    </div>
+
+    <div class="flex-grow-1">
+      <div style="font-weight:600;font-size:.9rem">
+        ${nombre}
       </div>
+    </div>
 
-      <div class="dvw" id="faq-${Date.now()}">
-        ${respuesta}
-      </div>
-    `;
+  </div>
+
+  <button class="btn btn-sm btn-danger can-admin ms-2"
+    style="display:none"
+    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
+
+<div class="dvw" id="faq-${Date.now()}">
+  ${respuesta}
+</div>
+`;
 
     faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
 
-    toast("Pregunta agregada ✓");
+toast("Pregunta agregada ✓");
 
+applyRole();
   }
 
   // =========================
@@ -724,33 +784,43 @@ function addReglamentoItem() {
     const reglContent = document.getElementById("regl-content");
 
     const documentoHTML = `
-      <div class="cc mb-3 d-flex justify-content-between align-items-center">
 
-        <div>
-          <div style="font-weight:600;font-size:.95rem">
-            ${nombre}
-          </div>
-        </div>
+<div class="cc mb-3 d-flex justify-content-between align-items-center">
 
-        <div class="d-flex gap-2">
+  <div>
+    <div style="font-weight:600;font-size:.95rem">
+      ${nombre}
+    </div>
+  </div>
 
-          <a href="#" class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-eye"></i>
-          </a>
+  <div class="d-flex gap-2">
 
-          <a href="#" class="btn btn-sm btn-primary">
-            <i class="bi bi-download"></i>
-          </a>
+    <a href="#" class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-eye"></i>
+    </a>
 
-        </div>
+    <a href="#" class="btn btn-sm btn-primary">
+      <i class="bi bi-download"></i>
+    </a>
 
-      </div>
-    `;
+    <button class="btn btn-sm btn-danger can-admin"
+      style="display:none"
+      onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+      <i class="bi bi-trash"></i>
+
+    </button>
+
+  </div>
+
+</div>
+`;
 
     reglContent.insertAdjacentHTML("afterbegin", documentoHTML);
 
-    toast("Documento agregado ✓");
+toast("Documento agregado ✓");
 
+applyRole();
   }
 
   // cerrar panel
@@ -765,4 +835,76 @@ function addReglamentoItem() {
     faqRespuesta.value = "";
   }
 
+}
+async function cargarPreguntasFrecuentes() {
+  const res = await fetch("preguntas.json");
+  const preguntas = await res.json();
+
+  const faqContainer = document.getElementById("faq-container");
+
+  faqContainer.innerHTML = `
+    <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
+      Preguntas Frecuentes
+    </div>
+  `;
+
+  preguntas.forEach(p => {
+    const preguntaHTML = `
+      <div class="ditem d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center flex-grow-1"
+             onclick="dview('${p.id}')"
+             style="cursor:pointer">
+          <div class="dic" style="background:#dbeafe;color:#2563eb">
+            <i class="bi bi-question-circle-fill"></i>
+          </div>
+          <div class="flex-grow-1">${p.pregunta}</div>
+        </div>
+
+        <button class="btn btn-sm btn-danger can-admin ms-2"
+          style="display:none"
+          onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+
+      <div class="dvw" id="${p.id}">
+        ${p.respuesta}
+      </div>
+    `;
+
+    faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
+  });
+
+  applyRole();
+}
+// ════════════════ MENSAJES A ESTUDIANTES ════════════════
+
+function abrirMensajeEstudiante(email){
+
+  document.getElementById("msg-email").value = email;
+
+  document.getElementById("msg-titulo").value = "";
+
+  document.getElementById("msg-cuerpo").value = "";
+
+  document.getElementById("msg-archivo").value = "";
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("modalMensajeEstudiante")
+  );
+
+  modal.show();
+}
+
+function confirmarEnvioMensaje(){
+
+  const modalEl = document.getElementById(
+    "modalMensajeEstudiante"
+  );
+
+  const modal = bootstrap.Modal.getInstance(modalEl);
+
+  modal.hide();
+
+  toast("Mensaje enviado correctamente ✓");
 }

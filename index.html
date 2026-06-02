@@ -182,11 +182,11 @@
         <button class="qbtn" onclick="fNov('ur',this)"><i class="bi bi-exclamation-triangle"></i>Urgente</button>
       </div>
       <div class="d-flex gap-2 flex-wrap mb-3" id="nov-cbar">
-        <span class="ctag on" onclick="fCNov('todas',this)">Todas las carreras</span>
-        <span class="ctag" onclick="fCNov('datos',this)">Cs. de Datos e IA</span>
-        <span class="ctag" onclick="fCNov('admin',this)">Administración</span>
-        <span class="ctag" onclick="fCNov('enferm',this)">Enfermería</span>
-      </div>
+  <span class="ctag on" onclick="fCNov('todas',this)">Todas las carreras</span>
+  <span class="ctag" onclick="fCNov('datos',this)">Cs. de Datos e IA</span>
+  <span class="ctag" onclick="fCNov('admin',this)">Administración</span>
+  <span class="ctag" onclick="fCNov('enferm',this)">Enfermería</span>
+</div>
       <div class="feed" id="feed-main"></div>
     </div>
 
@@ -367,67 +367,124 @@ onclick="addReglamentoItem()">Subir</button>
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Reglamento Institutos Superiores</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Reglamento.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Reglamento.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Reglamento.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Reglamento.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Centro de Estudiantes</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Centro.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Centro.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Centro.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Centro.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Régimen Académico Institucional</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Regimen.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Regimen.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Regimen.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Regimen.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Acuerdo Institucional de Convivencia</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Acuerdo.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Acuerdo.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Acuerdo.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Acuerdo.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
     <div class="cc mb-3 d-flex justify-content-between align-items-center">
       <div><div style="font-weight:600">Estructura curricular</div></div>
       <div class="d-flex gap-2">
-        <a href="Docs/Estructura.pdf" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-        <a href="Docs/Estructura.pdf" download class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-      </div>
+
+  <a href="Docs/Estructura.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+    <i class="bi bi-eye"></i>
+  </a>
+
+  <a href="Docs/Estructura.pdf" download class="btn btn-sm btn-primary">
+    <i class="bi bi-download"></i>
+  </a>
+
+  <button class="btn btn-sm btn-danger can-admin"
+    style="display:none"
+    onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
+
+    <i class="bi bi-trash"></i>
+
+  </button>
+
+</div>
     </div>
 
-    <!-- FAQ -->
-    <div class="cc">
-      <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
-        Preguntas Frecuentes
-      </div>
-
-      <div class="ditem" onclick="dview('dv-f1')">
-<div class="dic" style="background:#dbeafe;color:#2563eb">
-  <i class="bi bi-question-circle-fill"></i>
-</div>        <div class="flex-grow-1">¿Cómo me inscribo a materias?</div>
-      </div>
-      <div class="dvw" id="dv-f1">
-        Accedé a la sección Eventos y utilizá los chips de materias disponibles.
-      </div>
-
-      <div class="ditem" onclick="dview('dv-f2')">
-<div class="dic" style="background:#dbeafe;color:#2563eb">
-  <i class="bi bi-question-circle-fill"></i>
-</div>        <div class="flex-grow-1">¿Cómo contacto al Centro de Estudiantes?</div>
-      </div>
-      <div class="dvw" id="dv-f2">
-        Podés acercarte al aula de delegados o enviar un correo institucional.
-      </div>
-    </div>
+   <!-- FAQ -->
+<div class="cc" id="faq-container">
+  <div class="mb-2" style="font-weight:700;font-size:.8rem;color:var(--muted)">
+    Preguntas Frecuentes
+  </div>
+</div>
 
   </div> <!-- FIN regl-content -->
 
@@ -491,15 +548,35 @@ onclick="addReglamentoItem()">Subir</button>
       <div class="cc">
         <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
           <div style="position:relative;flex:1;max-width:260px"><i class="bi bi-search" style="position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.8rem"></i><input class="finput" style="padding-left:2.1rem" placeholder="Buscar alumno o DNI…" oninput="fStu(this.value)"/></div>
-          <select class="fselect" style="width:auto" onchange="fStuC(this.value)">
-            <option value="todas">Todas las carreras</option>
-            <option value="Ciencia de Datos e IA">Cs. de Datos e IA</option>
-            <option value="Administración">Administración</option>
-            <option value="Enfermería">Enfermería</option>
-          </select>
+          <select class="fselect" style="width:auto;max-width:360px" onchange="fStuC(this.value)">
+  <option value="todas">Todas las carreras</option>
+  <option value="Profesorado de Educación Inicial">Profesorado de Educación Inicial</option>
+  <option value="Profesorado de Ed. Secundaria en Matemática">Profesorado de Ed. Secundaria en Matemática</option>
+  <option value="Profesorado de Ed. Secundaria en Lengua y Literatura">Profesorado de Ed. Secundaria en Lengua y Literatura</option>
+  <option value="Tecnicatura en Ciencia de Datos e IA">Tecnicatura en Ciencia de Datos e IA</option>
+  <option value="Tecnicatura en Administración Financiera">Tecnicatura en Administración Financiera</option>
+  <option value="Tecnicatura en Administración con Orientación en Marketing">Tecnicatura en Administración con Orientación en Marketing</option>
+  <option value="Tecnicatura en Enfermería">Tecnicatura en Enfermería</option>
+  <option value="Especialización de Enfermería en Salud Mental">Especialización de Enfermería en Salud Mental</option>
+  <option value="Tecnicatura en Acompañamiento Terapéutico">Tecnicatura en Acompañamiento Terapéutico</option>
+  <option value="Tecnicatura en Psicopedagogía">Tecnicatura en Psicopedagogía</option>
+  <option value="Tecnicatura en Trabajo Social">Tecnicatura en Trabajo Social</option>
+  <option value="Tecnicatura en Comunicación Multimedial">Tecnicatura en Comunicación Multimedial</option>
+  <option value="Tecnicatura en Hotelería">Tecnicatura en Hotelería</option>
+  <option value="Tecnicatura en Higiene y Seguridad en el Trabajo">Tecnicatura en Higiene y Seguridad en el Trabajo</option>
+</select>
           <span id="stu-cnt" style="font-size:.82rem;color:var(--muted)"></span>
         </div>
-        <div class="stuw"><table class="stut"><thead><tr><th>Alumno</th><th>DNI</th><th>Email</th><th>Carrera</th><th>Estado</th></tr></thead><tbody id="stu-tbody"></tbody></table></div>
+        <div class="stuw"><table class="stut"><thead>
+<tr>
+<th>Alumno</th>
+<th>DNI</th>
+<th>Email</th>
+<th>Carrera</th>
+<th>Estado</th>
+<th>Enviar</th>
+</tr>
+</thead><tbody id="stu-tbody"></tbody></table></div>
       </div>
     </div>
 
@@ -562,7 +639,110 @@ onclick="addReglamentoItem()">Subir</button>
     </div>
   </div>
 </div>
+<!-- MODAL MENSAJE ESTUDIANTE -->
+<div class="modal fade" id="modalMensajeEstudiante" tabindex="-1">
 
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content border-0 shadow rounded-4">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          <i class="bi bi-envelope-fill text-primary me-2"></i>
+          Enviar mensaje
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+
+        <!-- EMAIL -->
+        <div class="mb-3">
+          <label class="flabel">Correo del estudiante</label>
+
+          <input
+            type="text"
+            class="finput"
+            id="msg-email"
+            readonly>
+        </div>
+
+        <!-- TITULO -->
+        <div class="mb-3">
+          <label class="flabel">Título</label>
+
+          <input
+            type="text"
+            class="finput"
+            id="msg-titulo"
+            placeholder="Ej: Aviso importante">
+        </div>
+
+        <!-- MENSAJE -->
+        <div class="mb-3">
+
+          <label class="flabel">Mensaje</label>
+
+          <div class="msg-box">
+
+            <textarea
+              class="finput"
+              id="msg-cuerpo"
+              rows="5"
+              placeholder="Escribí el mensaje..."
+              style="resize:none"></textarea>
+
+            <!-- CLIP -->
+            <label class="clip-btn">
+
+              <i class="bi bi-paperclip"></i>
+
+              <input
+                type="file"
+                id="msg-archivo"
+                hidden>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-secondary"
+          data-bs-dismiss="modal">
+          Cancelar
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="confirmarEnvioMensaje()">
+
+          Confirmar envío
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 <div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="app.js"></script>
