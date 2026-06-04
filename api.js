@@ -36,3 +36,18 @@ async function obtenerUsuariosAPI() {
 async function crearUsuarioAPI(nuevoUsuario) {
   return await apiRequest("/usuarios", "POST", nuevoUsuario);
 }
+async function obtenerNotificacionesAPI() {
+  return await apiRequest("/notificaciones");
+}
+
+async function crearNotificacionAPI(notificacion) {
+  return await apiRequest("/notificaciones", "POST", notificacion);
+}
+
+async function actualizarNotificacionAPI(id, datos) {
+  return await apiRequest(`/notificaciones/${id}`, "PUT", datos);
+}
+
+async function eliminarNotificacionAPI(id) {
+  return await apiRequest(`/notificaciones/${id}`, "DELETE");
+}

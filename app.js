@@ -103,7 +103,7 @@ const foundUser = usuarios.find(u =>
       iniciarSesionUI(foundUser);
       applyRole();
       cargarPreguntasFrecuentes();
-      buildNotifs();
+      await buildNotifs();
       renderCal();
       renderAlumnos();
 
@@ -253,12 +253,25 @@ document.addEventListener('click',e=>{
 });
 
 // ════════════════ NOTIFICATIONS ════════════════
-function buildNotifs(){
-  notifs=[
-    {dot:'pub',text:'Nuevo evento: <strong>Jornada de Ciencia de Datos</strong> — 25 Jun',time:'Hace 1 hora',read:false},
-    {dot:'pub',text:'Nueva novedad de Prof. García: <strong>Inscripción a Materias</strong>',time:'Hace 2 horas',read:false},
-    {dot:'priv',text:'Recordatorio: <strong>Parcial de Matemáticas</strong> en 3 días',time:'Hoy',read:false},
-  ];renderNotifs();
+async function buildNotifs() {
+  try {
+    const data = await obtenerNotificacionesAPI();
+
+    notifs = data.map(n => ({
+      id: n.id,
+      dot: n.dot || n.tipo || "pub",
+      text: n.text || n.mensaje || n.titulo || "Nueva notificación",
+      time: n.time || n.fecha || "Ahora",
+      read: n.read || n.leida || false
+    }));
+
+    renderNotifs();
+
+  } catch (error) {
+    console.error("Error al cargar notificaciones:", error);
+    notifs = [];
+    renderNotifs();
+  }
 }
 function renderNotifs(){
   const list=document.getElementById('nlist');
@@ -268,10 +281,60 @@ function renderNotifs(){
   list.innerHTML=notifs.map((n,i)=>`<div class="nitem" onclick="mread(${i})" style="${n.read?'opacity:.5':''}"><div class="ndot ${n.dot}"></div><div><div class="ntext">${n.text}</div><div class="ntime">${n.time}</div></div></div>`).join('');
 }
 function toggleNP(){document.getElementById('npanel').classList.toggle('open');}
-function mread(i){notifs[i].read=true;renderNotifs();}
-function clearN(){notifs=[];renderNotifs();}
-function pushN(dot,text){notifs.unshift({dot,text,time:'Ahora',read:false});renderNotifs();}
+async function mread(i) {
+  const n = notifs[i];
 
+  n.read = true;
+  renderNotifs();
+
+  if (n.id) {
+    try {
+      await actualizarNotificacionAPI(n.id, {
+        ...n,
+        read: true,
+        leida: true
+      });
+    } catch (error) {
+      console.error("No se pudo marcar como leída:", error);
+    }
+  }
+}
+async function clearN() {
+  const copia = [...notifs];
+
+  notifs = [];
+  renderNotifs();
+
+  try {
+    for (const n of copia) {
+      if (n.id) {
+        await eliminarNotificacionAPI(n.id);
+      }
+    }
+  } catch (error) {
+    console.error("No se pudieron eliminar las notificaciones:", error);
+  }
+}
+async function pushN(dot, text) {
+  const nueva = {
+    dot: dot,
+    text: text,
+    time: "Ahora",
+    read: false
+  };
+
+  notifs.unshift(nueva);
+  renderNotifs();
+
+  try {
+    const creada = await crearNotificacionAPI(nueva);
+
+    nueva.id = creada.id;
+
+  } catch (error) {
+    console.error("No se pudo guardar la notificación en la API:", error);
+  }
+}
 // ════════════════ LAST CAL ENTRY (home banner) ════════════════
 function updateLastCal(){
   const sec=document.getElementById('last-cal-section');
