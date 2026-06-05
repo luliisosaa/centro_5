@@ -211,7 +211,23 @@
         <div class="row g-2 mb-2">
           <div class="col-md-6"><label class="flabel">Título</label><input class="finput" id="np-tit" placeholder="Ej: Cambio de aula Inglés"/></div>
           <div class="col-md-3"><label class="flabel">Categoría</label><select class="fselect" id="np-cat"><option value="ac">Académico</option><option value="so">Social</option><option value="in">Institucional</option><option value="ur">Urgente</option></select></div>
-          <div class="col-md-3"><label class="flabel">Carrera</label><select class="fselect" id="np-car"><option value="todas">Todas</option><option value="datos">Cs. de Datos e IA</option><option value="admin">Administración</option><option value="enferm">Enfermería</option></select></div>
+          <div class="col-md-3"><label class="flabel">Carrera</label><select class="fselect" id="np-car">
+  <option value="todas">Todas</option>
+  <option value="inicial">Profesorado de Educación Inicial</option>
+  <option value="matematica">Profesorado de Ed. Secundaria en Matemática</option>
+  <option value="lengua">Profesorado de Ed. Secundaria en Lengua y Literatura</option>
+  <option value="datos">Tecnicatura en Ciencia de Datos e IA</option>
+  <option value="admin_financiera">Tecnicatura en Administración Financiera</option>
+  <option value="marketing">Tecnicatura en Administración con Orientación en Marketing</option>
+  <option value="enferm">Tecnicatura en Enfermería</option>
+  <option value="salud_mental">Especialización de Enfermería en Salud Mental</option>
+  <option value="acompanamiento">Tecnicatura en Acompañamiento Terapéutico</option>
+  <option value="psicopedagogia">Tecnicatura en Psicopedagogía</option>
+  <option value="trabajo_social">Tecnicatura en Trabajo Social</option>
+  <option value="multimedial">Tecnicatura en Comunicación Multimedial</option>
+  <option value="hoteleria">Tecnicatura en Hotelería</option>
+  <option value="higiene">Tecnicatura en Higiene y Seguridad en el Trabajo</option>
+</select></div>
         </div>
         <div class="mb-2"><label class="flabel">Contenido</label><textarea class="finput" id="np-body" rows="3" style="resize:vertical" placeholder="Escribí el aviso…"></textarea></div>
         <div class="row g-2 mb-2">
@@ -228,15 +244,28 @@
         <button class="qbtn" onclick="fNov('ur',this)"><i class="bi bi-exclamation-triangle"></i>Urgente</button>
       </div>
       <div class="d-flex gap-2 flex-wrap mb-3" id="nov-cbar">
-        <span class="ctag on" onclick="fCNov('todas',this)">Todas las carreras</span>
-        <span class="ctag" onclick="fCNov('datos',this)">Cs. de Datos e IA</span>
-        <span class="ctag" onclick="fCNov('admin',this)">Administración</span>
-        <span class="ctag" onclick="fCNov('enferm',this)">Enfermería</span>
-      </div>
-      <div class="feed" id="feed-main"></div>
-    </div>
+  <span class="ctag on" onclick="fCNov('todas',this)">Todas las carreras</span>
+  <span class="ctag" onclick="fCNov('inicial',this)">Profesorado de Educación Inicial</span>
+  <span class="ctag" onclick="fCNov('matematica',this)">Prof. Secundaria en Matemática</span>
+  <span class="ctag" onclick="fCNov('lengua',this)">Prof. Lengua y Literatura</span>
+  <span class="ctag" onclick="fCNov('datos',this)">Tec. Ciencia de Datos e IA</span>
+  <span class="ctag" onclick="fCNov('admin_financiera',this)">Administración Financiera</span>
+  <span class="ctag" onclick="fCNov('marketing',this)">Adm. con Marketing</span>
+  <span class="ctag" onclick="fCNov('enferm',this)">Enfermería</span>
+  <span class="ctag" onclick="fCNov('salud_mental',this)">Salud Mental</span>
+  <span class="ctag" onclick="fCNov('acompanamiento',this)">Acompañamiento Terapéutico</span>
+  <span class="ctag" onclick="fCNov('psicopedagogia',this)">Psicopedagogía</span>
+  <span class="ctag" onclick="fCNov('trabajo_social',this)">Trabajo Social</span>
+  <span class="ctag" onclick="fCNov('multimedial',this)">Comunicación Multimedial</span>
+  <span class="ctag" onclick="fCNov('hoteleria',this)">Hotelería</span>
+  <span class="ctag" onclick="fCNov('higiene',this)">Higiene y Seguridad</span>
+</div>
 
-    <!-- EVENTOS test calendario -->
+<div class="feed" id="feed-main"></div>
+
+</div>
+
+<!-- EVENTOS test calendario -->
     <div class="page" id="page-eventos">
       <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
         <div><h2>Eventos</h2><p>Actividades y fechas importantes</p></div>
