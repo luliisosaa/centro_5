@@ -1,0 +1,35 @@
+const API_URL =
+  "https://centro-de-estudiantes-api.vercel.app";
+
+const AUTH =
+  "Basic " + btoa("grupo5:PassGrupo5");
+
+async function apiRequest(endpoint, method = "GET", data = null) {
+
+  const options = {
+    method,
+    headers: {
+      "accept": "application/json",
+      "Authorization": AUTH
+    }
+  };
+
+  if (data) {
+    options.headers["Content-Type"] =
+      "application/json";
+
+    options.body =
+      JSON.stringify(data);
+  }
+
+  const response = await fetch(
+    `${API_URL}${endpoint}`,
+    options
+  );
+
+  if (!response.ok) {
+    throw new Error("Error API");
+  }
+
+  return await response.json();
+}

@@ -771,6 +771,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 
 <div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
 // ════════════════ DATA ════════════════
 const ROLES={
@@ -828,6 +829,8 @@ let EVENTS=[
 const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8','#7c3aed'];
 let role='alumno',user={...ROLES.alumno},avUrl=null;
 let calDate=new Date();
+const API_URL = "https://centro-de-estudiantes-api.vercel.app/api";
+const AUTH = "Basic Z3J1cG81OlBhc3NfZ3J1cG81";
 const savedFeriados=localStorage.getItem('feriadoDates');
 if(savedFeriados)feriadoDates=Object.assign({},FERIADOS_2026,JSON.parse(savedFeriados));
 let pubDates={'2025-3-18':'Parcial de Matemáticas','2025-3-25':'Jornada Ciencia de Datos','2025-4-10':'Asamblea General','2025-6-20':'Inscripción Materias'};
@@ -1247,10 +1250,47 @@ function renderCalList(y,m){
 </div>`).join('');
 }
 function calNav(dir){calDate.setMonth(calDate.getMonth()+dir);renderCal();}
+async function cargarCalendarioAPI() {
+
+  try {
+
+    const res = await fetch(`${API_URL}/calendario`, {
+      headers: {
+        accept: "application/json",
+        Authorization: AUTH
+      }
+    });
+
+    const eventos = await res.json();
+
+    pubDates = {};
+    feriadoDates = {};
+
+    eventos.forEach(ev => {
+
+      const fecha = new Date(ev.fecha);
+
+      const key =
+        `${fecha.getFullYear()}-${fecha.getMonth()}-${fecha.getDate()}`;
+
+      if (ev.tipo === "feriado") {
+        feriadoDates[key] = ev.titulo;
+      } else {
+        pubDates[key] = ev.titulo;
+      }
+
+    });
+
+    renderCal();
+
+  } catch (err) {
+    console.error(err);
+  }
+}
 function calTipoChange(){}
 function cnAll(cb){['cn15','cn7','cn3','cn0'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=cb.checked;});}
 
-function addCalFecha(){
+async function addCalFecha(){
   const tit=document.getElementById('cal-tit').value.trim();
   const fec=document.getElementById('cal-fec').value;
   const tipo=document.getElementById('cal-tipo').value;
@@ -1261,6 +1301,27 @@ const carreraVal=carSel.value;
   const parts=fec.split('-');const k=`${parts[0]}-${parseInt(parts[1])-1}-${parseInt(parts[2])}`;
 
  if(tipo==='publica'){
+  try {
+
+  await fetch(`${API_URL}/calendario`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": AUTH
+    },
+    body: JSON.stringify({
+      fecha: fec,
+      titulo: tit,
+      tipo: tipo === "publica" ? "publica" : "feriado",
+      color: tipo === "publica"
+        ? "#16A34A"
+        : "#DC2626"
+    })
+  });
+
+} catch(err) {
+  console.error(err);
+}
     pubDates[k]=tit;
     lastCalEntry={title:tit,fecha:fec,author:user.nombre};
     updateLastCal();
