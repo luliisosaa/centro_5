@@ -51,3 +51,10 @@ async function actualizarNotificacionAPI(id, datos) {
 async function eliminarNotificacionAPI(id) {
   return await apiRequest(`/notificaciones/${id}`, "DELETE");
 }
+async function obtenerNovedadesAPI() {
+  return await apiRequest("/novedades");
+}
+
+async function crearNovedadAPI(novedad) {
+  return await apiRequest("/novedades", "POST", novedad);
+}

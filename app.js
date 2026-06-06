@@ -59,6 +59,7 @@ let privDates={};
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
+let novedadesAPI = [];
 let pendingImgUrls=[],pendingDocs=[];
 let lastCalEntry=null;
 
@@ -143,7 +144,7 @@ const isDoc=['docente','delegado','directivo'].includes(r);
   document.querySelectorAll('.can-admin').forEach(e=>e.style.display=isAdm?'':'none');
   document.querySelectorAll('.can-docente').forEach(e=>e.style.display=isDoc?'':'none');
   document.querySelectorAll('.admin-only').forEach(e=>e.style.display=isAdm?'':'none');
-  renderFeed();renderEvents();renderHomeFeed();renderHomeEvents();renderGallery();
+  renderFeed();renderEvents();renderHomeFeed();renderHomeEvents();renderGallery();cargarNovedadesAPI();
 }
 function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
 function setAv(id,ini,url,block){
@@ -375,18 +376,100 @@ function postHTML(p){
   </div>
 </div>`;
 }
+async function cargarNovedadesAPI() {
+  try {
+    const data = await obtenerNovedadesAPI();
+
+    novedadesAPI = data.map(n => ({
+      id: n.id,
+      author: n.autor || n.owner || "Centro de Estudiantes",
+      role: "Delegado",
+      cat: convertirCategoriaAPI(n),
+      car: convertirCarreraAPI(n),
+      title: n.titulo || "Sin título",
+      body: n.contenido || n.mensaje || "",
+      time: n.fecha || "Ahora",
+      likes: 0,
+      liked: false,
+      comments: 0,
+      emoji: n.icono || "📢",
+      bg: "linear-gradient(135deg,#dce8ff,#93c5fd)",
+      imgUrls: [],
+      docs: n.adjunto ? [n.adjunto] : [],
+      isNew: false
+    }));
+
+    console.log("Novedades recibidas desde API:");
+    console.table(novedadesAPI);
+
+    renderFeed();
+    renderHomeFeed();
+
+  } catch (error) {
+    console.error("Error cargando novedades:", error);
+  }
+}
+function convertirCategoriaAPI(n) {
+  if (n.categoria_id === 1 || n.categoria === "Académico") return "ac";
+  if (n.categoria_id === 2 || n.categoria === "Social") return "so";
+  if (n.categoria_id === 3 || n.categoria === "Institucional") return "in";
+  if (n.categoria_id === 4 || n.categoria === "Urgente") return "ur";
+
+  return "ac";
+}
+
+function convertirCarreraAPI(n) {
+  if (!n.carrera_id || n.carrera_id === null) return "todas";
+
+  const carreras = {
+    1: "datos",
+    2: "admin_financiera",
+    3: "enferm"
+  };
+
+  return carreras[n.carrera_id] || "todas";
+}
 function renderFeed(){
-  const el=document.getElementById('feed-main');if(!el)return;
-  const vis=POSTS.filter(p=>(novCat==='todas'||p.cat===novCat)&&(novCar==='todas'||p.car===novCar||p.car==='todas'));
-  el.innerHTML=vis.length?vis.map(postHTML).join(''):`<p style="color:var(--muted);text-align:center;padding:2rem">Sin publicaciones.</p>`;
+  const el = document.getElementById('feed-main');
+  if (!el) return;
+
+  const fuente = novedadesAPI.length ? novedadesAPI : POSTS;
+
+  const vis = fuente.filter(p =>
+    (novCat === 'todas' || p.cat === novCat) &&
+    (novCar === 'todas' || p.car === novCar || p.car === 'todas')
+  );
+
+  el.innerHTML = vis.length
+    ? vis.map(postHTML).join('')
+    : `<p style="color:var(--muted);text-align:center;padding:2rem">Sin publicaciones.</p>`;
 }
 function renderHomeFeed(){
-  const el=document.getElementById('home-feed');if(!el)return;
-  el.innerHTML=POSTS.slice(0,2).map(p=>{
-    const ini=initials(p.author);const rc=roleColor(p.role);
-    return `<div class="post-card mb-2"><div class="post-head"><div class="post-av" style="background:${rc};width:32px;height:32px;font-size:.72rem">${ini}</div><div><div class="post-author" style="font-size:.85rem">${p.author}${p.isNew?'<span class="new-post-badge ms-1">NUEVO</span>':''}</div><div class="post-role">${p.time}</div></div></div><div class="post-body" style="padding:.6rem 1rem .8rem"><div class="post-title" style="font-size:.88rem">${p.title}</div><div class="post-text" style="font-size:.82rem;margin-top:.2rem">${p.body.substring(0,90)}…</div></div></div>`;
+  const el = document.getElementById('home-feed');
+  if (!el) return;
+
+  const fuente = novedadesAPI.length ? novedadesAPI : POSTS;
+
+  el.innerHTML = fuente.slice(0,2).map(p => {
+    const ini = initials(p.author);
+    const rc = roleColor(p.role);
+
+    return `<div class="post-card mb-2">
+      <div class="post-head">
+        <div class="post-av" style="background:${rc};width:32px;height:32px;font-size:.72rem">${ini}</div>
+        <div>
+          <div class="post-author" style="font-size:.85rem">${p.author}${p.isNew ? '<span class="new-post-badge ms-1">NUEVO</span>' : ''}</div>
+          <div class="post-role">${p.time}</div>
+        </div>
+      </div>
+      <div class="post-body" style="padding:.6rem 1rem .8rem">
+        <div class="post-title" style="font-size:.88rem">${p.title}</div>
+        <div class="post-text" style="font-size:.82rem;margin-top:.2rem">${p.body.substring(0,90)}…</div>
+      </div>
+    </div>`;
   }).join('');
-  document.getElementById('home-nov-count').textContent=POSTS.length;
+
+  document.getElementById('home-nov-count').textContent = fuente.length;
 }
 function likePost(id,btn){
   const p=POSTS.find(x=>x.id===id);if(!p)return;
@@ -406,24 +489,75 @@ function previewDocs(inp){
   pendingDocs=[];const prev=document.getElementById('np-docprev');prev.innerHTML='';
   Array.from(inp.files).forEach(f=>{pendingDocs.push(f.name);prev.innerHTML+=`<div class="post-doc-link" style="margin-bottom:.3rem"><i class="bi bi-file-earmark-pdf-fill text-danger"></i>${f.name}</div>`;});
 }
-function publishPost(){
-  const tit=document.getElementById('np-tit').value.trim();
-  const body=document.getElementById('np-body').value.trim();
-  if(!tit||!body){toast('Completá el título y el contenido');return;}
-  const catV=document.getElementById('np-cat').value;
-  const carV=document.getElementById('np-car').value;
-  const roleLabel={alumno:'Alumno',docente:'Docente',delegado:'Delegado',admin:'Admin'}[role];
-  const newPost={id:Date.now(),author:user.nombre,role:roleLabel,cat:catV,car:carV,title:tit,body:body,time:'Ahora mismo',likes:0,liked:false,comments:0,emoji:'📢',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',imgUrls:[...pendingImgUrls],docs:[...pendingDocs],isNew:true};
-  POSTS.unshift(newPost);
-  if(pendingImgUrls.length>0){pendingImgUrls.forEach((url,i)=>{IG_ITEMS.unshift({id:Date.now()+i,type:'img',album:'general',desc:`${tit} — img ${i+1}`,realUrl:url,likes:0,time:'Ahora mismo'});});}
-  if(pendingDocs.length>0){pendingDocs.forEach((d,i)=>{IG_ITEMS.unshift({id:Date.now()+100+i,type:'doc',album:'docs',desc:d,ext:d.split('.').pop().toUpperCase(),likes:0,time:'Ahora mismo'});});}
-  renderFeed();renderHomeFeed();renderGallery();
-  tp('pnl-nov');
-  document.getElementById('np-tit').value='';document.getElementById('np-body').value='';
-  document.getElementById('np-imgprev').innerHTML='';document.getElementById('np-docprev').innerHTML='';
-  pendingImgUrls=[];pendingDocs=[];
-  pushN('pub',`Nueva publicación de <strong>${user.nombre}</strong>: "${tit}"`);
-  toast('✓ Publicado en el feed y en Galería');
+async function publishPost(){
+  const tit = document.getElementById('np-tit').value.trim();
+  const body = document.getElementById('np-body').value.trim();
+
+  if (!tit || !body) {
+    toast('Completá el título y el contenido');
+    return;
+  }
+
+  const catV = document.getElementById('np-cat').value;
+  const carV = document.getElementById('np-car').value;
+
+  const categoriaID = {
+    ac: 1,
+    so: 2,
+    in: 3,
+    ur: 4
+  }[catV] || 1;
+
+  const carreraID = {
+    todas: null,
+    datos: 1,
+    admin_financiera: 2,
+    enferm: 3
+  }[carV] || null;
+
+  const nuevaNovedad = {
+    titulo: tit,
+    contenido: body,
+    categoria_id: categoriaID,
+    autor: user.nombre || "Centro de Estudiantes",
+    carrera_id: carreraID,
+    destacado: false,
+    fecha: new Date().toISOString(),
+    adjunto: "",
+    icono: "📢",
+    owner: "grupo5"
+  };
+
+  try {
+    await crearNovedadAPI(nuevaNovedad);
+
+    await crearNotificacionAPI({
+      titulo: "Nueva novedad",
+      mensaje: tit,
+      usuario_id: user.id || 1,
+      leida: false,
+      fecha: new Date().toISOString()
+    });
+
+    await cargarNovedadesAPI();
+    await buildNotifs();
+
+    tp('pnl-nov');
+
+    document.getElementById('np-tit').value = '';
+    document.getElementById('np-body').value = '';
+    document.getElementById('np-imgprev').innerHTML = '';
+    document.getElementById('np-docprev').innerHTML = '';
+
+    pendingImgUrls = [];
+    pendingDocs = [];
+
+    toast('Novedad publicada en la API ✓');
+
+  } catch (error) {
+    console.error("Error al publicar novedad:", error);
+    toast('No se pudo publicar la novedad');
+  }
 }
 
 // ════════════════ EVENTS ════════════════
