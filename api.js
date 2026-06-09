@@ -58,3 +58,10 @@ async function obtenerNovedadesAPI() {
 async function crearNovedadAPI(novedad) {
   return await apiRequest("/novedades", "POST", novedad);
 }
+async function obtenerReglamentacionAPI() {
+  return await apiRequest("/reglamentacion");
+}
+
+async function crearReglamentacionAPI(documento) {
+  return await apiRequest("/reglamentacion", "POST", documento);
+}

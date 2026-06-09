@@ -60,6 +60,7 @@ let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
 let novedadesAPI = [];
+let reglamentacionAPI = [];
 let pendingImgUrls=[],pendingDocs=[];
 let lastCalEntry=null;
 
@@ -105,6 +106,7 @@ const foundUser = usuarios.find(u =>
       applyRole();
       cargarPreguntasFrecuentes();
       await buildNotifs();
+      await cargarReglamentacionAPI();
       renderCal();
       renderAlumnos();
 
@@ -179,6 +181,9 @@ function nav(name){
   }
   document.getElementById('npanel').classList.remove('open');
   updateLastCal();
+  if (name === 'reglamento') {
+  cargarReglamentacionAPI();
+}
 }
 
 function tp(id){const el=document.getElementById(id);el.classList.toggle('open');if(el.classList.contains('open'))el.scrollIntoView({behavior:'smooth',block:'nearest'});}
@@ -876,140 +881,99 @@ function toggleReglamentoFields() {
   }
 
 }
-function addReglamentoItem() {
+async function cargarReglamentacionAPI() {
+  try {
+    const data = await obtenerReglamentacionAPI();
 
-  const categoria = document.getElementById("doc-categoria").value;
-  const nombre = document.getElementById("doc-nombre").value;
+    reglamentacionAPI = data;
 
-  if(!nombre.trim()) {
+    console.log("Reglamentación recibida desde API:");
+    console.table(reglamentacionAPI);
+
+    renderReglamentacionAPI();
+
+  } catch (error) {
+    console.error("Error cargando reglamentación:", error);
+  }
+}
+
+function renderReglamentacionAPI() {
+  const cont = document.getElementById("regl-content");
+  if (!cont) return;
+
+  cont.innerHTML = "";
+
+  reglamentacionAPI.forEach(doc => {
+      const tieneLink = doc.link && doc.link.trim() !== "";
+    cont.insertAdjacentHTML("beforeend", `
+      <div class="cc mb-3 d-flex justify-content-between align-items-center">
+        <div>
+          <div style="font-weight:600">${doc.titulo}</div>
+          <div style="font-size:.8rem;color:var(--muted)">
+            ${doc.descripcion || ""}
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+  ${tieneLink ? `
+    <a href="${doc.link}" target="_blank" class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-eye"></i>
+    </a>
+
+    <a href="${doc.link}" download class="btn btn-sm btn-primary">
+      <i class="bi bi-download"></i>
+    </a>
+  ` : `
+    <button class="btn btn-sm btn-outline-secondary" disabled title="Archivo no disponible">
+      <i class="bi bi-eye"></i>
+    </button>
+
+    <button class="btn btn-sm btn-secondary" disabled title="Archivo no disponible">
+      <i class="bi bi-download"></i>
+    </button>
+  `}
+</div>
+      </div>
+    `);
+  });
+
+  applyRole();
+}
+async function addReglamentoItem() {
+  const nombre = document.getElementById("doc-nombre").value.trim();
+
+  if (!nombre) {
     toast("Escriba un título");
     return;
   }
 
-  // =========================
-  // PREGUNTAS FRECUENTES
-  // =========================
-  if(categoria === "faq") {
+  const nuevoDocumento = {
+    tipo: "documento",
+    titulo: nombre,
+    descripcion: "Documento de reglamentación",
+    archivo: nombre + ".pdf",
+    link: "",
+    categoria: "academica",
+    palabras_clave: ["reglamento", "documento"],
+    fecha_publicacion: new Date().toISOString().split("T")[0],
+    version: "1.0"
+  };
 
-    const respuesta = document.getElementById("faq-respuesta").value;
+  try {
+    await crearReglamentacionAPI(nuevoDocumento);
 
-    if(!respuesta.trim()) {
-      toast("Escriba una respuesta");
-      return;
-    }
+    await cargarReglamentacionAPI();
 
-    const faqContainer = document.querySelector("#regl-content .cc:last-child");
+    tp("pnl-doc");
 
-    const preguntaHTML = `
+    document.getElementById("doc-nombre").value = "";
 
-<div class="ditem d-flex align-items-center justify-content-between">
+    toast("Reglamentación guardada en la API ✓");
 
-  <div class="d-flex align-items-center flex-grow-1"
-       onclick="dview('faq-${Date.now()}')"
-       style="cursor:pointer">
-
-    <div class="dic" style="background:#dbeafe;color:#2563eb">
-      <i class="bi bi-question-circle-fill"></i>
-    </div>
-
-    <div class="flex-grow-1">
-      <div style="font-weight:600;font-size:.9rem">
-        ${nombre}
-      </div>
-    </div>
-
-  </div>
-
-  <button class="btn btn-sm btn-danger can-admin ms-2"
-    style="display:none"
-    onclick="this.parentElement.nextElementSibling.remove();this.parentElement.remove();toast('Pregunta eliminada ✓')">
-
-    <i class="bi bi-trash"></i>
-
-  </button>
-
-</div>
-
-<div class="dvw" id="faq-${Date.now()}">
-  ${respuesta}
-</div>
-`;
-
-    faqContainer.insertAdjacentHTML("beforeend", preguntaHTML);
-
-toast("Pregunta agregada ✓");
-
-applyRole();
+  } catch (error) {
+    console.error("Error al guardar reglamentación:", error);
+    toast("No se pudo guardar en la API");
   }
-
-  // =========================
-  // DOCUMENTOS
-  // =========================
-  else {
-
-    const pdfInput = document.querySelector("#pdf-box input[type='file']");
-
-    if(!pdfInput.files.length) {
-      toast("Seleccione un PDF");
-      return;
-    }
-
-    const archivo = pdfInput.files[0];
-
-    const reglContent = document.getElementById("regl-content");
-
-    const documentoHTML = `
-
-<div class="cc mb-3 d-flex justify-content-between align-items-center">
-
-  <div>
-    <div style="font-weight:600;font-size:.95rem">
-      ${nombre}
-    </div>
-  </div>
-
-  <div class="d-flex gap-2">
-
-    <a href="#" class="btn btn-sm btn-outline-primary">
-      <i class="bi bi-eye"></i>
-    </a>
-
-    <a href="#" class="btn btn-sm btn-primary">
-      <i class="bi bi-download"></i>
-    </a>
-
-    <button class="btn btn-sm btn-danger can-admin"
-      style="display:none"
-      onclick="this.closest('.cc').remove();toast('Documento eliminado ✓')">
-
-      <i class="bi bi-trash"></i>
-
-    </button>
-
-  </div>
-
-</div>
-`;
-
-    reglContent.insertAdjacentHTML("afterbegin", documentoHTML);
-
-toast("Documento agregado ✓");
-
-applyRole();
-  }
-
-  // cerrar panel
-  tp("pnl-doc");
-
-  // limpiar campos
-  document.getElementById("doc-nombre").value = "";
-
-  const faqRespuesta = document.getElementById("faq-respuesta");
-
-  if(faqRespuesta) {
-    faqRespuesta.value = "";
-  }
-
 }
 async function cargarPreguntasFrecuentes() {
   const res = await fetch("preguntas.json");
