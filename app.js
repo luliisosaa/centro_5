@@ -932,12 +932,12 @@ function renderReglamentacionAPI() {
       <i class="bi bi-download"></i>
     </button>
     
-    <button
+  `}
+  <button
   class="btn btn-sm btn-danger can-admin"
   onclick="eliminarDocumentoAPI('${doc.id}')">
   <i class="bi bi-trash"></i>
 </button>
-  `}
 </div>
       </div>
     `);
@@ -967,6 +967,7 @@ async function eliminarDocumentoAPI(id) {
 }
 async function addReglamentoItem() {
   const nombre = document.getElementById("doc-nombre").value.trim();
+  const link = document.getElementById("doc-link").value.trim();
 
   if (!nombre) {
     toast("Escriba un título");
@@ -978,7 +979,7 @@ async function addReglamentoItem() {
     titulo: nombre,
     descripcion: "Documento de reglamentación",
     archivo: nombre + ".pdf",
-    link: "",
+    link: link,
     categoria: "academica",
     palabras_clave: ["reglamento", "documento"],
     fecha_publicacion: new Date().toISOString().split("T")[0],
@@ -993,6 +994,7 @@ async function addReglamentoItem() {
     tp("pnl-doc");
 
     document.getElementById("doc-nombre").value = "";
+    document.getElementById("doc-link").value = "";
 
     toast("Reglamentación guardada en la API ✓");
 
