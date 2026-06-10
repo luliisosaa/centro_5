@@ -65,3 +65,6 @@ async function obtenerReglamentacionAPI() {
 async function crearReglamentacionAPI(documento) {
   return await apiRequest("/reglamentacion", "POST", documento);
 }
+async function eliminarReglamentacionAPI(id) {
+  return await apiRequest(`/reglamentacion/${id}`, "DELETE");
+}

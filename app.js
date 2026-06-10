@@ -931,6 +931,12 @@ function renderReglamentacionAPI() {
     <button class="btn btn-sm btn-secondary" disabled title="Archivo no disponible">
       <i class="bi bi-download"></i>
     </button>
+    
+    <button
+  class="btn btn-sm btn-danger can-admin"
+  onclick="eliminarDocumentoAPI('${doc.id}')">
+  <i class="bi bi-trash"></i>
+</button>
   `}
 </div>
       </div>
@@ -938,6 +944,26 @@ function renderReglamentacionAPI() {
   });
 
   applyRole();
+}
+async function eliminarDocumentoAPI(id) {
+
+  if (!confirm("¿Eliminar este documento?")) return;
+
+  try {
+
+    await eliminarReglamentacionAPI(id);
+
+    await cargarReglamentacionAPI();
+
+    toast("Documento eliminado ✓");
+
+  } catch (error) {
+
+    console.error(error);
+
+    toast("Error al eliminar");
+
+  }
 }
 async function addReglamentoItem() {
   const nombre = document.getElementById("doc-nombre").value.trim();
