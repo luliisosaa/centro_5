@@ -6,18 +6,18 @@ const ROLES={
   directivo:   {nombre:'Admin Instituto',email:'admin@instituto.edu',   dni:'99887766',usr:'@admin57', carrera:''},
 };
 const ALUMNOS=[
-  {n:'Ana Martínez',    d:'30111222',e:'ana@instituto.edu',    c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Lucas Rodríguez', d:'32333444',e:'lucas@instituto.edu',  c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Sofía López',     d:'34555666',e:'sofia@instituto.edu',  c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Facundo Peralta', d:'27334455',e:'facu@instituto.edu',   c:'Ciencia de Datos e IA',est:'Regular'},
-  {n:'Nicolás Vega',    d:'31990011',e:'nico@instituto.edu',   c:'Ciencia de Datos e IA',est:'Libre'},
-  {n:'Mateo Díaz',      d:'29777888',e:'mateo@instituto.edu',  c:'Administración',        est:'Regular'},
-  {n:'Valentina Torres',d:'33999000',e:'valen@instituto.edu',  c:'Administración',        est:'Libre'},
-  {n:'Tomás Fernández', d:'31112233',e:'tomas@instituto.edu',  c:'Administración',        est:'Regular'},
-  {n:'Luciana Castro',  d:'38667788',e:'luci@instituto.edu',   c:'Administración',        est:'Regular'},
-  {n:'Camila Suárez',   d:'35445566',e:'camila@instituto.edu', c:'Enfermería',            est:'Regular'},
-  {n:'Agustín Romero',  d:'28778899',e:'agustin@instituto.edu',c:'Enfermería',            est:'Recursante'},
-  {n:'Julieta Morales', d:'36001122',e:'julieta@instituto.edu',c:'Enfermería',            est:'Regular'},
+  {n:'Ana Martínez',    d:'30111222',e:'ana@instituto.edu',    c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Lucas Rodríguez', d:'32333444',e:'lucas@instituto.edu',  c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Sofía López',     d:'34555666',e:'sofia@instituto.edu',  c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Facundo Peralta', d:'27334455',e:'facu@instituto.edu',   c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
+  {n:'Nicolás Vega',    d:'31990011',e:'nico@instituto.edu',   c:'Tecnicatura en Ciencia de Datos e IA',est:'Libre'},
+  {n:'Mateo Díaz',      d:'29777888',e:'mateo@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Regular'},
+  {n:'Valentina Torres',d:'33999000',e:'valen@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Libre'},
+  {n:'Tomás Fernández', d:'31112233',e:'tomas@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Regular'},
+  {n:'Luciana Castro',  d:'38667788',e:'luci@instituto.edu',   c:'Tecnicatura en Enfermería',            est:'Regular'},
+  {n:'Camila Suárez',   d:'35445566',e:'camila@instituto.edu', c:'Tecnicatura en Enfermería',            est:'Regular'},
+  {n:'Agustín Romero',  d:'28778899',e:'agustin@instituto.edu',c:'Tecnicatura en Enfermería',            est:'Recursante'},
+  {n:'Julieta Morales', d:'36001122',e:'julieta@instituto.edu',c:'Tecnicatura en Enfermería',            est:'Regular'},
 ];
 
 // Gallery items
@@ -53,9 +53,8 @@ let EVENTS=[
 
 const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8','#7c3aed'];
 let role='estudiante',user={...ROLES.estudiante},avUrl=null;
-let calDate=new Date(2025,3,1);
-let pubDates={'2025-3-18':'Parcial de Matemáticas','2025-3-25':'Jornada Ciencia de Datos','2025-4-10':'Asamblea General','2025-6-20':'Inscripción Materias'};
-let privDates={};
+let calDate = new Date(2026, 0, 1);
+let calDates = {};
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
@@ -623,74 +622,166 @@ function toggleMat(el,name,calKey){
 // ════════════════ CALENDAR ════════════════
 const MNS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 function renderCal(){
-  const grid=document.getElementById('cal-grid');
-  const y=calDate.getFullYear(),m=calDate.getMonth();
-  document.getElementById('cal-title').textContent=`${MNS[m]} ${y}`;
-  const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),td=new Date();
-  grid.innerHTML='';
-  for(let i=0;i<first;i++){const d=document.createElement('div');d.className='cd om';d.textContent=new Date(y,m,-(first-1-i)).getDate();grid.appendChild(d);}
-  for(let d=1;d<=days;d++){
-    const el=document.createElement('div');el.className='cd';
-    const num=document.createElement('span');num.textContent=d;el.appendChild(num);
-    const k=`${y}-${m}-${d}`;
-    const hP=!!pubDates[k],hV=!!privDates[k];
-    const dw=document.createElement('div');dw.className='cdots';
-    if(hP){el.classList.add('hp');const dt=document.createElement('div');dt.className='cdt p';dw.appendChild(dt);}
-    if(hV){el.classList.add('hv');const dt=document.createElement('div');dt.className='cdt v';dw.appendChild(dt);}
-    if(hP&&hV)el.classList.add('hb');
-    if(dw.children.length)el.appendChild(dw);
-    if(d===td.getDate()&&m===td.getMonth()&&y===td.getFullYear())el.classList.add('td');
-    const tip=document.createElement('div');tip.className='cttip';
-    const tt=[pubDates[k]&&`📅 ${pubDates[k]}`,privDates[k]&&`🔵 ${privDates[k]}`].filter(Boolean).join(' · ');
-    if(tt){tip.textContent=tt;el.appendChild(tip);}
+  const grid = document.getElementById('cal-grid');
+  const y = calDate.getFullYear();
+  const m = calDate.getMonth();
+
+  document.getElementById('cal-title').textContent = `${MNS[m]} ${y}`;
+
+  const first = new Date(y, m, 1).getDay();
+  const days = new Date(y, m + 1, 0).getDate();
+  const td = new Date();
+
+  grid.innerHTML = '';
+
+  for(let i = 0; i < first; i++){
+    const d = document.createElement('div');
+    d.className = 'cd om';
+    d.textContent = new Date(y, m, -(first - 1 - i)).getDate();
+    grid.appendChild(d);
+  }
+
+  for(let d = 1; d <= days; d++){
+    const el = document.createElement('div');
+    el.className = 'cd';
+
+    const num = document.createElement('span');
+    num.textContent = d;
+    el.appendChild(num);
+
+    const k = `${y}-${m + 1}-${d}`;
+    const item = calDates[k];
+
+    if(item){
+      if(item.tipo === 'docente') el.classList.add('cal-docente');
+      if(item.tipo === 'directivo') el.classList.add('cal-directivo');
+
+      const dot = document.createElement('div');
+      dot.className = 'cdots';
+
+      const dt = document.createElement('div');
+      dt.className = item.tipo === 'docente' ? 'cdt docente' : 'cdt directivo';
+
+      dot.appendChild(dt);
+      el.appendChild(dot);
+
+      const tip = document.createElement('div');
+      tip.className = 'cttip';
+      tip.textContent = `${item.tipo === 'docente' ? '🟠' : '🌸'} ${item.titulo} · ${item.carrera}`;
+      el.appendChild(tip);
+    }
+
+    if(d === td.getDate() && m === td.getMonth() && y === td.getFullYear()){
+      el.classList.add('td');
+    }
+
     grid.appendChild(el);
   }
-  renderCalList(y,m);
+
+  renderCalList(y, m);
 }
-function renderCalList(y,m){
-  const el=document.getElementById('cal-list');
-  const items=[];
-  for(let d=1;d<=new Date(y,m+1,0).getDate();d++){
-    const k=`${y}-${m}-${d}`;
-    if(pubDates[k])items.push({d,label:pubDates[k],type:'pub'});
-    if(privDates[k])items.push({d,label:privDates[k],type:'priv'});
+
+function renderCalList(y, m){
+  const el = document.getElementById('cal-list');
+  const items = [];
+
+  for(let d = 1; d <= new Date(y, m + 1, 0).getDate(); d++){
+    const k = `${y}-${m + 1}-${d}`;
+    if(calDates[k]){
+      items.push({
+        d,
+        ...calDates[k]
+      });
+    }
   }
-  if(!items.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem">Sin eventos este mes.</p>';return;}
-  el.innerHTML=items.map(i=>`
-<div style="display:flex;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--border)">
-  <div style="width:34px;height:34px;border-radius:9px;background:${i.type==='pub'?'#e8fdf0':'#e8f0fd'};color:${i.type==='pub'?'var(--success)':'var(--primary)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">${i.d}</div>
-  <div style="font-size:.87rem;font-weight:500;flex:1">${i.label}</div>
-  <span style="font-size:.72rem;padding:.18rem .55rem;border-radius:20px;font-weight:600;background:${i.type==='pub'?'#e8fdf0':'#e8f0fd'};color:${i.type==='pub'?'var(--success)':'var(--primary)'}">
-    ${i.type==='pub'?'📅 Público':'🔵 Privado'}
-  </span>
-</div>`).join('');
+
+  if(!items.length){
+    el.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Sin eventos este mes.</p>';
+    return;
+  }
+
+  el.innerHTML = items.map(i => `
+    <div style="display:flex;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--border)">
+      <div style="
+        width:34px;
+        height:34px;
+        border-radius:9px;
+        background:${i.tipo === 'docente' ? '#fff0e6' : '#fdf2f8'};
+        color:${i.tipo === 'docente' ? '#F97316' : '#EC4899'};
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        font-size:.85rem;
+        flex-shrink:0">
+        ${i.d}
+      </div>
+
+      <div style="font-size:.87rem;font-weight:500;flex:1">
+        ${i.titulo}
+        <div style="font-size:.74rem;color:var(--muted)">
+          ${i.carrera}
+        </div>
+      </div>
+
+      <span style="
+        font-size:.72rem;
+        padding:.18rem .55rem;
+        border-radius:20px;
+        font-weight:600;
+        background:${i.tipo === 'docente' ? '#fff0e6' : '#fdf2f8'};
+        color:${i.tipo === 'docente' ? '#F97316' : '#EC4899'}">
+        ${i.tipo === 'docente' ? 'Docente' : 'Directivo'}
+      </span>
+    </div>
+  `).join('');
 }
 function calNav(dir){calDate.setMonth(calDate.getMonth()+dir);renderCal();}
 function calTipoChange(){document.getElementById('cal-notif-sec').style.display=document.getElementById('cal-tipo').value==='privada'?'':'none';}
 function cnAll(cb){['cn15','cn7','cn3','cn0'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=cb.checked;});}
 
 function addCalFecha(){
-  const tit=document.getElementById('cal-tit').value.trim();
-  const fec=document.getElementById('cal-fec').value;
-  const tipo=document.getElementById('cal-tipo').value;
-  if(!tit||!fec){toast('Completá el título y la fecha');return;}
-  const d=new Date(fec);const k=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  const tit = document.getElementById('cal-tit').value.trim();
+  const fec = document.getElementById('cal-fec').value;
+  const tipo = document.getElementById('cal-tipo').value;
+  const carrera = document.getElementById('cal-carrera').value;
 
-  if(tipo==='publica'){
-    pubDates[k]=tit;
-    if(['docente','delegado','admin'].includes(role)){
-      lastCalEntry={title:tit,fecha:fec,author:user.nombre};
-      updateLastCal();
-      pushN('cal',`📅 <strong>${user.nombre}</strong> agregó al calendario: "${tit}"`);
-    }
-  } else {
-    privDates[k]=tit;
-    pushN('priv',`🔵 Fecha privada agregada: "<strong>${tit}</strong>"`);
+  if(!tit || !fec){
+    toast('Completá el título y la fecha');
+    return;
   }
 
-  renderCal();tp('pnl-cal');
-  document.getElementById('cal-tit').value='';document.getElementById('cal-fec').value='';
-  toast(`Fecha "${tit}" agregada como ${tipo==='publica'?'pública (verde)':'privada (azul)'} ✓`);
+  const [anio, mes, dia] = fec.split('-').map(Number);
+  const k = `${anio}-${mes}-${dia}`;
+
+  calDates[k] = {
+    titulo: tit,
+    tipo: tipo,
+    carrera: carrera,
+    autor: user.nombre
+  };
+
+  lastCalEntry = {
+    title: tit,
+    fecha: fec,
+    author: user.nombre
+  };
+
+  updateLastCal();
+
+  pushN(
+    tipo === 'docente' ? 'pub' : 'cal',
+    `${tipo === 'docente' ? '🟠' : '🌸'} <strong>${user.nombre}</strong> agregó al calendario: "${tit}"`
+  );
+
+  renderCal();
+  tp('pnl-cal');
+
+  document.getElementById('cal-tit').value = '';
+  document.getElementById('cal-fec').value = '';
+  document.getElementById('cal-carrera').value = 'todas';
+
+  toast(`Fecha "${tit}" agregada al calendario ✓`);
 }
 
 // ════════════════ REGLAMENTO ════════════════
@@ -811,8 +902,52 @@ function renderAlumnos(){
     const ini=initials(a.n);const col=AVC[i%AVC.length];
     const sb=a.est==='Regular'?'#dcfce7':a.est==='Libre'?'#fef2f2':'#fff7ed';
     const sc=a.est==='Regular'?'#16a34a':a.est==='Libre'?'#dc2626':'#c2410c';
-    return `<tr><td><div style="display:flex;align-items:center;gap:.6rem"><div class="sav" style="background:${col}">${ini}</div><span>${a.n}</span></div></td><td>${a.d}</td><td style="font-size:.82rem;color:var(--muted)">${a.e}</td><td style="font-size:.83rem">${a.c}</td><td><span style="padding:.15rem .55rem;border-radius:20px;font-size:.72rem;font-weight:600;background:${sb};color:${sc}">${a.est}</span></td></tr>`;
-  }).join('')||'<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--muted)">Sin resultados</td></tr>';
+    return `<tr>
+
+<td>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <div class="sav" style="background:${col}">
+      ${ini}
+    </div>
+    <span>${a.n}</span>
+  </div>
+</td>
+
+<td>${a.d}</td>
+
+<td style="font-size:.82rem;color:var(--muted)">
+  ${a.e}
+</td>
+
+<td style="font-size:.83rem">
+  ${a.c}
+</td>
+
+<td>
+  <span style="
+    padding:.15rem .55rem;
+    border-radius:20px;
+    font-size:.72rem;
+    font-weight:600;
+    background:${sb};
+    color:${sc}">
+    ${a.est}
+  </span>
+</td>
+
+<td>
+  <button
+    class="btn btn-primary btn-sm"
+    onclick="abrirMailAlumno('${a.e}')">
+
+    <i class="bi bi-envelope-fill"></i>
+    Enviar
+
+  </button>
+</td>
+
+</tr>`;
+  }).join('')||'<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--muted)">Sin resultados</td></tr>';
 }
 function fStu(q){stuQ=q;renderAlumnos();}
 function fStuC(v){stuC=v;renderAlumnos();}
@@ -1101,4 +1236,31 @@ async function registrarUsuario() {
     console.error(error);
     alert("No se pudo crear el usuario");
   }
+}
+function abrirMailAlumno(email){
+
+  document.getElementById("mail-destino").value = email;
+
+  const modal =
+    new bootstrap.Modal(
+      document.getElementById("mailModal")
+    );
+
+  modal.show();
+}
+
+function confirmarEnvioAlumno(){
+
+  toast("Correo enviado ✓");
+
+  const modal =
+    bootstrap.Modal.getInstance(
+      document.getElementById("mailModal")
+    );
+
+  modal.hide();
+
+  document.getElementById("mail-titulo").value = "";
+  document.getElementById("mail-mensaje").value = "";
+  document.getElementById("mail-adjunto").value = "";
 }

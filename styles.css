@@ -307,3 +307,23 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 
   filter: brightness(1.05);
 }
+/* CALENDARIO: colores por rol */
+.cd.cal-docente{
+  background:#fff0e6;
+  border-color:#fdba74;
+  color:#c2410c;
+}
+
+.cd.cal-directivo{
+  background:#fdf2f8;
+  border-color:#f9a8d4;
+  color:#be185d;
+}
+
+.cdt.docente{
+  background:#F97316;
+}
+
+.cdt.directivo{
+  background:#EC4899;
+}
