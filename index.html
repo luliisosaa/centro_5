@@ -209,6 +209,21 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
 /* EVENTS */
 .ecard{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;gap:1rem;align-items:flex-start;transition:box-shadow .2s}
 .ecard:hover{box-shadow:0 4px 16px rgba(45,107,228,.08)}
+.ev-card-flotante{background:linear-gradient(135deg,var(--primary),#4a8af7);color:#fff;border-radius:var(--r);padding:1.5rem 1.8rem;min-width:170px;text-align:center;cursor:pointer;transition:box-shadow .2s,transform .15s;user-select:none;box-shadow:0 4px 16px rgba(45,107,228,.25)}
+.ev-card-flotante:hover{box-shadow:0 8px 28px rgba(45,107,228,.38);transform:translateY(-3px)}
+.ev-card-flotante .efc-icon{font-size:1.8rem;margin-bottom:.4rem}
+.ev-card-flotante .efc-title{font-weight:700;font-size:.9rem;font-family:'Sora',sans-serif}
+.ev-card-flotante .efc-sub{font-size:.75rem;opacity:.8;margin-top:.2rem}
+.ev-doc-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:.7rem;transition:box-shadow .2s}
+.ev-doc-card:hover{box-shadow:0 4px 16px rgba(45,107,228,.08)}
+.ev-chip{display:inline-flex;align-items:center;padding:.2rem .7rem;border-radius:20px;font-size:.72rem;font-weight:600}
+.ev-chip-general{background:var(--primary-l);color:var(--primary)}
+.ev-chip-carrera{background:#dcfce7;color:#166534}
+.ev-chip-dir{background:#fdf2f8;color:#9d174d}
+.ev-chip-autor{background:#fff7ed;color:#c2410c}
+.ev-autor-dot{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0}
+.ev-fecha-btn{background:var(--surf2);border:1.5px solid var(--border);border-radius:10px;padding:.5rem 1rem;font-size:.85rem;font-weight:600;cursor:pointer;color:var(--text);transition:all .2s;font-family:'DM Sans',sans-serif}
+.ev-fecha-btn:hover,.ev-fecha-btn.on{background:var(--primary-l);border-color:var(--primary);color:var(--primary)}
 .ebox{background:var(--primary-l);color:var(--primary);border-radius:10px;padding:.5rem .7rem;text-align:center;flex-shrink:0;min-width:52px}
 .ebox .ed{font-size:1.3rem;font-weight:700;font-family:'Sora',sans-serif;line-height:1}
 .ebox .em{font-size:.68rem;font-weight:600;text-transform:uppercase}
@@ -478,46 +493,132 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
       </div>
       <div class="feed" id="feed-main"></div>
     </div>
-
-    <!-- EVENTOS test calendario -->
+    <!-- EVENTOS -->
     <div class="page" id="page-eventos">
-      <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
-        <div><h2>Eventos</h2><p>Actividades y fechas importantes</p></div>
-        <button class="badd can-create" style="display:none" onclick="tp('pnl-ev')"><i class="bi bi-plus-lg"></i>Agregar Evento</button>
+      <div class="page-hdr">
+        <h2>Eventos</h2>
+        <p>Actividades y fechas importantes</p>
       </div>
-      <div class="ipanel" id="pnl-ev">
-        <div class="iph"><h5><i class="bi bi-calendar-plus me-2 text-primary"></i>Nuevo Evento</h5><button class="bcp" onclick="tp('pnl-ev')"><i class="bi bi-x-lg"></i></button></div>
-        <div class="row g-2 mb-2">
-          <div class="col-md-5"><label class="flabel">Título</label><input class="finput" id="ev-tit" placeholder="Ej: Parcial de Matemáticas"/></div>
-          <div class="col-md-3"><label class="flabel">Fecha</label><input class="finput" id="ev-fec" type="date"/></div>
-          <div class="col-md-2"><label class="flabel">Hora</label><input class="finput" id="ev-hor" type="time"/></div>
-          <div class="col-md-2"><label class="flabel">Cupo</label><input class="finput" id="ev-cup" type="number" placeholder="∞"/></div>
+
+      <!-- ══ ALUMNOS ══ -->
+      <div id="bloque-alumno" style="display:none">
+        <div class="cc mb-3">
+          <h6 style="font-weight:700;margin-bottom:.8rem"><i class="bi bi-journal-check text-primary me-2"></i>Parciales disponibles</h6>
+          <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem">Elegí tu carrera para ver los parciales y anotarte.</p>
+          <div class="row g-2 mb-3">
+            <div class="col-md-7">
+              <label class="flabel">Tu carrera</label>
+              <select class="fselect" id="sel-carrera-alumno" onchange="mostrarParciales(this.value)">
+                <option value="">— Seleccioná tu carrera —</option>
+                <optgroup label="Profesorados">
+                  <option value="ingles">Profesorado de Inglés</option>
+                  <option value="inicial">Profesorado de Educación Inicial</option>
+                  <option value="matematica">Profesorado de Ed. Secundaria en Matemática</option>
+                  <option value="lengua">Profesorado de Ed. Secundaria en Lengua y Literatura</option>
+                </optgroup>
+                <optgroup label="Tecnicaturas">
+                  <option value="datos">Tec. Superior en Ciencia de Datos e IA</option>
+                  <option value="admin">Tec. Superior en Administración Financiera</option>
+                  <option value="marketing">Tec. en Administración con Orientación en Marketing</option>
+                  <option value="acomp">Tec. Superior en Acompañamiento Terapéutico</option>
+                  <option value="enfermeria">Tec. Superior en Enfermería</option>
+                  <option value="saludmental">Especialización de Enfermería en Salud Mental</option>
+                  <option value="hoteleria">Tec. Superior en Hotelería</option>
+                  <option value="psicopedagogia">Tec. Superior en Psicopedagogía</option>
+                  <option value="comunicacion">Tec. Superior en Comunicación Multimedial</option>
+                  <option value="higiene">Tec. en Higiene y Seguridad en el Trabajo</option>
+                  <option value="trabajo_social">Tec. Superior en Trabajo Social</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <div id="parciales-lista" style="display:none"></div>
         </div>
-        <div class="row g-2 mb-2">
-          <div class="col-md-4"><label class="flabel">Lugar</label><input class="finput" id="ev-lug" placeholder="Aula / Online"/></div>
-          <div class="col-md-4"><label class="flabel">Carrera</label><select class="fselect" id="ev-car"><option value="general">Todas</option><option value="datos">Cs. de Datos e IA</option><option value="admin">Administración</option><option value="enferm">Enfermería</option></select></div>
-        </div>
-        <div class="d-flex gap-2 mt-2"><button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="addEvento()">Crear</button><button class="btns" style="width:auto;padding:.45rem 1rem" onclick="tp('pnl-ev')">Cancelar</button></div>
-      </div>
-      <div class="cc mb-3">
-        <h6 style="font-weight:700;margin-bottom:.8rem"><i class="bi bi-pencil-square text-primary me-2"></i>Anotarse a Materias</h6>
-        <div class="d-flex gap-2 flex-wrap">
-          <span class="ctag" onclick="toggleMat(this,'Matemáticas','2025-4-17')">Matemáticas</span>
-          <span class="ctag" onclick="toggleMat(this,'Inglés','2025-4-22')">Inglés</span>
-          <span class="ctag" onclick="toggleMat(this,'Programación','2025-4-24')">Programación</span>
-          <span class="ctag" onclick="toggleMat(this,'Ciencia de Datos','2025-4-19')">Ciencia de Datos</span>
-          <span class="ctag" onclick="toggleMat(this,'Estadística','2025-4-26')">Estadística</span>
-          <span class="ctag" onclick="toggleMat(this,'Contabilidad','2025-4-28')">Contabilidad</span>
+        <div class="cc mb-3">
+          <h6 style="font-weight:700;margin-bottom:.8rem"><i class="bi bi-calendar-event text-primary me-2"></i>Eventos</h6>
+          <div class="d-flex gap-2 flex-wrap mb-3">
+            <span class="ctag on" id="ftag-general" onclick="filtroAlumno('general',this)">General</span>
+            <span class="ctag" id="ftag-carrera" onclick="filtroAlumno('carrera',this)">Para tu carrera</span>
+          </div>
+          <div id="ev-list-alumno"></div>
         </div>
       </div>
-      <div class="d-flex gap-2 flex-wrap mb-2">
-        <span class="ctag on" onclick="fCEv('todas',this)">Todos</span>
-        <span class="ctag" onclick="fCEv('datos',this)">Cs. de Datos e IA</span>
-        <span class="ctag" onclick="fCEv('admin',this)">Administración</span>
-        <span class="ctag" onclick="fCEv('enferm',this)">Enfermería</span>
-        <span class="ctag" onclick="fCEv('general',this)">General</span>
+
+      <!-- ══ DOCENTES ══ -->
+      <div id="bloque-docente" style="display:none">
+        <div class="d-flex gap-3 flex-wrap mb-3">
+         <div class="ev-card-flotante" onclick="togglePnlDoc()">
+            <div class="efc-icon">＋</div>
+            <div class="efc-title">Nuevo Evento</div>
+            <div class="efc-sub">Subir a una carrera o general</div>
+          </div> 
+        </div>
+        <div id="pnl-doc-ev" class="cc mb-3" style="display:none">
+          <div class="iph"><h5><i class="bi bi-send me-2 text-primary"></i>Nuevo Evento</h5><button class="bcp" onclick="togglePnlDoc()"><i class="bi bi-x-lg"></i></button></div>
+          <div class="row g-2 mb-2">
+            <div class="col-md-6"><label class="flabel">Título</label><input class="finput" id="doc-tit" placeholder="Ej: Simulacro de parcial"/></div>
+            <div class="col-md-3"><label class="flabel">Fecha</label><input class="finput" id="doc-fec" type="date"/></div>
+            <div class="col-md-3"><label class="flabel">Hora</label><input class="finput" id="doc-hor" type="time"/></div>
+          </div>
+          <div class="mb-2"><label class="flabel">Detalles</label><textarea class="finput" id="doc-det" rows="3" style="resize:vertical" placeholder="Describí el evento..."></textarea></div>
+          <div class="mb-3">
+            <label class="flabel">¿Para qué carrera/s?</label>
+            <select class="fselect" id="doc-car">
+              <option value="general">General (todos)</option>
+              <optgroup label="Profesorados">
+                <option value="ingles">Profesorado de Inglés</option>
+                <option value="inicial">Profesorado de Educación Inicial</option>
+                <option value="matematica">Profesorado de Ed. Secundaria en Matemática</option>
+                <option value="lengua">Profesorado de Ed. Secundaria en Lengua y Literatura</option>
+              </optgroup>
+              <optgroup label="Tecnicaturas">
+                <option value="datos">Tec. Superior en Ciencia de Datos e IA</option>
+                <option value="admin">Tec. Superior en Administración Financiera</option>
+                <option value="marketing">Tec. en Administración con Orientación en Marketing</option>
+                <option value="acomp">Tec. Superior en Acompañamiento Terapéutico</option>
+                <option value="enfermeria">Tec. Superior en Enfermería</option>
+                <option value="saludmental">Especialización de Enfermería en Salud Mental</option>
+                <option value="hoteleria">Tec. Superior en Hotelería</option>
+                <option value="psicopedagogia">Tec. Superior en Psicopedagogía</option>
+                <option value="comunicacion">Tec. Superior en Comunicación Multimedial</option>
+                <option value="higiene">Tec. en Higiene y Seguridad en el Trabajo</option>
+                <option value="trabajo_social">Tec. Superior en Trabajo Social</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="subirEventoDoc()"><i class="bi bi-send me-1"></i>Subir</button>
+            <button class="btns" style="width:auto;padding:.45rem 1rem" onclick="togglePnlDoc()">Cancelar</button>
+          </div>
+        </div>
+        <div id="ev-list-docente"></div>
       </div>
-      <!-- Search results box for events -->
+
+      <!-- ══ DIRECTIVOS ══ -->
+      <div id="bloque-directivo" style="display:none">
+        <div class="d-flex gap-3 flex-wrap mb-3">
+          <div class="ev-card-flotante" onclick="togglePnlDir()">
+            <div class="efc-icon">＋</div>
+            <div class="efc-title">Nuevo Evento General</div>
+            <div class="efc-sub">Se publica para todos</div>
+          </div>
+        </div>
+        <div id="pnl-dir-ev" class="cc mb-3" style="display:none">
+          <div class="iph"><h5><i class="bi bi-send me-2 text-primary"></i>Nuevo Evento General</h5><button class="bcp" onclick="togglePnlDir()"><i class="bi bi-x-lg"></i></button></div>
+          <div class="row g-2 mb-2">
+            <div class="col-md-6"><label class="flabel">Título</label><input class="finput" id="dir-tit" placeholder="Ej: Jornada de lectura"/></div>
+            <div class="col-md-3"><label class="flabel">Fecha</label><input class="finput" id="dir-fec" type="date"/></div>
+            <div class="col-md-3"><label class="flabel">Hora</label><input class="finput" id="dir-hor" type="time"/></div>
+          </div>
+          <div class="mb-2"><label class="flabel">Detalles</label><textarea class="finput" id="dir-det" rows="3" style="resize:vertical" placeholder="Describí el evento..."></textarea></div>
+          <div class="d-flex gap-2">
+            <button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="subirEventoDir()"><i class="bi bi-send me-1"></i>Subir</button>
+            <button class="btns" style="width:auto;padding:.45rem 1rem" onclick="togglePnlDir()">Cancelar</button>
+          </div>
+        </div>
+        <div id="ev-list-directivo"></div>
+      </div>
+
       <div id="ev-search-results" style="display:none" class="cc mb-2">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <span style="font-size:.85rem;font-weight:700;color:var(--primary)" id="ev-sr-label">Resultados</span>
@@ -525,9 +626,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Sora',sans-serif}
         </div>
         <div id="ev-sr-list"></div>
       </div>
-      <div id="ev-list"></div>
+      <div id="ev-list" style="display:none"></div>
     </div>
-
     <!-- CALENDARIO -->
     <div class="page" id="page-calendario">
       <div class="page-hdr d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -917,6 +1017,11 @@ function applyRole(){
   document.querySelectorAll('.can-admin').forEach(e=>e.style.display=isAdm?'':'none');
   document.querySelectorAll('.can-docente').forEach(e=>e.style.display=isDoc?'':'none');
   document.querySelectorAll('.admin-only').forEach(e=>e.style.display=isAdm?'':'none');
+  const esAlumno=r==='alumno';
+  const esDocente=r==='docente'||r==='delegado';
+  if(document.getElementById('bloque-alumno'))document.getElementById('bloque-alumno').style.display=esAlumno?'':'none';
+  if(document.getElementById('bloque-docente'))document.getElementById('bloque-docente').style.display=esDocente?'':'none';
+  if(document.getElementById('bloque-directivo'))document.getElementById('bloque-directivo').style.display=isAdm?'':'none';
   renderFeed();renderEvents();renderHomeFeed();renderHomeEvents();renderGallery();
 }
 function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
@@ -1153,84 +1258,389 @@ function publishPost(){
 }
 
 // ════════════════ EVENTS ════════════════
-function renderEvents(){
-  const el=document.getElementById('ev-list');if(!el)return;
-  const vis=EVENTS.filter(e=>evCar==='todas'||e.car===evCar||e.car==='general');
-  el.innerHTML=vis.map(e=>`
-<div class="ecard" data-c="${e.car}" data-eid="${e.id}">
-  <div class="ebox" style="${e.bs}"><div class="ed">${e.day}</div><div class="em">${e.mon}</div></div>
-  <div class="flex-grow-1">
-    <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
-      <div class="etitle">${e.title}</div><span class="be ${e.done?'be-ce':'be-ab'}">${e.done?'Inscripto':'Abierto'}</span>
-    </div>
-    <div class="emeta">${e.meta}</div>
-  </div>
-  <button class="bini ${e.done?'done':''}" onclick="inscr(${e.id},this)" ${e.done?'disabled':''}>${e.done?'✓ Inscripto':'Inscribirse'}</button>
-</div>`).join('');
-}
-function renderHomeEvents(){
-  const el=document.getElementById('home-events');if(!el)return;
-  el.innerHTML=EVENTS.slice(0,3).map(e=>`<div class="ecard" style="padding:.7rem .9rem;margin-bottom:.5rem"><div class="ebox" style="${e.bs}"><div class="ed">${e.day}</div><div class="em">${e.mon}</div></div><div><div class="etitle" style="font-size:.85rem">${e.title}</div><div class="emeta">${e.meta.split('·')[0]}</div></div></div>`).join('');
-}
-function inscr(id,btn){
-  const e=EVENTS.find(x=>x.id===id);if(!e||e.done)return;
-  e.done=true;btn.classList.add('done');btn.textContent='✓ Inscripto';btn.disabled=true;
-  pubDates[e.calKey]=e.title;renderCal();
-  pushN('pub',`Inscripto en <strong>${e.title}</strong> — en el calendario.`);
-  toast(`✓ Inscripto en "${e.title}" — marcado en el calendario`);renderEvents();
-}
-function fCEv(car,el){document.querySelectorAll('#page-eventos .ctag').forEach(t=>t.classList.remove('on'));el.classList.add('on');evCar=car;renderEvents();}
-function clearEvSearch(){document.getElementById('ev-search-results').style.display='none';}
+let docEventos=[
+  {id:1,title:'Simulacro de Parcial — Cs. de Datos',day:15,mon:'Jun',hor:'17:30',det:'Aula 3 — Traer calculadora y apuntes. Duración estimada: 2 horas. Materia: Estadística y Probabilidad.',car:'datos',autor:'Prof. María González'},
+  {id:2,title:'Jornada de Lectura',day:20,mon:'Jun',hor:'18:00',det:'Biblioteca del instituto — Actividad abierta a todos los estudiantes y docentes. Se sortearán libros al final.',car:'general',autor:'Direc. Estella Ramos',esDir:true},
+  {id:3,title:'Reunión Informativa — Enfermería',day:22,mon:'Jun',hor:'19:00',det:'Aula 7 — Cambios en el plan de estudios 2026. Asistencia recomendada para alumnos de 2° y 3° año.',car:'enfermeria',autor:'Prof. Carlos Benítez'},
+  {id:4,title:'Taller de Comunicación Digital',day:25,mon:'Jun',hor:'17:30',det:'Sala de informática — Taller práctico de redes sociales y producción de contenido. Cupo limitado: 20 personas.',car:'comunicacion',autor:'Prof. Laura Sosa'},
+  {id:5,title:'Acto Institucional',day:9,mon:'Jul',hor:'18:00',det:'Patio principal — Acto por el Día de la Independencia. Asistencia obligatoria para toda la comunidad educativa.',car:'general',autor:'Direc. Estella Ramos',esDir:true},
+  {id:6,title:'Workshop de Machine Learning',day:18,mon:'Jun',hor:'18:30',det:'Laboratorio de informática — Introducción práctica a modelos de clasificación. Traer notebook si tenés.',car:'datos',autor:'Prof. María González'},
+  {id:7,title:'Charla: Inteligencia Artificial en el Trabajo',day:2,mon:'Jul',hor:'19:45',det:'Aula magna — Disertante invitada: Lic. Romina Fierro. Entrada libre y gratuita para toda la comunidad.',car:'datos',autor:'Prof. María González'},
+];
+let filtroAlumnoActual='general';
+let carreraAlumnoActual='';
 
-function addEvento(){
-  const tit=document.getElementById('ev-tit').value.trim();const fec=document.getElementById('ev-fec').value;
+const PARCIALES={
+  ingles:[
+    {mat:'Lengua Inglesa I',estado:'anotar',fecha:'2026-7-10'},
+    {mat:'Lengua Inglesa II',estado:'promocionado',fecha:'2026-7-23'},
+    {mat:'Didáctica del Inglés',estado:'cancelado',fecha:'2026-8-5'},
+    {mat:'Gramática Inglesa',estado:'anotar',fecha:'2026-7-18'},
+    {mat:'Literatura en Inglés',estado:'anotar',fecha:'2026-8-12'},
+  ],
+  inicial:[
+    {mat:'Didáctica de Ed. Inicial',estado:'anotar',fecha:'2026-7-8'},
+    {mat:'Psicología del Desarrollo',estado:'promocionado',fecha:'2026-7-22'},
+    {mat:'Pedagogía',estado:'anotar',fecha:'2026-8-3'},
+    {mat:'Práctica Docente I',estado:'cancelado',fecha:'2026-7-30'},
+    {mat:'Expresión Artística',estado:'anotar',fecha:'2026-8-14'},
+  ],
+  matematica:[
+    {mat:'Álgebra',estado:'anotar',fecha:'2026-7-9'},
+    {mat:'Análisis Matemático',estado:'promocionado',fecha:'2026-7-24'},
+    {mat:'Geometría',estado:'anotar',fecha:'2026-8-6'},
+    {mat:'Didáctica de la Matemática',estado:'cancelado',fecha:'2026-7-17'},
+    {mat:'Probabilidad y Estadística',estado:'anotar',fecha:'2026-8-13'},
+  ],
+  lengua:[
+    {mat:'Lingüística General',estado:'anotar',fecha:'2026-7-11'},
+    {mat:'Literatura Argentina',estado:'promocionado',fecha:'2026-7-25'},
+    {mat:'Semiología',estado:'anotar',fecha:'2026-8-7'},
+    {mat:'Literatura Latinoamericana',estado:'cancelado',fecha:'2026-7-20'},
+    {mat:'Didáctica de la Lengua',estado:'anotar',fecha:'2026-8-15'},
+  ],
+  datos:[
+    {mat:'Ingles I',estado:'anotar',fecha1:'2026-7-8',fecha2:'2026-8-5'},
+    {mat:'ingles II',estado:'promocionado',fecha1:'2026-7-22',fecha2:'2026-8-19'},
+    {mat:'Tecnicas de programacion',estado:'anotar',fecha1:'2026-7-14',fecha2:'2026-8-11'},
+    {mat:'Logica computacional',estado:'anotar',fecha1:'2026-7-29',fecha2:'2026-8-26'},
+    {mat:'Matematicas',estado:'anotar',fecha1:'2026-7-16',fecha2:'2026-8-13'},
+  ],
+  admin:[
+    {mat:'Contabilidad General',estado:'anotar',fecha:'2026-7-9'},
+    {mat:'Matemática Financiera',estado:'promocionado',fecha:'2026-7-23'},
+    {mat:'Administración de Empresas',estado:'anotar',fecha:'2026-8-5'},
+    {mat:'Derecho Laboral',estado:'cancelado',fecha:'2026-7-28'},
+    {mat:'Costos',estado:'anotar',fecha:'2026-8-12'},
+  ],
+  marketing:[
+    {mat:'Marketing Digital',estado:'anotar',fecha:'2026-7-10'},
+    {mat:'Comportamiento del Consumidor',estado:'promocionado',fecha:'2026-7-24'},
+    {mat:'Publicidad',estado:'anotar',fecha:'2026-8-6'},
+    {mat:'Investigación de Mercado',estado:'cancelado',fecha:'2026-7-31'},
+    {mat:'Comercio Electrónico',estado:'anotar',fecha:'2026-8-13'},
+  ],
+  acomp:[
+    {mat:'Psicopatología',estado:'anotar',fecha:'2026-7-9'},
+    {mat:'Técnicas de Acompañamiento',estado:'promocionado',fecha:'2026-7-21'},
+    {mat:'Ética Profesional',estado:'anotar',fecha:'2026-8-3'},
+    {mat:'Neurología Básica',estado:'cancelado',fecha:'2026-7-27'},
+    {mat:'Trabajo en Equipo',estado:'anotar',fecha:'2026-8-10'},
+  ],
+  enfermeria:[
+    {mat:'Anatomía y Fisiología',estado:'anotar',fecha:'2026-7-8'},
+    {mat:'Enfermería Clínica',estado:'promocionado',fecha:'2026-7-22'},
+    {mat:'Farmacología',estado:'anotar',fecha:'2026-8-4'},
+    {mat:'Salud Comunitaria',estado:'cancelado',fecha:'2026-7-30'},
+    {mat:'Enfermería Quirúrgica',estado:'anotar',fecha:'2026-8-11'},
+  ],
+  saludmental:[
+    {mat:'Psicopatología Avanzada',estado:'anotar',fecha:'2026-7-10'},
+    {mat:'Rehabilitación Psiquiátrica',estado:'promocionado',fecha:'2026-7-23'},
+    {mat:'Intervención en Crisis',estado:'anotar',fecha:'2026-8-5'},
+    {mat:'Ética en Salud Mental',estado:'cancelado',fecha:'2026-7-28'},
+    {mat:'Legislación Sanitaria',estado:'anotar',fecha:'2026-8-14'},
+  ],
+  hoteleria:[
+    {mat:'Gestión Hotelera',estado:'anotar',fecha:'2026-7-9'},
+    {mat:'Gastronomía',estado:'promocionado',fecha:'2026-7-24'},
+    {mat:'Turismo Regional',estado:'anotar',fecha:'2026-8-6'},
+    {mat:'Administración de Eventos',estado:'cancelado',fecha:'2026-7-29'},
+    {mat:'Inglés Turístico',estado:'anotar',fecha:'2026-8-13'},
+  ],
+  psicopedagogia:[
+    {mat:'Psicología del Aprendizaje',estado:'anotar',fecha:'2026-7-8'},
+    {mat:'Diagnóstico Psicopedagógico',estado:'promocionado',fecha:'2026-7-21'},
+    {mat:'Neurociencias',estado:'anotar',fecha:'2026-8-3'},
+    {mat:'Dificultades de Aprendizaje',estado:'cancelado',fecha:'2026-7-27'},
+    {mat:'Orientación Vocacional',estado:'anotar',fecha:'2026-8-10'},
+  ],
+  comunicacion:[
+    {mat:'Producción Audiovisual',estado:'anotar',fecha:'2026-7-10'},
+    {mat:'Diseño Multimedial',estado:'promocionado',fecha:'2026-7-25'},
+    {mat:'Periodismo Digital',estado:'anotar',fecha:'2026-8-7'},
+    {mat:'Fotografía',estado:'cancelado',fecha:'2026-7-31'},
+    {mat:'Redes Sociales y Comunidades',estado:'anotar',fecha:'2026-8-14'},
+  ],
+  higiene:[
+    {mat:'Legislación en Higiene',estado:'anotar',fecha:'2026-7-9'},
+    {mat:'Ergonomía',estado:'promocionado',fecha:'2026-7-22'},
+    {mat:'Toxicología Laboral',estado:'anotar',fecha:'2026-8-4'},
+    {mat:'Seguridad en Construcción',estado:'cancelado',fecha:'2026-7-28'},
+    {mat:'Gestión Ambiental',estado:'anotar',fecha:'2026-8-11'},
+  ],
+  trabajo_social:[
+    {mat:'Teoría del Trabajo Social',estado:'anotar',fecha:'2026-7-8'},
+    {mat:'Políticas Sociales',estado:'promocionado',fecha:'2026-7-23'},
+    {mat:'Metodología de Intervención',estado:'anotar',fecha:'2026-8-5'},
+    {mat:'Derecho Social',estado:'cancelado',fecha:'2026-7-30'},
+    {mat:'Trabajo Social Comunitario',estado:'anotar',fecha:'2026-8-12'},
+  ],
+};
+
+function mostrarParciales(carrera){
+  carreraAlumnoActual=carrera;
+  const lista=document.getElementById('parciales-lista');
+  if(!carrera){lista.style.display='none';return;}
+  const parciales=PARCIALES[carrera]||[];
+  const mons=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  function fmt(s){const p=s.split('-');return `${parseInt(p[2])} ${mons[parseInt(p[1])-1]} ${p[0]}`;}
+  lista.innerHTML=parciales.map(p=>{
+    const key=p.mat.replace(/[^a-zA-Z0-9]/g,'_');
+    const grad=p.estado==='promocionado'?'linear-gradient(135deg,#dcfce7,#bbf7d0)':p.estado==='cancelado'?'linear-gradient(135deg,#fef2f2,#fecaca)':'linear-gradient(135deg,var(--surf2),var(--white))';
+    const bord=p.estado==='promocionado'?'#86efac':p.estado==='cancelado'?'#fca5a5':'var(--border)';
+    const badge=p.estado==='promocionado'
+      ?`<span style="background:#dcfce7;color:#16a34a;border-radius:20px;padding:.25rem .9rem;font-size:.78rem;font-weight:700">✓ Promocionado/a — no hace falta rendir</span>`
+      :p.estado==='cancelado'
+      ?`<span style="background:#fef2f2;color:#dc2626;border-radius:20px;padding:.25rem .9rem;font-size:.78rem;font-weight:700">✕ Materia cancelada</span>`
+      :`<button class="btnp" style="width:auto;padding:.35rem 1rem;font-size:.82rem" id="btn-${key}" onclick="abrirFormParcial('${key}','${p.mat}','${p.fecha1}','${p.fecha2}')">Anotarme</button>`;
+    return `
+<div style="background:${grad};border:1.5px solid ${bord};border-radius:12px;padding:.9rem 1.1rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+  <div>
+    <div style="font-weight:700;font-size:.9rem">${p.mat}</div>
+    <div style="font-size:.8rem;color:var(--muted);margin-top:.15rem">📅 ${fmt(p.fecha1)} &nbsp;·&nbsp; 📅 ${fmt(p.fecha2)}</div>
+  </div>
+  ${badge}
+</div>
+<div id="form-${key}" style="display:none;background:var(--surf2);border-radius:10px;padding:.9rem;margin-bottom:.6rem;border:1.5px solid var(--border)">
+  <div style="font-weight:700;font-size:.88rem;margin-bottom:.7rem">Inscripción a: ${p.mat}</div>
+  <div style="margin-bottom:.8rem">
+    <label class="flabel">Elegí la fecha</label>
+    <div class="d-flex gap-2 mt-1 flex-wrap">
+      <button class="ev-fecha-btn" id="fb1-${key}" onclick="selFechaParcial('${key}','${p.fecha1}','fb1-${key}','fb2-${key}')">${fmt(p.fecha1)}</button>
+      <button class="ev-fecha-btn" id="fb2-${key}" onclick="selFechaParcial('${key}','${p.fecha2}','fb2-${key}','fb1-${key}')">${fmt(p.fecha2)}</button>
+    </div>
+  </div>
+  <div class="row g-2 mb-2">
+    <div class="col-md-4"><label class="flabel">Nombre completo</label><input class="finput" id="nom-${key}" placeholder="Tu nombre"/></div>
+    <div class="col-md-4"><label class="flabel">DNI</label><input class="finput" id="dni-${key}" placeholder="Tu DNI"/></div>
+    <div class="col-md-4"><label class="flabel">Email</label><input class="finput" id="email-${key}" placeholder="Para confirmar inscripción"/></div>
+  </div>
+  <div style="margin-bottom:.7rem">
+    <label class="flabel">¿Tenés libreta?</label>
+    <div class="d-flex gap-2 mt-1">
+      <button class="rbtn" id="lsi-${key}" onclick="selLib('${key}','si')">Sí</button>
+      <button class="rbtn" id="lno-${key}" onclick="selLib('${key}','no')">No</button>
+    </div>
+  </div>
+  <div id="alib-${key}" style="display:none;background:#fef2f2;border-radius:8px;padding:.5rem .8rem;font-size:.82rem;color:#dc2626;margin-bottom:.6rem">
+    <i class="bi bi-exclamation-triangle-fill me-1"></i> Sin libreta no podés anotarte. Acercate a la secretaría.
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btnp" style="width:auto;padding:.35rem 1rem;font-size:.82rem" onclick="confirmarParcial('${key}','${p.mat}')">Confirmar inscripción</button>
+    <button class="btns" style="width:auto;padding:.35rem .8rem;font-size:.82rem" onclick="cerrarFormParcial('${key}')">Cancelar</button>
+  </div>
+</div>`;
+  }).join('');
+  lista.style.display='';
+}
+
+let libsPorMat={};
+let fechasPorMat={};
+function abrirFormParcial(key,mat,fecha1,fecha2){
+  document.getElementById(`form-${key}`).style.display='';
+  const btn=document.getElementById(`btn-${key}`);
+  if(btn)btn.style.display='none';
+  fechasPorMat[key]=null;
+}
+function cerrarFormParcial(key){
+  document.getElementById(`form-${key}`).style.display='none';
+  const btn=document.getElementById(`btn-${key}`);
+  if(btn)btn.style.display='';
+  fechasPorMat[key]=null;
+}
+function selFechaParcial(key,fecha,idOn,idOff){
+  fechasPorMat[key]=fecha;
+  document.getElementById(idOn).classList.add('on');
+  document.getElementById(idOff).classList.remove('on');
+}
+function selLib(key,val){
+  libsPorMat[key]=val;
+  document.getElementById(`lsi-${key}`).classList.toggle('active',val==='si');
+  document.getElementById(`lno-${key}`).classList.toggle('active',val==='no');
+  document.getElementById(`alib-${key}`).style.display=val==='no'?'':'none';
+}
+function confirmarParcial(key,mat){
+  const nom=document.getElementById(`nom-${key}`).value.trim();
+  const dni=document.getElementById(`dni-${key}`).value.trim();
+  const email=document.getElementById(`email-${key}`).value.trim();
+  const lib=libsPorMat[key];
+  const fecha=fechasPorMat[key];
+  if(!nom||!dni){toast('Completá nombre y DNI');return;}
+  if(!email){toast('Ingresá tu email para la confirmación');return;}
+  if(!lib){toast('Indicá si tenés libreta');return;}
+  if(lib==='no'){toast('Sin libreta no podés anotarte');return;}
+  if(!fecha){toast('Elegí una fecha de parcial');return;}
+  const p=fecha.split('-');
+  const mons=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const fechaFmt=`${parseInt(p[2])} ${mons[parseInt(p[1])-1]} ${p[0]}`;
+  privDates[`${p[0]}-${parseInt(p[1])-1}-${parseInt(p[2])}`]=`Parcial: ${mat}`;
+  renderCal();
+  pushN('priv',`✅ Inscripción confirmada — <strong>${mat}</strong> el ${fechaFmt}. Se enviará info a ${email}. ¡Mucho éxito!`);
+  toast(`✓ Anotado/a a ${mat} el ${fechaFmt}`);
+  cerrarFormParcial(key);
+  mostrarParciales(carreraAlumnoActual);
+}
+function filtroAlumno(tipo,el){
+  filtroAlumnoActual=tipo;
+  document.getElementById('ftag-general').classList.toggle('on',tipo==='general');
+  document.getElementById('ftag-carrera').classList.toggle('on',tipo==='carrera');
+  renderEvListAlumno();
+}
+function renderEvListAlumno(){
+  const el=document.getElementById('ev-list-alumno');if(!el)return;
+  const vis=filtroAlumnoActual==='general'
+    ?docEventos.filter(e=>e.car==='general')
+    :docEventos.filter(e=>e.car===carreraAlumnoActual&&e.car!=='general');
+  const COLORES=['#2D6BE4','#F97316','#16A34A','#9d174d','#854d0e','#166534','#c2410c'];
+  function colorAutor(nombre){let h=0;for(let i=0;i<nombre.length;i++)h+=nombre.charCodeAt(i);return COLORES[h%COLORES.length];}
+  function inicialesAutor(n){return n.replace('Prof.','').replace('Direc.','').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+  el.innerHTML=vis.length?vis.map(e=>`
+<div class="ev-doc-card" id="evcard-${e.id}">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem">
+    <div style="flex:1">
+      <div style="font-weight:700;font-size:.93rem">${e.title}</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:.15rem">📅 ${e.day} ${e.mon}${e.hor?' · ⏰ '+e.hor+' hs':''}</div>
+      <div id="det-short-${e.id}" style="font-size:.83rem;margin-top:.3rem;color:var(--text)">${e.det.length>60?e.det.slice(0,60)+'…':e.det}</div>
+      <div id="det-full-${e.id}" style="font-size:.83rem;margin-top:.3rem;color:var(--text);display:none">${e.det}</div>
+    </div>
+    <span class="ev-chip ${e.car==='general'?'ev-chip-general':'ev-chip-carrera'}">${e.car==='general'?'General':e.car}</span>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:.5rem;border-top:1px solid var(--border)">
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <div class="ev-autor-dot" style="background:${colorAutor(e.autor)}">${inicialesAutor(e.autor)}</div>
+      <span style="font-size:.78rem;color:var(--muted)">${e.autor}</span>
+    </div>
+    <button onclick="toggleDetEvento(${e.id})" style="background:none;border:none;font-size:.78rem;color:var(--primary);cursor:pointer;font-weight:600" id="ver-mas-${e.id}">Ver más ▾</button>
+  </div>
+</div>`).join(''):'<p style="color:var(--muted);font-size:.85rem">Sin eventos por ahora.</p>';
+}
+function togglePnlDoc(){
+  const p=document.getElementById('pnl-doc-ev');
+  p.style.display=p.style.display==='none'?'':'none';
+}
+function togglePnlDir(){
+  const p=document.getElementById('pnl-dir-ev');
+  p.style.display=p.style.display==='none'?'':'none';
+}
+
+function subirEventoDoc(){
+  const tit=document.getElementById('doc-tit').value.trim();
+  const fec=document.getElementById('doc-fec').value;
+  const det=document.getElementById('doc-det').value.trim();
+  const car=document.getElementById('doc-car').value;
   if(!tit||!fec){toast('Completá título y fecha');return;}
   const d=new Date(fec);
   const mons=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  const car=document.getElementById('ev-car').value;
-  const hor=document.getElementById('ev-hor').value||'—';
-  const lug=document.getElementById('ev-lug').value||'Por definir';
-  const cup=document.getElementById('ev-cup').value;
-  const ck=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-  const newEv={id:Date.now(),day:d.getDate(),mon:mons[d.getMonth()],title:tit,meta:`${lug} · ${hor} hs${cup?' · Cupo:'+cup:''}`,car,calKey:ck,done:false,bs:''};
-  EVENTS.unshift(newEv);
-  pubDates[ck]=tit;renderCal();renderEvents();renderHomeEvents();
-  tp('pnl-ev');['ev-tit','ev-fec','ev-hor','ev-cup','ev-lug'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
-  pushN('pub',`Nuevo evento: <strong>${tit}</strong>`);toast(`Evento "${tit}" creado ✓`);
-}
-function toggleMat(el,name,calKey){
-  const on=el.classList.toggle('on');
-  if(on){privDates[calKey]='Inscripción: '+name;renderCal();pushN('priv',`Anotado/a a <strong>${name}</strong> — en tu calendario.`);toast(`Anotado/a a ${name} ✓`);}
-  else{delete privDates[calKey];renderCal();}
+  docEventos.unshift({id:Date.now(),title:tit,day:d.getDate(),mon:mons[d.getMonth()],hor:document.getElementById('doc-hor').value||'',det:det||'Sin descripción',car,autor:user.nombre});
+  togglePnlDoc();
+  ['doc-tit','doc-fec','doc-hor','doc-det'].forEach(i=>document.getElementById(i).value='');
+  renderEvListDocente();
+  renderEvListAlumno();
+  pushN('pub',`Nuevo evento: <strong>${tit}</strong>`);
+  toast(`✓ "${tit}" subido`);
 }
 
-// ════════════════ CALENDAR ════════════════
-const MNS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-function renderCal(){
-  const grid=document.getElementById('cal-grid');
-  const y=calDate.getFullYear(),m=calDate.getMonth();
-  document.getElementById('cal-title').textContent=`${MNS[m]} ${y}`;
-  const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),td=new Date();
-  grid.innerHTML='';
-  for(let i=0;i<first;i++){const d=document.createElement('div');d.className='cd om';d.textContent=new Date(y,m,-(first-1-i)).getDate();grid.appendChild(d);}
-  for(let d=1;d<=days;d++){
-    const el=document.createElement('div');el.className='cd';
-    const num=document.createElement('span');num.textContent=d;el.appendChild(num);
-    const k=`${y}-${m}-${d}`;
-    const hP=!!pubDates[k],hF=!!feriadoDates[k];
-    const dw=document.createElement('div');dw.className='cdots';
-    if(hP){el.classList.add('hp');const dt=document.createElement('div');dt.className='cdt p';dw.appendChild(dt);}
-    if(hF){el.classList.add('hv');const dt=document.createElement('div');dt.className='cdt v';dw.appendChild(dt);}
-    if(hP&&hF)el.classList.add('hb');
-    if(dw.children.length)el.appendChild(dw);
-    if(d===td.getDate()&&m===td.getMonth()&&y===td.getFullYear())el.classList.add('td');
-    const tip=document.createElement('div');tip.className='cttip';
-    const tt=[pubDates[k]&&`📅 ${pubDates[k]}`,feriadoDates[k]&&`🔴 ${feriadoDates[k]}`].filter(Boolean).join(' · ');
-    if(tt){tip.textContent=tt;el.appendChild(tip);}
-    grid.appendChild(el);
-  }
-  renderCalList(y,m);
+function subirEventoDir(){
+  const tit=document.getElementById('dir-tit').value.trim();
+  const fec=document.getElementById('dir-fec').value;
+  const det=document.getElementById('dir-det').value.trim();
+  if(!tit||!fec){toast('Completá título y fecha');return;}
+  const d=new Date(fec);
+  const mons=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  docEventos.unshift({id:Date.now(),title:tit,day:d.getDate(),mon:mons[d.getMonth()],hor:document.getElementById('dir-hor').value||'',det:det||'Sin descripción',car:'general',autor:user.nombre,esDir:true});
+  togglePnlDir();
+  ['dir-tit','dir-fec','dir-hor','dir-det'].forEach(i=>document.getElementById(i).value='');
+  renderEvListDirectivo();
+  renderEvListAlumno();
+  toast(`✓ "${tit}" publicado`);
 }
+
+function renderEvListDocente(){
+  const el=document.getElementById('ev-list-docente');if(!el)return;
+  const propios=docEventos.filter(e=>e.autor===user.nombre);
+  const COLORES=['#2D6BE4','#F97316','#16A34A','#9d174d','#854d0e','#166534','#c2410c'];
+  function colorAutor(nombre){let h=0;for(let i=0;i<nombre.length;i++)h+=nombre.charCodeAt(i);return COLORES[h%COLORES.length];}
+  function inicialesAutor(n){return n.replace('Prof.','').replace('Direc.','').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+  el.innerHTML=propios.length?propios.map(e=>`
+<div class="ev-doc-card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem">
+    <div>
+      <div style="font-weight:700;font-size:.93rem">${e.title}</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:.15rem">📅 ${e.day} ${e.mon}${e.hor?' · ⏰ '+e.hor+' hs':''}</div>
+      <div style="font-size:.83rem;margin-top:.3rem">${e.det}</div>
+    </div>
+    <span class="ev-chip ${e.car==='general'?'ev-chip-general':'ev-chip-carrera'}">${e.car==='general'?'General':e.car}</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:.5rem;padding-top:.5rem;border-top:1px solid var(--border)">
+    <div class="ev-autor-dot" style="background:${colorAutor(e.autor)}">${inicialesAutor(e.autor)}</div>
+    <span style="font-size:.78rem;color:var(--muted)">${e.autor}</span>
+  </div>
+</div>`).join(''):'<p style="color:var(--muted);font-size:.85rem;padding:.5rem 0">Todavía no subiste eventos.</p>';
+}
+
+function renderEvListDirectivo(){
+  const el=document.getElementById('ev-list-directivo');if(!el)return;
+  const COLORES=['#2D6BE4','#F97316','#16A34A','#9d174d','#854d0e','#166534','#c2410c'];
+  function colorAutor(nombre){let h=0;for(let i=0;i<nombre.length;i++)h+=nombre.charCodeAt(i);return COLORES[h%COLORES.length];}
+  function inicialesAutor(n){return n.replace('Prof.','').replace('Direc.','').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+  el.innerHTML=docEventos.length?docEventos.map(e=>`
+<div class="ev-doc-card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem">
+    <div style="flex:1">
+      <div style="font-weight:700;font-size:.93rem">${e.title}</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:.15rem">📅 ${e.day} ${e.mon}${e.hor?' · ⏰ '+e.hor+' hs':''}</div>
+      <div style="font-size:.83rem;margin-top:.3rem">${e.det}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap">
+      <span class="ev-chip ${e.car==='general'?'ev-chip-general':'ev-chip-carrera'}">${e.car==='general'?'General':e.car}</span>
+      <button style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:.9rem;padding:.1rem .3rem" onclick="eliminarDocEvento(${e.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:.5rem;padding-top:.5rem;border-top:1px solid var(--border)">
+    <div class="ev-autor-dot" style="background:${colorAutor(e.autor)}">${inicialesAutor(e.autor)}</div>
+    <span style="font-size:.78rem;color:var(--muted)">${e.autor}</span>
+  </div>
+</div>`).join(''):'<p style="color:var(--muted);font-size:.85rem;padding:.5rem 0">Sin eventos cargados.</p>';
+}
+
+function eliminarDocEvento(id){
+  const ev=docEventos.find(e=>e.id===id);if(!ev)return;
+  docEventos=docEventos.filter(e=>e.id!==id);
+  renderEvListDirectivo();
+  renderEvListAlumno();
+  pushN('pub',`🗑️ El evento <strong>${ev.title}</strong> fue eliminado por la dirección.`);
+  toast('Evento eliminado ✓');
+}
+function toggleDetEvento(id){
+  const s=document.getElementById(`det-short-${id}`);
+  const f=document.getElementById(`det-full-${id}`);
+  const b=document.getElementById(`ver-mas-${id}`);
+  if(!s||!f)return;
+  const abierto=f.style.display!=='none';
+  s.style.display=abierto?'':'none';
+  f.style.display=abierto?'none':'';
+  b.textContent=abierto?'Ver más ▾':'Ver menos ▴';
+}
+function renderEvents(){
+  renderEvListAlumno();
+  renderEvListDocente();
+  renderEvListDirectivo();
+}
+function renderHomeEvents(){
+  const el=document.getElementById('home-events');if(!el)return;
+  const vis=docEventos.filter(e=>e.car==='general').slice(0,3);
+  el.innerHTML=vis.length?vis.map(e=>`
+<div class="ev-doc-card" style="margin-bottom:.5rem">
+  <div style="font-weight:700;font-size:.88rem">${e.title}</div>
+  <div style="font-size:.78rem;color:var(--muted)">${e.day} ${e.mon}</div>
+</div>`).join(''):'<p style="color:var(--muted);font-size:.85rem">Sin eventos generales.</p>';
+}
+function inscr(){}
+function fCEv(){}
+function clearEvSearch(){document.getElementById('ev-search-results').style.display='none';}
+function addEvento(){}
+function toggleMat(){}
 function renderCalList(y,m){
   const el=document.getElementById('cal-list');
   const items=[];
