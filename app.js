@@ -97,10 +97,13 @@ const foundUser = usuarios.find(u =>
 );
 
     if (foundUser) {
-      localStorage.setItem("usuario", JSON.stringify(foundUser));
 
-      user = foundUser;
-      role = rolSeleccionado;
+  foundUser.rol = rolSeleccionado;
+
+  localStorage.setItem("usuario", JSON.stringify(foundUser));
+
+  user = foundUser;
+  role = rolSeleccionado;
 
       iniciarSesionUI(foundUser);
       applyRole();
