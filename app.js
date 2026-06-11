@@ -777,6 +777,12 @@ function renderCalList(y, m){
         color:${i.tipo === 'docente' ? '#F97316' : '#EC4899'}">
         ${i.tipo === 'docente' ? 'Docente' : 'Directivo'}
       </span>
+      <button
+  class="btn btn-sm btn-outline-danger ms-2"
+  onclick="eliminarFechaCalendario('${i.id}')"
+  title="Eliminar fecha">
+  <i class="bi bi-trash"></i>
+</button>
     </div>
   `).join('');
 }
@@ -837,6 +843,26 @@ async function addCalFecha(){
   } catch (error) {
     console.error("Error al guardar fecha en calendario:", error);
     toast("No se pudo guardar la fecha en la API");
+  }
+}
+async function eliminarFechaCalendario(id) {
+  if (!id) {
+    toast("No se encontró el ID de la fecha");
+    return;
+  }
+
+  if (!confirm("¿Eliminar esta fecha del calendario?")) return;
+
+  try {
+    await eliminarCalendarioAPI(id);
+
+    await cargarCalendarioAPI();
+
+    toast("Fecha eliminada del calendario ✓");
+
+  } catch (error) {
+    console.error("Error al eliminar fecha:", error);
+    toast("No se pudo eliminar la fecha");
   }
 }
 
