@@ -22,15 +22,56 @@ const ALUMNOS=[
 
 // Gallery items
 let IG_ITEMS=[
-  {id:1,type:'img',album:'jornada',desc:'Jornada IA — Exposición Final',emoji:'🤖',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',likes:24,time:'Hace 3 días'},
-  {id:2,type:'img',album:'jornada',desc:'Presentación de Proyectos',emoji:'💻',bg:'linear-gradient(135deg,#f0fdf4,#86efac)',likes:18,time:'Hace 3 días'},
-  {id:3,type:'img',album:'jornada',desc:'Workshop de Programación',emoji:'🎓',bg:'linear-gradient(135deg,#fff0e6,#fdba74)',likes:31,time:'Hace 4 días'},
-  {id:4,type:'img',album:'bienvenida',desc:'Recepción de Ingresantes',emoji:'🎉',bg:'linear-gradient(135deg,#fef9c3,#fde047)',likes:47,time:'Hace 1 semana'},
-  {id:5,type:'img',album:'bienvenida',desc:'Primera jornada',emoji:'👋',bg:'linear-gradient(135deg,#fdf2f8,#f0abfc)',likes:29,time:'Hace 1 semana'},
-  {id:6,type:'img',album:'examen',desc:'Mesa de Examen — Junio 2025',emoji:'📝',bg:'linear-gradient(135deg,#dcfce7,#4ade80)',likes:11,time:'Hace 5 días'},
-  {id:7,type:'doc',album:'docs',desc:'Programa de Matemáticas 2025',ext:'PDF',likes:6,time:'Hace 2 días'},
-  {id:8,type:'img',album:'examen',desc:'Parcial de Programación',emoji:'⌨️',bg:'linear-gradient(135deg,#eff6ff,#93c5fd)',likes:15,time:'Hace 6 días'},
-  {id:9,type:'doc',album:'docs',desc:'Material de Inglés — Unidad 3',ext:'DOCX',likes:9,time:'Hace 1 día'},
+  {
+    id:1,
+    type:'img',
+    desc:'Jornada de Concientización y RCP',
+    realUrl:'Elementos_Galeria/galeria1.jpg',
+    likes:24,
+    time:'Galería institucional'
+  },
+  {
+    id:2,
+    type:'img',
+    desc:'Novedades en la Biblioteca María Elena Walsh',
+    realUrl:'Elementos_Galeria/galeria2.jpg',
+    likes:18,
+    time:'Galería institucional'
+  },
+  {
+    id:3,
+    type:'img',
+    desc:'¡¡¡Recordá inscribirte!!!',
+    realUrl:'Elementos_Galeria/galeria3.jpg',
+    likes:31,
+    time:'Galería institucional'
+  },
+  {
+    id:4,
+    type:'img',
+    desc:'No te olvides de votar',
+    realUrl:'Elementos_Galeria/galeria4.jpg',
+    likes:29,
+    time:'Galería institucional'
+  },
+  {
+    id:5,
+    type:'doc',
+    desc:'introducción a matrices',
+    ext:'PDF',
+    fileUrl:'Elementos_Galeria/introducción a matrices.pdf',
+    likes:6,
+    time:'Documento PDF'
+  },
+  {
+    id:6,
+    type:'doc',
+    desc:'Ciencia de datos',
+    ext:'PDF',
+    fileUrl:'Elementos_Galeria/Ciencia de datos.pdf',
+    likes:9,
+    time:'Documento PDF'
+  }
 ];
 let galTab='grid', igTempUrl=null, igTempType='img';
 
@@ -915,11 +956,25 @@ function renderGallery(){
     empty.style.display='none';
     const extIcon={'PDF':'bi-file-earmark-pdf-fill text-danger','DOCX':'bi-file-earmark-word-fill text-primary','PPTX':'bi-file-earmark-ppt-fill text-warning','XLSX':'bi-file-earmark-excel-fill text-success'};
     docList.innerHTML=docs.map(d=>`
-<div class="doc-row" onclick="toast('Abriendo ${d.desc}...')">
-  <div class="doc-ic" style="background:#fef2f2"><i class="bi ${extIcon[d.ext]||'bi-file-earmark-fill text-muted'}" style="font-size:1.1rem"></i></div>
-  <div class="flex-grow-1"><div style="font-weight:600;font-size:.9rem">${d.desc}</div><div style="font-size:.77rem;color:var(--muted)">${d.ext||'DOC'} · ${d.time} · ❤️ ${d.likes}</div></div>
+<a class="doc-row text-decoration-none"
+   href="${d.fileUrl}"
+   download
+   target="_blank">
+  <div class="doc-ic" style="background:#fef2f2">
+    <i class="bi ${extIcon[d.ext]||'bi-file-earmark-fill text-muted'}" style="font-size:1.1rem"></i>
+  </div>
+
+  <div class="flex-grow-1">
+    <div style="font-weight:600;font-size:.9rem;color:var(--text)">
+      ${d.desc}
+    </div>
+    <div style="font-size:.77rem;color:var(--muted)">
+      ${d.ext||'DOC'} · ${d.time} · ❤️ ${d.likes}
+    </div>
+  </div>
+
   <i class="bi bi-download" style="color:var(--primary);font-size:1rem"></i>
-</div>`).join('');
+</a>`).join('');
   }
 }
 
@@ -944,15 +999,14 @@ function igPreview(inp){
 
 function igUpload(){
   const desc=document.getElementById('ig-desc').value.trim();
-  const album=document.getElementById('ig-album').value;
   const type=document.getElementById('ig-type').value;
   if(!desc){toast('Agregá una descripción');return;}
   if(!igTempUrl){toast('Seleccioná un archivo');return;}
   if(type==='img'){
-    IG_ITEMS.unshift({id:Date.now(),type:'img',album,desc,realUrl:igTempUrl,likes:0,time:'Ahora mismo'});
+    IG_ITEMS.unshift({id:Date.now(),type:'img',desc,realUrl:igTempUrl,likes:0,time:'Ahora mismo'});
   } else {
     const ext=(igTempUrl+'').split('.').pop().toUpperCase();
-    IG_ITEMS.unshift({id:Date.now(),type:'doc',album:'docs',desc,ext,likes:0,time:'Ahora mismo'});
+    IG_ITEMS.unshift({id:Date.now(),type:'doc',desc,ext,fileUrl:igTempUrl,likes:0,time:'Ahora mismo'});
   }
   const roleLabel={alumno:'Alumno',docente:'Docente',delegado:'Delegado',admin:'Admin'}[role];
   POSTS.unshift({id:Date.now()+1,author:user.nombre,role:roleLabel,cat:'so',car:'todas',title:`📸 Nueva publicación en Galería: ${desc}`,body:`${user.nombre} publicó "${desc}" en la Galería del Centro.`,time:'Ahora mismo',likes:0,liked:false,comments:0,emoji:'🖼️',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',imgUrls:type==='img'&&igTempUrl?[igTempUrl]:[],docs:type==='doc'&&igTempUrl?[igTempUrl]:[],isNew:true});

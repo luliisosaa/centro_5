@@ -663,9 +663,18 @@ onclick="addReglamentoItem()">Subir</button>
         <div class="gal-upload-form" id="gal-upload-form">
           <div class="iph" style="margin-bottom:.7rem"><h5><i class="bi bi-images me-2 text-primary"></i>Subir Foto / Documento</h5><button class="bcp" onclick="toggleGalUpload()"><i class="bi bi-x-lg"></i></button></div>
           <div class="row g-2 mb-2">
-            <div class="col-md-5"><label class="flabel">Descripción</label><input class="finput" id="ig-desc" placeholder="Ej: Mesa de Examen Junio 2025"/></div>
-            <div class="col-md-4"><label class="flabel">Álbum</label><select class="fselect" id="ig-album"><option value="jornada">Jornada IA 2025</option><option value="bienvenida">Bienvenida Ingresantes</option><option value="examen">Exámenes</option><option value="docs">Documentos</option><option value="general">General</option></select></div>
-            <div class="col-md-3"><label class="flabel">Tipo</label><select class="fselect" id="ig-type" onchange="galTypeChange()"><option value="img">Imagen</option><option value="doc">Documento</option></select></div>
+            <div class="col-md-8">
+  <label class="flabel">Descripción</label>
+  <input class="finput" id="ig-desc" placeholder="Ej: Jornada de Concientización y RCP"/>
+</div>
+
+<div class="col-md-4">
+  <label class="flabel">Tipo</label>
+  <select class="fselect" id="ig-type" onchange="galTypeChange()">
+    <option value="img">Imagen</option>
+    <option value="doc">Documento</option>
+  </select>
+</div>
           </div>
           <div class="mb-2"><label class="flabel">Archivo</label><input class="finput" id="ig-file" type="file" accept="image/*,.pdf,.doc,.docx,.pptx,.xlsx" onchange="igPreview(this)"/><div id="ig-file-prev" style="margin-top:.5rem"></div></div>
           <div class="d-flex gap-2 mt-2"><button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="igUpload()">Publicar en Galería</button><button class="btns" style="width:auto;padding:.45rem 1rem" onclick="toggleGalUpload()">Cancelar</button></div>
