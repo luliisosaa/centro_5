@@ -323,28 +323,29 @@
         </div>
         <div class="row g-2 mb-2">
           <div class="col-md-4"><label class="flabel">Lugar</label><input class="finput" id="ev-lug" placeholder="Aula / Online"/></div>
-          <div class="col-md-4"><label class="flabel">Carrera</label><select class="fselect" id="ev-car"><option value="general">Todas</option><option value="datos">Cs. de Datos e IA</option><option value="admin">Administración</option><option value="enferm">Enfermería</option></select></div>
-        </div>
+<div class="col-md-4">
+  <label class="flabel">Carrera</label>
+  <select class="fselect" id="ev-car">
+    <option value="general">Todas las carreras</option>
+    <option value="inicial">Profesorado de Educación Inicial</option>
+    <option value="matematica">Profesorado de Ed. Secundaria en Matemática</option>
+    <option value="lengua">Profesorado de Ed. Secundaria en Lengua y Literatura</option>
+    <option value="datos">Tecnicatura en Ciencia de Datos e IA</option>
+    <option value="admin_financiera">Tecnicatura en Administración Financiera</option>
+    <option value="marketing">Tecnicatura en Administración con Orientación en Marketing</option>
+    <option value="enferm">Tecnicatura en Enfermería</option>
+    <option value="salud_mental">Especialización de Enfermería en Salud Mental</option>
+    <option value="acompanamiento">Tecnicatura en Acompañamiento Terapéutico</option>
+    <option value="psicopedagogia">Tecnicatura en Psicopedagogía</option>
+    <option value="trabajo_social">Tecnicatura en Trabajo Social</option>
+    <option value="multimedial">Tecnicatura en Comunicación Multimedial</option>
+    <option value="hoteleria">Tecnicatura en Hotelería</option>
+    <option value="higiene">Tecnicatura en Higiene y Seguridad en el Trabajo</option>
+  </select>
+</div>        </div>
         <div class="d-flex gap-2 mt-2"><button class="btnp" style="width:auto;padding:.45rem 1.2rem" onclick="addEvento()">Crear</button><button class="btns" style="width:auto;padding:.45rem 1rem" onclick="tp('pnl-ev')">Cancelar</button></div>
       </div>
-      <div class="cc mb-3">
-        <h6 style="font-weight:700;margin-bottom:.8rem"><i class="bi bi-pencil-square text-primary me-2"></i>Anotarse a Materias</h6>
-        <div class="d-flex gap-2 flex-wrap">
-          <span class="ctag" onclick="toggleMat(this,'Matemáticas','2025-4-17')">Matemáticas</span>
-          <span class="ctag" onclick="toggleMat(this,'Inglés','2025-4-22')">Inglés</span>
-          <span class="ctag" onclick="toggleMat(this,'Programación','2025-4-24')">Programación</span>
-          <span class="ctag" onclick="toggleMat(this,'Ciencia de Datos','2025-4-19')">Ciencia de Datos</span>
-          <span class="ctag" onclick="toggleMat(this,'Estadística','2025-4-26')">Estadística</span>
-          <span class="ctag" onclick="toggleMat(this,'Contabilidad','2025-4-28')">Contabilidad</span>
-        </div>
-      </div>
-      <div class="d-flex gap-2 flex-wrap mb-2">
-        <span class="ctag on" onclick="fCEv('todas',this)">Todos</span>
-        <span class="ctag" onclick="fCEv('datos',this)">Cs. de Datos e IA</span>
-        <span class="ctag" onclick="fCEv('admin',this)">Administración</span>
-        <span class="ctag" onclick="fCEv('enferm',this)">Enfermería</span>
-        <span class="ctag" onclick="fCEv('general',this)">General</span>
-      </div>
+      
       <!-- Search results box for events -->
       <div id="ev-search-results" style="display:none" class="cc mb-2">
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -922,6 +923,68 @@ onclick="addReglamentoItem()">Subir</button>
 
   </div>
 
+</div>
+<div class="modal fade" id="inscripcionModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square text-primary me-2"></i>
+          Inscripción al evento
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="hidden" id="insc-evento-id">
+
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input class="form-control" id="insc-nombre" placeholder="Ingrese su nombre">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Apellido</label>
+          <input class="form-control" id="insc-apellido" placeholder="Ingrese su apellido">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Carrera</label>
+          <select class="form-select" id="insc-carrera">
+            <option value="">Seleccione una carrera</option>
+            <option>Profesorado de Educación Inicial</option>
+            <option>Profesorado de Ed. Secundaria en Matemática</option>
+            <option>Profesorado de Ed. Secundaria en Lengua y Literatura</option>
+            <option>Tecnicatura en Ciencia de Datos e IA</option>
+            <option>Tecnicatura en Administración Financiera</option>
+            <option>Tecnicatura en Administración con Orientación en Marketing</option>
+            <option>Tecnicatura en Enfermería</option>
+            <option>Especialización de Enfermería en Salud Mental</option>
+            <option>Tecnicatura en Acompañamiento Terapéutico</option>
+            <option>Tecnicatura en Psicopedagogía</option>
+            <option>Tecnicatura en Trabajo Social</option>
+            <option>Tecnicatura en Comunicación Multimedial</option>
+            <option>Tecnicatura en Hotelería</option>
+            <option>Tecnicatura en Higiene y Seguridad en el Trabajo</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+
+        <button class="btn btn-primary" onclick="confirmarInscripcionEvento()">
+          Aceptar
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
 </body>
 </html>

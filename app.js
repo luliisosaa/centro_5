@@ -629,19 +629,77 @@ function renderEvents(){
     </div>
     <div class="emeta">${e.meta}</div>
   </div>
-  <button class="bini ${e.done?'done':''}" onclick="inscr(${e.id},this)" ${e.done?'disabled':''}>${e.done?'✓ Inscripto':'Inscribirse'}</button>
-</div>`).join('');
+<button
+  class="bini ${e.done?'done':''}"
+  onclick="abrirModalInscripcion(${e.id})"
+  ${e.done?'disabled':''}>
+  ${e.done?'✓ Inscripto':'Inscribirse'}
+</button></div>`).join('');
 }
 function renderHomeEvents(){
   const el=document.getElementById('home-events');if(!el)return;
   el.innerHTML=EVENTS.slice(0,3).map(e=>`<div class="ecard" style="padding:.7rem .9rem;margin-bottom:.5rem"><div class="ebox" style="${e.bs}"><div class="ed">${e.day}</div><div class="em">${e.mon}</div></div><div><div class="etitle" style="font-size:.85rem">${e.title}</div><div class="emeta">${e.meta.split('·')[0]}</div></div></div>`).join('');
 }
-function inscr(id,btn){
-  const e=EVENTS.find(x=>x.id===id);if(!e||e.done)return;
-  e.done=true;btn.classList.add('done');btn.textContent='✓ Inscripto';btn.disabled=true;
-  pubDates[e.calKey]=e.title;renderCal();
-  pushN('pub',`Inscripto en <strong>${e.title}</strong> — en el calendario.`);
-  toast(`✓ Inscripto en "${e.title}" — marcado en el calendario`);renderEvents();
+function abrirModalInscripcion(id){
+  const evento = EVENTS.find(e => e.id === id);
+  if(!evento) return;
+
+  document.getElementById('insc-evento-id').value = id;
+
+  const partesNombre = (user.nombre || '').split(' ');
+
+  document.getElementById('insc-nombre').value = partesNombre[0] || '';
+  document.getElementById('insc-apellido').value = partesNombre.slice(1).join(' ') || '';
+  document.getElementById('insc-carrera').value = user.carrera || '';
+
+  const modal = new bootstrap.Modal(document.getElementById('inscripcionModal'));
+  modal.show();
+}
+
+function confirmarInscripcionEvento(){
+  const id = Number(document.getElementById('insc-evento-id').value);
+  const nombre = document.getElementById('insc-nombre').value.trim();
+  const apellido = document.getElementById('insc-apellido').value.trim();
+  const carrera = document.getElementById('insc-carrera').value;
+
+  if(!nombre || !apellido || !carrera){
+    toast('Completá nombre, apellido y carrera');
+    return;
+  }
+
+  const e = EVENTS.find(x => x.id === id);
+  if(!e) return;
+
+  e.done = true;
+
+  if(e.calKey){
+    calDates[e.calKey] = {
+      titulo: e.title,
+      tipo: 'docente',
+      carrera: carrera,
+      autor: `${nombre} ${apellido}`,
+      fecha: e.calKey
+    };
+
+    renderCal();
+  }
+
+  pushN(
+    'pub',
+    `Inscripción confirmada en <strong>${e.title}</strong> — ${nombre} ${apellido}`
+  );
+
+  renderEvents();
+
+  const modal = bootstrap.Modal.getInstance(document.getElementById('inscripcionModal'));
+  modal.hide();
+
+  document.getElementById('insc-evento-id').value = '';
+  document.getElementById('insc-nombre').value = '';
+  document.getElementById('insc-apellido').value = '';
+  document.getElementById('insc-carrera').value = '';
+
+  toast(`✓ Inscripción confirmada en "${e.title}"`);
 }
 function fCEv(car,el){document.querySelectorAll('#page-eventos .ctag').forEach(t=>t.classList.remove('on'));el.classList.add('on');evCar=car;renderEvents();}
 function clearEvSearch(){document.getElementById('ev-search-results').style.display='none';}
