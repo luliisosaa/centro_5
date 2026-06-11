@@ -79,3 +79,14 @@ async function crearCalendarioAPI(fechaCalendario) {
 async function eliminarCalendarioAPI(id) {
   return await apiRequest(`/calendario/${id}`, "DELETE");
 }
+async function obtenerEventosAPI() {
+  return await apiRequest("/eventos");
+}
+
+async function crearEventoAPI(evento) {
+  return await apiRequest("/eventos", "POST", evento);
+}
+
+async function eliminarEventoAPI(id) {
+  return await apiRequest(`/eventos/${id}`, "DELETE");
+}

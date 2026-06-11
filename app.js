@@ -98,6 +98,7 @@ let calDate = new Date(2026, 0, 1);
 let calDates = {};
 let calendarioAPI = [];
 let estudiantesAPI = [];
+let eventosAPI = [];
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
@@ -154,6 +155,7 @@ const foundUser = usuarios.find(u =>
       await cargarReglamentacionAPI();
 await cargarCalendarioAPI();
 await cargarEstudiantesAPI();
+await cargarEventosAPI();
 
       document.getElementById("login-screen").classList.remove("active");
       document.getElementById("main-screen").classList.add("active");
@@ -234,6 +236,9 @@ if (name === 'calendario') {
 }
 if (name === 'estudiantes') {
   cargarEstudiantesAPI();
+}
+if (name === 'eventos') {
+  cargarEventosAPI();
 }
 }
 
@@ -617,24 +622,161 @@ async function publishPost(){
 }
 
 // ════════════════ EVENTS ════════════════
+function claveCarreraPorID(id) {
+  const carreras = {
+    1: "datos",
+    2: "admin_financiera",
+    3: "enferm",
+    4: "inicial",
+    5: "matematica",
+    6: "lengua",
+    7: "marketing",
+    8: "salud_mental",
+    9: "acompanamiento",
+    10: "psicopedagogia",
+    11: "trabajo_social",
+    12: "multimedial",
+    13: "hoteleria",
+    14: "higiene"
+  };
+
+  return carreras[Number(id)] || "general";
+}
+
+function carreraIDPorClave(clave) {
+  const carreras = {
+    datos: 1,
+    admin_financiera: 2,
+    enferm: 3,
+    inicial: 4,
+    matematica: 5,
+    lengua: 6,
+    marketing: 7,
+    salud_mental: 8,
+    acompanamiento: 9,
+    psicopedagogia: 10,
+    trabajo_social: 11,
+    multimedial: 12,
+    hoteleria: 13,
+    higiene: 14
+  };
+
+  return carreras[clave] || null;
+}
+
+function mesCorto(numMes) {
+  const mons = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return mons[numMes - 1] || '';
+}
+async function cargarEventosAPI() {
+  try {
+    const data = await obtenerEventosAPI();
+
+    eventosAPI = data;
+
+if (!Array.isArray(data) || data.length === 0) {
+  console.warn("La API no tiene eventos cargados. Se mantienen los eventos locales.");
+  renderEvents();
+  renderHomeEvents();
+  return;
+}
+
+EVENTS = data.map(ev => {
+      const fecha = ev.fecha || ev.fecha_inicio || ev.dia || "";
+      const partes = fecha.substring(0, 10).split("-");
+      const anio = Number(partes[0]);
+      const mes = Number(partes[1]);
+      const dia = Number(partes[2]);
+
+      const hora = ev.hora || ev.horario || "—";
+      const lugar = ev.lugar || ev.ubicacion || "Por definir";
+      const cupo = ev.cupo || ev.capacidad || "";
+
+      const carreraClave =
+        ev.carrera_id
+          ? claveCarreraPorID(ev.carrera_id)
+          : ev.carrera || ev.car || "general";
+
+      return {
+        id: ev.id,
+        day: dia || '',
+        mon: mesCorto(mes),
+        title: ev.titulo || ev.nombre || "Sin título",
+        meta: `${lugar} · ${hora} hs${cupo ? ' · Cupo: ' + cupo : ''}`,
+        car: carreraClave,
+        calKey: fecha ? `${anio}-${mes}-${dia}` : '',
+        done: false,
+        bs: ''
+      };
+    });
+
+    console.log("Eventos recibidos desde API:");
+    console.table(eventosAPI);
+    console.log(EVENTS);
+
+    renderEvents();
+    renderHomeEvents();
+
+  } catch (error) {
+    console.error("Error cargando eventos:", error);
+    toast("No se pudieron cargar los eventos desde la API");
+  }
+}
 function renderEvents(){
-  const el=document.getElementById('ev-list');if(!el)return;
-  const vis=EVENTS.filter(e=>evCar==='todas'||e.car===evCar||e.car==='general');
-  el.innerHTML=vis.map(e=>`
+  const el = document.getElementById('ev-list');
+  if(!el) return;
+
+  const vis = EVENTS.filter(e =>
+  evCar === 'todas' ||
+  e.car === evCar ||
+  e.car === 'general'
+);
+
+if (vis.length === 0) {
+  el.innerHTML = `
+    <div class="cc text-center" style="padding:2rem;color:var(--muted)">
+      <i class="bi bi-calendar-x" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>
+      No hay eventos disponibles por el momento.
+    </div>
+  `;
+  return;
+}
+
+el.innerHTML = vis.map(e => `
 <div class="ecard" data-c="${e.car}" data-eid="${e.id}">
-  <div class="ebox" style="${e.bs}"><div class="ed">${e.day}</div><div class="em">${e.mon}</div></div>
+  <div class="ebox" style="${e.bs}">
+    <div class="ed">${e.day}</div>
+    <div class="em">${e.mon}</div>
+  </div>
+
   <div class="flex-grow-1">
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
-      <div class="etitle">${e.title}</div><span class="be ${e.done?'be-ce':'be-ab'}">${e.done?'Inscripto':'Abierto'}</span>
+      <div class="etitle">${e.title}</div>
+      <span class="be ${e.done ? 'be-ce' : 'be-ab'}">
+        ${e.done ? 'Inscripto' : 'Abierto'}
+      </span>
     </div>
     <div class="emeta">${e.meta}</div>
   </div>
-<button
-  class="bini ${e.done?'done':''}"
-  onclick="abrirModalInscripcion(${e.id})"
-  ${e.done?'disabled':''}>
-  ${e.done?'✓ Inscripto':'Inscribirse'}
-</button></div>`).join('');
+
+  <div class="d-flex gap-2 align-items-start">
+    <button
+      class="bini ${e.done ? 'done' : ''}"
+      onclick="abrirModalInscripcion('${e.id}')"
+      ${e.done ? 'disabled' : ''}>
+      ${e.done ? '✓ Inscripto' : 'Inscribirse'}
+    </button>
+
+    ${['docente','directivo','delegado'].includes(role) ? `
+      <button
+        class="btn btn-sm btn-outline-danger"
+        onclick="eliminarEvento('${e.id}')"
+        title="Eliminar evento">
+        <i class="bi bi-trash"></i>
+      </button>
+    ` : ''}
+  </div>
+</div>`).join('');
 }
 function renderHomeEvents(){
   const el=document.getElementById('home-events');if(!el)return;
@@ -704,26 +846,94 @@ function confirmarInscripcionEvento(){
 function fCEv(car,el){document.querySelectorAll('#page-eventos .ctag').forEach(t=>t.classList.remove('on'));el.classList.add('on');evCar=car;renderEvents();}
 function clearEvSearch(){document.getElementById('ev-search-results').style.display='none';}
 
-function addEvento(){
-  const tit=document.getElementById('ev-tit').value.trim();const fec=document.getElementById('ev-fec').value;
-  if(!tit||!fec){toast('Completá título y fecha');return;}
-  const d=new Date(fec);
-  const mons=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  const car=document.getElementById('ev-car').value;
-  const hor=document.getElementById('ev-hor').value||'—';
-  const lug=document.getElementById('ev-lug').value||'Por definir';
-  const cup=document.getElementById('ev-cup').value;
-  const ck=`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-  const newEv={id:Date.now(),day:d.getDate(),mon:mons[d.getMonth()],title:tit,meta:`${lug} · ${hor} hs${cup?' · Cupo:'+cup:''}`,car,calKey:ck,done:false,bs:''};
-  EVENTS.unshift(newEv);
-  pubDates[ck]=tit;renderCal();renderEvents();renderHomeEvents();
-  tp('pnl-ev');['ev-tit','ev-fec','ev-hor','ev-cup','ev-lug'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
-  pushN('pub',`Nuevo evento: <strong>${tit}</strong>`);toast(`Evento "${tit}" creado ✓`);
+async function addEvento(){
+  const tit = document.getElementById('ev-tit').value.trim();
+  const fec = document.getElementById('ev-fec').value;
+
+  if(!tit || !fec){
+    toast('Completá título y fecha');
+    return;
+  }
+
+  const car = document.getElementById('ev-car').value;
+  const hor = document.getElementById('ev-hor').value || '—';
+  const lug = document.getElementById('ev-lug').value || 'Por definir';
+  const cup = document.getElementById('ev-cup').value;
+
+  const horaInicio = hor && hor !== '—' ? hor : '00:00';
+
+const nuevoEvento = {
+  titulo: tit,
+  descripcion: `${lug} · ${horaInicio} hs${cup ? ' · Cupo: ' + cup : ''}`,
+  fecha_inicio: `${fec}T${horaInicio}:00`,
+  fecha_fin: `${fec}T${horaInicio}:00`,
+  cupo: cup ? Number(cup) : null,
+  inscriptos: 0,
+  autor_id: user.id || 1,
+  autor: user.nombre || "Usuario",
+  estado: "abierto",
+  categoria: "general",
+  lugar: lug,
+  color: "#3A5BA9",
+  imagen: "",
+  carrera_id: carreraIDPorClave(car),
+  carrera: car,
+  owner: "grupo5"
+};
+  try {
+    await crearEventoAPI(nuevoEvento);
+
+    await crearNotificacionAPI({
+      titulo: "Nuevo evento",
+      mensaje: tit,
+      usuario_id: user.id || 1,
+      leida: false,
+      fecha: new Date().toISOString()
+    });
+
+    await cargarEventosAPI();
+    await buildNotifs();
+
+    tp('pnl-ev');
+
+    ['ev-tit','ev-fec','ev-hor','ev-cup','ev-lug'].forEach(id => {
+      const e = document.getElementById(id);
+      if(e) e.value = '';
+    });
+
+    document.getElementById('ev-car').value = 'general';
+
+    toast(`Evento "${tit}" guardado en la API ✓`);
+
+  } catch (error) {
+    console.error("Error al guardar evento:", error);
+    toast("No se pudo guardar el evento en la API");
+  }
 }
 function toggleMat(el,name,calKey){
   const on=el.classList.toggle('on');
   if(on){privDates[calKey]='Inscripción: '+name;renderCal();pushN('priv',`Anotado/a a <strong>${name}</strong> — en tu calendario.`);toast(`Anotado/a a ${name} ✓`);}
   else{delete privDates[calKey];renderCal();}
+}
+async function eliminarEvento(id) {
+  if(!id){
+    toast("No se encontró el ID del evento");
+    return;
+  }
+
+  if(!confirm("¿Eliminar este evento?")) return;
+
+  try {
+    await eliminarEventoAPI(id);
+
+    await cargarEventosAPI();
+
+    toast("Evento eliminado ✓");
+
+  } catch (error) {
+    console.error("Error al eliminar evento:", error);
+    toast("No se pudo eliminar el evento");
+  }
 }
 
 // ════════════════ CALENDAR ════════════════
