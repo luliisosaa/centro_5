@@ -55,6 +55,7 @@ const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8'
 let role='estudiante',user={...ROLES.estudiante},avUrl=null;
 let calDate = new Date(2026, 0, 1);
 let calDates = {};
+let calendarioAPI = [];
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
@@ -109,8 +110,8 @@ const foundUser = usuarios.find(u =>
       cargarPreguntasFrecuentes();
       await buildNotifs();
       await cargarReglamentacionAPI();
-      renderCal();
-      renderAlumnos();
+await cargarCalendarioAPI();
+renderAlumnos();
 
       document.getElementById("login-screen").classList.remove("active");
       document.getElementById("main-screen").classList.add("active");
@@ -185,6 +186,9 @@ function nav(name){
   updateLastCal();
   if (name === 'reglamento') {
   cargarReglamentacionAPI();
+}
+if (name === 'calendario') {
+  cargarCalendarioAPI();
 }
 }
 
@@ -621,6 +625,46 @@ function toggleMat(el,name,calKey){
 
 // ════════════════ CALENDAR ════════════════
 const MNS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+async function cargarCalendarioAPI() {
+  try {
+    const data = await obtenerCalendarioAPI();
+
+    calendarioAPI = data;
+
+    calDates = {};
+
+    data.forEach(item => {
+      const fecha = item.fecha || item.fecha_inicio || item.dia;
+
+      if (!fecha) return;
+
+      const partes = fecha.substring(0, 10).split("-");
+      const anio = Number(partes[0]);
+      const mes = Number(partes[1]);
+      const dia = Number(partes[2]);
+
+      const k = `${anio}-${mes}-${dia}`;
+
+      calDates[k] = {
+        id: item.id,
+        titulo: item.titulo || item.nombre || "Sin título",
+        tipo: item.tipo || item.rol || "docente",
+        carrera: item.carrera || item.carrera_nombre || "Todas las carreras",
+        autor: item.autor || item.owner || "Sistema",
+        fecha: fecha
+      };
+    });
+
+    console.log("Calendario recibido desde API:");
+    console.table(calendarioAPI);
+
+    renderCal();
+
+  } catch (error) {
+    console.error("Error cargando calendario:", error);
+    toast("No se pudo cargar calendario desde la API");
+  }
+}
 function renderCal(){
   const grid = document.getElementById('cal-grid');
   const y = calDate.getFullYear();
@@ -689,9 +733,9 @@ function renderCalList(y, m){
     const k = `${y}-${m + 1}-${d}`;
     if(calDates[k]){
       items.push({
-        d,
-        ...calDates[k]
-      });
+  d,
+  ...calDates[k]
+});
     }
   }
 
@@ -740,7 +784,7 @@ function calNav(dir){calDate.setMonth(calDate.getMonth()+dir);renderCal();}
 function calTipoChange(){document.getElementById('cal-notif-sec').style.display=document.getElementById('cal-tipo').value==='privada'?'':'none';}
 function cnAll(cb){['cn15','cn7','cn3','cn0'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=cb.checked;});}
 
-function addCalFecha(){
+async function addCalFecha(){
   const tit = document.getElementById('cal-tit').value.trim();
   const fec = document.getElementById('cal-fec').value;
   const tipo = document.getElementById('cal-tipo').value;
@@ -751,37 +795,49 @@ function addCalFecha(){
     return;
   }
 
-  const [anio, mes, dia] = fec.split('-').map(Number);
-  const k = `${anio}-${mes}-${dia}`;
-
-  calDates[k] = {
+  const nuevaFecha = {
     titulo: tit,
+    fecha: fec,
     tipo: tipo,
     carrera: carrera,
-    autor: user.nombre
+    autor: user.nombre || "Usuario",
+    owner: "grupo5"
   };
 
-  lastCalEntry = {
-    title: tit,
-    fecha: fec,
-    author: user.nombre
-  };
+  try {
+    await crearCalendarioAPI(nuevaFecha);
 
-  updateLastCal();
+    await crearNotificacionAPI({
+      titulo: "Nueva fecha en calendario",
+      mensaje: tit,
+      usuario_id: user.id || 1,
+      leida: false,
+      fecha: new Date().toISOString()
+    });
 
-  pushN(
-    tipo === 'docente' ? 'pub' : 'cal',
-    `${tipo === 'docente' ? '🟠' : '🌸'} <strong>${user.nombre}</strong> agregó al calendario: "${tit}"`
-  );
+    lastCalEntry = {
+      title: tit,
+      fecha: fec,
+      author: user.nombre
+    };
 
-  renderCal();
-  tp('pnl-cal');
+    updateLastCal();
 
-  document.getElementById('cal-tit').value = '';
-  document.getElementById('cal-fec').value = '';
-  document.getElementById('cal-carrera').value = 'todas';
+    await cargarCalendarioAPI();
+    await buildNotifs();
 
-  toast(`Fecha "${tit}" agregada al calendario ✓`);
+    tp('pnl-cal');
+
+    document.getElementById('cal-tit').value = '';
+    document.getElementById('cal-fec').value = '';
+    document.getElementById('cal-carrera').value = 'todas';
+
+    toast(`Fecha "${tit}" guardada en la API ✓`);
+
+  } catch (error) {
+    console.error("Error al guardar fecha en calendario:", error);
+    toast("No se pudo guardar la fecha en la API");
+  }
 }
 
 // ════════════════ REGLAMENTO ════════════════
