@@ -688,8 +688,10 @@ EVENTS = data.map(ev => {
       const mes = Number(partes[1]);
       const dia = Number(partes[2]);
 
-      const hora = ev.hora || ev.horario || "—";
-      const lugar = ev.lugar || ev.ubicacion || "Por definir";
+const hora =
+  ev.hora ||
+  ev.horario ||
+  (ev.fecha_inicio ? ev.fecha_inicio.substring(11, 16) : "—");      const lugar = ev.lugar || ev.ubicacion || "Por definir";
       const cupo = ev.cupo || ev.capacidad || "";
 
       const carreraClave =
