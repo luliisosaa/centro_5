@@ -56,6 +56,7 @@ let role='estudiante',user={...ROLES.estudiante},avUrl=null;
 let calDate = new Date(2026, 0, 1);
 let calDates = {};
 let calendarioAPI = [];
+let estudiantesAPI = [];
 let notifs=[];
 let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
@@ -111,7 +112,7 @@ const foundUser = usuarios.find(u =>
       await buildNotifs();
       await cargarReglamentacionAPI();
 await cargarCalendarioAPI();
-renderAlumnos();
+await cargarEstudiantesAPI();
 
       document.getElementById("login-screen").classList.remove("active");
       document.getElementById("main-screen").classList.add("active");
@@ -189,6 +190,9 @@ function nav(name){
 }
 if (name === 'calendario') {
   cargarCalendarioAPI();
+}
+if (name === 'estudiantes') {
+  cargarEstudiantesAPI();
 }
 }
 
@@ -973,17 +977,93 @@ function openLB(id){
 function closeLB(e){if(e.target===document.getElementById('lb-ov'))document.getElementById('lb-ov').classList.remove('open');}
 
 // ════════════════ STUDENTS ════════════════
+async function cargarEstudiantesAPI() {
+  try {
+    const usuarios = await obtenerUsuariosAPI();
+
+    estudiantesAPI = usuarios
+      .filter(u => Number(u.perfil_id) === 1)
+      .map(u => ({
+        id: u.id,
+        n: u.nombre || "Sin nombre",
+        d: String(u.dni || ""),
+        e: u.email || "Sin email",
+        c: carreraNombrePorID(u.carrera_id),
+        est: u.activo === false ? "Inactivo" : "Regular"
+      }));
+
+    console.log("Estudiantes recibidos desde API:");
+    console.table(estudiantesAPI);
+
+    renderAlumnos();
+
+  } catch (error) {
+    console.error("Error cargando estudiantes:", error);
+    toast("No se pudieron cargar los estudiantes desde la API");
+  }
+}
+function carreraNombrePorID(id) {
+  const carreras = {
+    1: "Tecnicatura en Ciencia de Datos e IA",
+    2: "Tecnicatura en Administración Financiera",
+    3: "Tecnicatura en Enfermería",
+    4: "Profesorado de Educación Inicial",
+    5: "Profesorado de Ed. Secundaria en Matemática",
+    6: "Profesorado de Ed. Secundaria en Lengua y Literatura",
+    7: "Tecnicatura en Administración con Orientación en Marketing",
+    8: "Especialización de Enfermería en Salud Mental",
+    9: "Tecnicatura en Acompañamiento Terapéutico",
+    10: "Tecnicatura en Psicopedagogía",
+    11: "Tecnicatura en Trabajo Social",
+    12: "Tecnicatura en Comunicación Multimedial",
+    13: "Tecnicatura en Hotelería",
+    14: "Tecnicatura en Higiene y Seguridad en el Trabajo"
+  };
+
+  return carreras[Number(id)] || "Sin carrera";
+}
 function renderAlumnos(){
-  const tb=document.getElementById('stu-tbody');if(!tb)return;
-  const fil=ALUMNOS.filter(a=>{
-    const mQ=!stuQ||a.n.toLowerCase().includes(stuQ.toLowerCase())||a.d.includes(stuQ);
-    const mC=stuC==='todas'||a.c===stuC;return mQ&&mC;
+  const tb = document.getElementById('stu-tbody');
+  if(!tb) return;
+
+  const fuente = estudiantesAPI.length ? estudiantesAPI : ALUMNOS;
+
+  const fil = fuente.filter(a => {
+    const nombre = (a.n || "").toLowerCase();
+    const dni = String(a.d || "");
+    const carrera = a.c || "";
+
+    const mQ =
+      !stuQ ||
+      nombre.includes(stuQ.toLowerCase()) ||
+      dni.includes(stuQ);
+
+    const mC =
+      stuC === 'todas' ||
+      carrera === stuC;
+
+    return mQ && mC;
   });
-  document.getElementById('stu-cnt').textContent=`${fil.length} alumno${fil.length!==1?'s':''}`;
-  tb.innerHTML=fil.map((a,i)=>{
-    const ini=initials(a.n);const col=AVC[i%AVC.length];
-    const sb=a.est==='Regular'?'#dcfce7':a.est==='Libre'?'#fef2f2':'#fff7ed';
-    const sc=a.est==='Regular'?'#16a34a':a.est==='Libre'?'#dc2626':'#c2410c';
+
+  document.getElementById('stu-cnt').textContent =
+    `${fil.length} alumno${fil.length !== 1 ? 's' : ''}`;
+
+  tb.innerHTML = fil.map((a, i) => {
+    const ini = initials(a.n);
+    const col = AVC[i % AVC.length];
+
+    const sb =
+      a.est === 'Regular' ? '#dcfce7' :
+      a.est === 'Libre' ? '#fef2f2' :
+      a.est === 'Inactivo' ? '#f1f5f9' :
+      '#fff7ed';
+
+    const sc =
+      a.est === 'Regular' ? '#16a34a' :
+      a.est === 'Libre' ? '#dc2626' :
+      a.est === 'Inactivo' ? '#64748b' :
+      '#c2410c';
+
     return `<tr>
 
 <td>
@@ -1021,15 +1101,14 @@ function renderAlumnos(){
   <button
     class="btn btn-primary btn-sm"
     onclick="abrirMailAlumno('${a.e}')">
-
     <i class="bi bi-envelope-fill"></i>
     Enviar
-
   </button>
 </td>
 
 </tr>`;
-  }).join('')||'<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--muted)">Sin resultados</td></tr>';
+  }).join('') ||
+  '<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--muted)">Sin resultados</td></tr>';
 }
 function fStu(q){stuQ=q;renderAlumnos();}
 function fStuC(v){stuC=v;renderAlumnos();}
