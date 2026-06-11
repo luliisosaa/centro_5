@@ -1019,16 +1019,47 @@ function igUpload(){
 }
 
 function openLB(id){
-  const item=IG_ITEMS.find(x=>x.id===id);if(!item)return;
-  const hasReal=!!item.realUrl;
-  document.getElementById('lb-media').innerHTML=hasReal
-    ?`<img src="${item.realUrl}" class="lb-media-img"/>`
-    :`<div class="lb-media-emoji" style="background:${item.bg||'var(--surf2)'}">${item.emoji||'🖼️'}</div>`;
-  document.getElementById('lb-title').textContent=item.desc;
-  document.getElementById('lb-meta').textContent=`❤️ ${item.likes} · ${item.time}`;
+  const item = IG_ITEMS.find(x => x.id === id);
+  if(!item) return;
+
+  const hasReal = !!item.realUrl;
+  const puedeEliminar = ['docente', 'directivo'].includes(role);
+
+  document.getElementById('lb-media').innerHTML = hasReal
+    ? `<img src="${item.realUrl}" class="lb-media-img"/>`
+    : `<div class="lb-media-emoji" style="background:${item.bg || 'var(--surf2)'}">${item.emoji || '🖼️'}</div>`;
+
+  document.getElementById('lb-title').textContent = item.desc;
+
+  document.getElementById('lb-meta').innerHTML = `
+    ❤️ ${item.likes} · ${item.time}
+
+    ${puedeEliminar ? `
+      <div class="mt-3">
+        <button
+          class="btn btn-sm btn-outline-danger"
+          onclick="eliminarGaleria(${item.id})">
+          <i class="bi bi-trash"></i>
+          Eliminar publicación
+        </button>
+      </div>
+    ` : ''}
+  `;
+
   document.getElementById('lb-ov').classList.add('open');
 }
 function closeLB(e){if(e.target===document.getElementById('lb-ov'))document.getElementById('lb-ov').classList.remove('open');}
+function eliminarGaleria(id){
+  if(!confirm('¿Eliminar esta publicación de la galería?')) return;
+
+  IG_ITEMS = IG_ITEMS.filter(item => item.id !== id);
+
+  document.getElementById('lb-ov').classList.remove('open');
+
+  renderGallery();
+
+  toast('Publicación eliminada ✓');
+}
 
 // ════════════════ STUDENTS ════════════════
 async function cargarEstudiantesAPI() {
