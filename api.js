@@ -36,6 +36,17 @@ async function obtenerUsuariosAPI() {
 async function crearUsuarioAPI(nuevoUsuario) {
   return await apiRequest("/usuarios", "POST", nuevoUsuario);
 }
+async function obtenerUsuarioPorIDAPI(id) {
+  return await apiRequest(`/usuarios/${id}`);
+}
+
+async function actualizarUsuarioAPI(id, datosUsuario) {
+  return await apiRequest(`/usuarios/${id}`, "PUT", datosUsuario);
+}
+
+async function obtenerPerfilesAPI() {
+  return await apiRequest("/perfiles");
+}
 async function obtenerNotificacionesAPI() {
   return await apiRequest("/notificaciones");
 }

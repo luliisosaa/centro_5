@@ -182,7 +182,8 @@ function applyRole(){
   document.getElementById('p-nom').value=user.nombre;
   document.getElementById('p-email').value=user.email;
   document.getElementById('p-dni').value=user.dni;
-  document.getElementById('p-usr').value=user.usr||'';
+  document.getElementById('p-usr').value = user.usuario || '';
+  document.getElementById('p-usr').readOnly = true;
   const bm={estudiante:'b-alumno',docente:'b-docente',delegado:'b-delegado',directivo:'b-admin'};
   const lm={estudiante:'Estudiante',docente:'Docente',delegado:'Delegado / Centro',directivo:'Directivo'};
   document.getElementById('p-badge').innerHTML=`<span class="br ${bm[r]}">${lm[r]}</span>`;
@@ -1473,14 +1474,48 @@ function changeAv(inp){
   const f=inp.files[0];if(!f)return;
   const r=new FileReader();r.onload=e=>{avUrl=e.target.result;setAv('av-prev','',avUrl,true);setAv('s-av','',avUrl,false);toast('Foto actualizada ✓');};r.readAsDataURL(f);
 }
-function saveP(){
-  user.nombre=document.getElementById('p-nom').value||user.nombre;
-  user.email=document.getElementById('p-email').value||user.email;
-  user.usr=document.getElementById('p-usr').value||user.usr;
-  document.getElementById('s-name').textContent=user.nombre;
-  document.getElementById('p-nombre').textContent=user.nombre;
-  document.getElementById('hw').textContent=`¡Bienvenido/a, ${user.nombre.split(' ')[0]}!`;
-  toast('Perfil guardado ✓');
+async function saveP(){
+  const nuevoNombre = document.getElementById('p-nom').value.trim();
+  const nuevoEmail = document.getElementById('p-email').value.trim();
+  const nuevoUsuario = document.getElementById('p-usr').value.trim();
+
+  if(!nuevoNombre || !nuevoEmail || !nuevoUsuario){
+    toast('Completá nombre, email y usuario');
+    return;
+  }
+
+  const datosActualizados = {
+    dni: user.dni,
+    nombre: nuevoNombre,
+    usuario: user.usuario,
+    email: nuevoEmail,
+    perfil_id: user.perfil_id,
+    carrera_id: user.carrera_id || null,
+    activo: user.activo !== false
+  };
+
+  try {
+    const usuarioActualizado = await actualizarUsuarioAPI(user.id, datosActualizados);
+
+// Conservamos el rol local, porque la API no lo devuelve como "rol"
+usuarioActualizado.rol = role;
+
+user = usuarioActualizado;
+
+localStorage.setItem("usuario", JSON.stringify(user));
+
+applyRole();
+
+    document.getElementById('s-name').textContent = user.nombre;
+    document.getElementById('p-nombre').textContent = user.nombre;
+    document.getElementById('hw').textContent = `¡Bienvenido/a, ${user.nombre.split(' ')[0]}!`;
+
+    toast('Perfil actualizado en la API ✓');
+
+  } catch(error) {
+    console.error("Error actualizando perfil:", error);
+    toast('No se pudo actualizar el perfil');
+  }
 }
 
 // ════════════════ TOAST ════════════════
