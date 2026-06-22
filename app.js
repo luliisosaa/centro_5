@@ -1,24 +1,5 @@
 // ════════════════ DATA ════════════════
-const ROLES={
-  estudiante:  {nombre:'Juan Pérez',     email:'juan@instituto.edu',    dni:'12345678',usr:'@jperez',  carrera:'Ciencia de Datos e IA'},
-  docente: {nombre:'Prof. García',   email:'garcia@instituto.edu',  dni:'87654321',usr:'@pgarcia', carrera:''},
-  delegado:{nombre:'María Delegada', email:'maria@instituto.edu',   dni:'11223344',usr:'@mdelegada',carrera:'Administración'},
-  directivo:   {nombre:'Admin Instituto',email:'admin@instituto.edu',   dni:'99887766',usr:'@admin57', carrera:''},
-};
-const ALUMNOS=[
-  {n:'Ana Martínez',    d:'30111222',e:'ana@instituto.edu',    c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
-  {n:'Lucas Rodríguez', d:'32333444',e:'lucas@instituto.edu',  c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
-  {n:'Sofía López',     d:'34555666',e:'sofia@instituto.edu',  c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
-  {n:'Facundo Peralta', d:'27334455',e:'facu@instituto.edu',   c:'Tecnicatura en Ciencia de Datos e IA',est:'Regular'},
-  {n:'Nicolás Vega',    d:'31990011',e:'nico@instituto.edu',   c:'Tecnicatura en Ciencia de Datos e IA',est:'Libre'},
-  {n:'Mateo Díaz',      d:'29777888',e:'mateo@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Regular'},
-  {n:'Valentina Torres',d:'33999000',e:'valen@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Libre'},
-  {n:'Tomás Fernández', d:'31112233',e:'tomas@instituto.edu',  c:'Tecnicatura en Administración Financiera',        est:'Regular'},
-  {n:'Luciana Castro',  d:'38667788',e:'luci@instituto.edu',   c:'Tecnicatura en Enfermería',            est:'Regular'},
-  {n:'Camila Suárez',   d:'35445566',e:'camila@instituto.edu', c:'Tecnicatura en Enfermería',            est:'Regular'},
-  {n:'Agustín Romero',  d:'28778899',e:'agustin@instituto.edu',c:'Tecnicatura en Enfermería',            est:'Recursante'},
-  {n:'Julieta Morales', d:'36001122',e:'julieta@instituto.edu',c:'Tecnicatura en Enfermería',            est:'Regular'},
-];
+
 
 // Gallery items
 let IG_ITEMS=[
@@ -76,24 +57,14 @@ let IG_ITEMS=[
 let galTab='grid', igTempUrl=null, igTempType='img';
 
 // Posts feed
-let POSTS=[
-  {id:1,author:'Prof. García',role:'Docente',cat:'ac',car:'datos',title:'Inscripción a Materias — 2do Cuatrimestre 2025',body:'¡Atención! A partir del 1° de agosto abrirá la inscripción. Asegúrense de tener todo al día con secretaría.',time:'Hace 2 horas',likes:14,liked:false,comments:3,emoji:'🎓',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',imgUrls:[],docs:[],isNew:true},
-  {id:2,author:'Centro de Estudiantes',role:'Delegado',cat:'so',car:'todas',title:'Jornada de Bienvenida — 25 de Junio',body:'Organizamos una jornada especial para los ingresantes. ¡Vengan todos! Salón principal a las 18hs.',time:'Ayer',likes:32,liked:false,comments:7,emoji:'🎉',bg:'linear-gradient(135deg,#f0fdf4,#86efac)',imgUrls:[],docs:[],isNew:false},
-  {id:3,author:'Dirección',role:'Directivo',cat:'in',car:'todas',title:'Actualización del Reglamento de Convivencia 2025',body:'Se actualizaron las pautas. El nuevo documento ya está disponible en Reglamentación.',time:'Hace 3 días',likes:8,liked:false,comments:1,emoji:'📋',bg:'linear-gradient(135deg,#fff7ed,#fdba74)',imgUrls:[],docs:['Reglamento_2025.pdf'],isNew:false},
-  {id:4,author:'Prof. Ramírez',role:'Docente',cat:'ac',car:'admin',title:'Cambio de Aula — Contabilidad General',body:'A partir de esta semana Contabilidad General en el Aula 12 (1er piso). Miércoles y Viernes 19hs.',time:'Hace 4 días',likes:5,liked:false,comments:0,emoji:'🏫',bg:'linear-gradient(135deg,#fdf2f8,#f0abfc)',imgUrls:[],docs:[],isNew:false},
-  {id:5,author:'Dpto. Enfermería',role:'Docente',cat:'so',car:'enferm',title:'Campaña de Vacunación — Semana 23',body:'Jornada de vacunación en el campus. Traigan libreta sanitaria. Lunes 10 y Martes 11 de junio, 17:30–20:00.',time:'Hace 5 días',likes:19,liked:false,comments:4,emoji:'💉',bg:'linear-gradient(135deg,#dcfce7,#4ade80)',imgUrls:[],docs:[],isNew:false},
-];
 
-let EVENTS=[
-  {id:1,day:'18',mon:'Jun',title:'Parcial de Matemáticas',meta:'Aula 3 · 17:30 hs · Cupo: 40',car:'datos',calKey:'2025-4-18',done:false,bs:''},
-  {id:2,day:'20',mon:'Ago',title:'Inscripción a Materias 2do Cuatrimestre',meta:'Online · Sin cupo · Todas',car:'general',calKey:'2025-7-20',done:false,bs:''},
-  {id:3,day:'25',mon:'Jun',title:'Jornada Ciencia de Datos e IA',meta:'Salón Principal · 9:00 hs · Cupo: 80',car:'datos',calKey:'2025-4-25',done:false,bs:'background:#fff0e6;color:var(--accent)'},
-  {id:4,day:'10',mon:'Jul',title:'Asamblea General',meta:'Aula Magna · 18:00 hs · Todas',car:'general',calKey:'2025-5-10',done:false,bs:'background:#f0fdf4;color:var(--success)'},
-  {id:5,day:'15',mon:'Jul',title:'Parcial de Contabilidad',meta:'Aula 7 · 19:00 hs · Cupo: 35',car:'admin',calKey:'2025-5-15',done:false,bs:'background:#fdf2f8;color:#9d174d'},
-];
+
+let EVENTS = [];
 
 const AVC=['#2D6BE4','#16A34A','#F97316','#9d174d','#854d0e','#166534','#1d4ed8','#7c3aed'];
-let role='estudiante',user={...ROLES.estudiante},avUrl=null;
+let role = 'estudiante';
+let user = {};
+let avUrl = null;
 let calDate = new Date(2026, 0, 1);
 let calDates = {};
 let calendarioAPI = [];
@@ -562,12 +533,19 @@ const fuente = novedadesAPI;
   document.getElementById('home-nov-count').textContent = fuente.length;
 }
 function likePost(id,btn){
-  const p=POSTS.find(x=>x.id===id);if(!p)return;
-  p.liked=!p.liked;p.likes+=p.liked?1:-1;
-  btn.classList.toggle('liked',p.liked);
-  btn.querySelector('i').className=`bi ${p.liked?'bi-heart-fill':'bi-heart'}`;
-  document.getElementById('lc-'+id).textContent=p.likes;
+  const p = novedadesAPI.find(x => String(x.id) === String(id));
+  if(!p) return;
+
+  p.liked = !p.liked;
+  p.likes += p.liked ? 1 : -1;
+
+  btn.classList.toggle('liked', p.liked);
+  btn.querySelector('i').className = `bi ${p.liked ? 'bi-heart-fill' : 'bi-heart'}`;
+
+  const lc = document.getElementById('lc-' + id);
+  if(lc) lc.textContent = p.likes;
 }
+  
 function fNov(cat,btn){document.querySelectorAll('#nov-fbar .qbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');novCat=cat;renderFeed();}
 function fCNov(car,el){document.querySelectorAll('#nov-cbar .ctag').forEach(t=>t.classList.remove('on'));el.classList.add('on');novCar=car;renderFeed();}
 
@@ -1351,13 +1329,13 @@ function igUpload(){
     IG_ITEMS.unshift({id:Date.now(),type:'doc',desc,ext,fileUrl:igTempUrl,likes:0,time:'Ahora mismo'});
   }
   const roleLabel={alumno:'Alumno',docente:'Docente',delegado:'Delegado',admin:'Admin'}[role];
-  POSTS.unshift({id:Date.now()+1,author:user.nombre,role:roleLabel,cat:'so',car:'todas',title:`📸 Nueva publicación en Galería: ${desc}`,body:`${user.nombre} publicó "${desc}" en la Galería del Centro.`,time:'Ahora mismo',likes:0,liked:false,comments:0,emoji:'🖼️',bg:'linear-gradient(135deg,#dce8ff,#93c5fd)',imgUrls:type==='img'&&igTempUrl?[igTempUrl]:[],docs:type==='doc'&&igTempUrl?[igTempUrl]:[],isNew:true});
-  renderGallery();renderFeed();renderHomeFeed();
+  
+  renderGallery();
   toggleGalUpload();
   document.getElementById('ig-desc').value='';document.getElementById('ig-file').value='';
   document.getElementById('ig-file-prev').innerHTML='';igTempUrl=null;
   pushN('pub',`Nueva foto/doc en Galería: <strong>${desc}</strong>`);
-  toast('✓ Publicado en la Galería y en Novedades');
+  toast('✓ Publicado en la Galería');
 }
 
 function openLB(id){
