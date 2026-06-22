@@ -104,6 +104,22 @@ let stuQ='',stuC='todas';
 let novCat='todas',novCar='todas',evCar='todas';
 let novedadesAPI = [];
 let reglamentacionAPI = [];
+const apiErrores = {
+  novedades: false,
+  eventos: false,
+  estudiantes: false,
+  reglamento: false,
+  calendario: false
+};
+
+function mensajeErrorAPI(texto = "No se pudo conectar con la API") {
+  return `
+    <div class="cc text-center" style="padding:2rem;color:var(--muted)">
+      <i class="bi bi-wifi-off" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>
+      ${texto}
+    </div>
+  `;
+}
 let pendingImgUrls=[],pendingDocs=[];
 let lastCalEntry=null;
 
@@ -150,7 +166,6 @@ const foundUser = usuarios.find(u =>
 
       iniciarSesionUI(foundUser);
       applyRole();
-      cargarPreguntasFrecuentes();
       await buildNotifs();
       await cargarReglamentacionAPI();
 await cargarCalendarioAPI();
@@ -441,7 +456,7 @@ function postHTML(p){
 async function cargarNovedadesAPI() {
   try {
     const data = await obtenerNovedadesAPI();
-
+apiErrores.novedades = false;
     novedadesAPI = data.map(n => ({
       id: n.id,
       author: n.autor || n.owner || "Centro de Estudiantes",
@@ -468,7 +483,10 @@ async function cargarNovedadesAPI() {
     renderHomeFeed();
 
   } catch (error) {
-    console.error("Error cargando novedades:", error);
+    apiErrores.estudiantes = true;
+estudiantesAPI = [];
+renderAlumnos();
+toast("No se pudo conectar con la API de estudiantes");
   }
 }
 function convertirCategoriaAPI(n) {
@@ -495,7 +513,12 @@ function renderFeed(){
   const el = document.getElementById('feed-main');
   if (!el) return;
 
-  const fuente = novedadesAPI.length ? novedadesAPI : POSTS;
+  if (apiErrores.novedades) {
+  el.innerHTML = mensajeErrorAPI("No se pudieron cargar las novedades desde la API");
+  return;
+}
+
+const fuente = novedadesAPI;
 
   const vis = fuente.filter(p =>
     (novCat === 'todas' || p.cat === novCat) &&
@@ -510,7 +533,12 @@ function renderHomeFeed(){
   const el = document.getElementById('home-feed');
   if (!el) return;
 
-  const fuente = novedadesAPI.length ? novedadesAPI : POSTS;
+  if (apiErrores.novedades) {
+  el.innerHTML = mensajeErrorAPI("No se pudieron cargar las novedades");
+  return;
+}
+
+const fuente = novedadesAPI;
 
   el.innerHTML = fuente.slice(0,2).map(p => {
     const ini = initials(p.author);
@@ -675,8 +703,10 @@ async function cargarEventosAPI() {
 
     eventosAPI = data;
 
+apiErrores.eventos = false;
+
 if (!Array.isArray(data) || data.length === 0) {
-  console.warn("La API no tiene eventos cargados. Se mantienen los eventos locales.");
+  EVENTS = [];
   renderEvents();
   renderHomeEvents();
   return;
@@ -721,13 +751,23 @@ const hora =
     renderHomeEvents();
 
   } catch (error) {
-    console.error("Error cargando eventos:", error);
-    toast("No se pudieron cargar los eventos desde la API");
-  }
+  apiErrores.eventos = true;
+  EVENTS = [];
+
+  renderEvents();
+  renderHomeEvents();
+
+  console.error("Error cargando eventos:", error);
+  toast("No se pudieron cargar los eventos desde la API");
+}
 }
 function renderEvents(){
   const el = document.getElementById('ev-list');
   if(!el) return;
+  if (apiErrores.eventos) {
+  el.innerHTML = mensajeErrorAPI("No se pudieron cargar los eventos desde la API");
+  return;
+}
 
   const vis = EVENTS.filter(e =>
   evCar === 'todas' ||
@@ -782,8 +822,35 @@ el.innerHTML = vis.map(e => `
 </div>`).join('');
 }
 function renderHomeEvents(){
-  const el=document.getElementById('home-events');if(!el)return;
-  el.innerHTML=EVENTS.slice(0,3).map(e=>`<div class="ecard" style="padding:.7rem .9rem;margin-bottom:.5rem"><div class="ebox" style="${e.bs}"><div class="ed">${e.day}</div><div class="em">${e.mon}</div></div><div><div class="etitle" style="font-size:.85rem">${e.title}</div><div class="emeta">${e.meta.split('·')[0]}</div></div></div>`).join('');
+  const el = document.getElementById('home-events');
+  if(!el) return;
+
+  if (apiErrores.eventos) {
+    el.innerHTML = mensajeErrorAPI("No se pudieron cargar los eventos");
+    return;
+  }
+
+  if (!EVENTS.length) {
+    el.innerHTML = `
+      <p style="color:var(--muted);font-size:.85rem">
+        No hay eventos disponibles.
+      </p>
+    `;
+    return;
+  }
+
+  el.innerHTML = EVENTS.slice(0,3).map(e=>`
+    <div class="ecard" style="padding:.7rem .9rem;margin-bottom:.5rem">
+      <div class="ebox" style="${e.bs}">
+        <div class="ed">${e.day}</div>
+        <div class="em">${e.mon}</div>
+      </div>
+      <div>
+        <div class="etitle" style="font-size:.85rem">${e.title}</div>
+        <div class="emeta">${e.meta.split('·')[0]}</div>
+      </div>
+    </div>
+  `).join('');
 }
 function abrirModalInscripcion(id){
   const evento = EVENTS.find(e => e.id === id);
@@ -944,6 +1011,7 @@ const MNS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Se
 async function cargarCalendarioAPI() {
   try {
     const data = await obtenerCalendarioAPI();
+    apiErrores.calendario = false;
 
     calendarioAPI = data;
 
@@ -977,8 +1045,11 @@ async function cargarCalendarioAPI() {
     renderCal();
 
   } catch (error) {
-    console.error("Error cargando calendario:", error);
-    toast("No se pudo cargar calendario desde la API");
+    apiErrores.calendario = true;
+calendarioAPI = [];
+calDates = {};
+renderCal();
+toast("No se pudo conectar con la API de calendario");
   }
 }
 function renderCal(){
@@ -1336,6 +1407,7 @@ function eliminarGaleria(id){
 async function cargarEstudiantesAPI() {
   try {
     const usuarios = await obtenerUsuariosAPI();
+    apiErrores.estudiantes = false;
 
     estudiantesAPI = usuarios
       .filter(u => Number(u.perfil_id) === 1)
@@ -1354,9 +1426,14 @@ async function cargarEstudiantesAPI() {
     renderAlumnos();
 
   } catch (error) {
-    console.error("Error cargando estudiantes:", error);
-    toast("No se pudieron cargar los estudiantes desde la API");
-  }
+  apiErrores.estudiantes = true;
+  estudiantesAPI = [];
+
+  renderAlumnos();
+
+  console.error("Error cargando estudiantes:", error);
+  toast("No se pudieron cargar los estudiantes desde la API");
+}
 }
 function carreraNombrePorID(id) {
   const carreras = {
@@ -1382,7 +1459,20 @@ function renderAlumnos(){
   const tb = document.getElementById('stu-tbody');
   if(!tb) return;
 
-  const fuente = estudiantesAPI.length ? estudiantesAPI : ALUMNOS;
+  if (apiErrores.estudiantes) {
+  tb.innerHTML = `
+    <tr>
+      <td colspan="6" style="text-align:center;padding:1.5rem;color:var(--muted)">
+        No se pudieron cargar los estudiantes desde la API
+      </td>
+    </tr>
+  `;
+
+  document.getElementById('stu-cnt').textContent = '0 alumnos';
+  return;
+}
+
+const fuente = estudiantesAPI;
 
   const fil = fuente.filter(a => {
     const nombre = (a.n || "").toLowerCase();
@@ -1540,7 +1630,6 @@ window.onload = function () {
     role = savedUser.rol;
     iniciarSesionUI(savedUser);
     applyRole();
-    cargarPreguntasFrecuentes();
     buildNotifs();
     renderCal();
     renderAlumnos();
@@ -1571,7 +1660,12 @@ function toggleReglamentoFields() {
 
 }
 async function cargarReglamentacionAPI() {
+  const cont = document.getElementById("regl-content");
+if (cont) {
+  cont.innerHTML = mensajeErrorAPI("Cargando reglamentación desde la API...");
+}
   try {
+    apiErrores.reglamento = false;
     const data = await obtenerReglamentacionAPI();
 
     reglamentacionAPI = data;
@@ -1582,7 +1676,15 @@ async function cargarReglamentacionAPI() {
     renderReglamentacionAPI();
 
   } catch (error) {
-    console.error("Error cargando reglamentación:", error);
+    apiErrores.reglamento = true;
+reglamentacionAPI = [];
+
+const cont = document.getElementById("regl-content");
+if (cont) {
+  cont.innerHTML = mensajeErrorAPI("No se pudo cargar reglamentación desde la API");
+}
+
+toast("No se pudo conectar con la API de reglamentación");
   }
 }
 
