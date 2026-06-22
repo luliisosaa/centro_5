@@ -1846,3 +1846,58 @@ h6 {
 .cdt.directivo {
   background: #EC4899;
 }
+/* ════════════════ MODAL REGISTRO ════════════════ */
+.reg-overlay{
+  position:fixed; inset:0;
+  background:rgba(26,35,64,.45);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden;
+  transition:opacity .25s ease;
+  z-index:2000;
+}
+.reg-overlay.open{ opacity:1; visibility:visible; }
+
+.reg-card{
+  background:var(--white);
+  border-radius:var(--r);
+  padding:1.8rem;
+  width:90%;
+  max-width:420px;
+  position:relative;
+  box-shadow:0 20px 50px rgba(26,35,64,.25);
+}
+
+.reg-close{
+  position:absolute; top:.8rem; right:.8rem;
+  background:none; border:none; font-size:1rem;
+  color:var(--muted); cursor:pointer;
+}
+.reg-close:hover{ color:var(--primary); }
+
+.reg-title{
+  font-weight:700;
+  margin-bottom:1.2rem;
+  color:var(--primary);
+}
+
+.rbtn2{
+  flex:1;
+  text-align:center;
+  padding:.55rem .3rem;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--muted);
+  cursor:pointer;
+  transition:.15s;
+}
+.rbtn2 i{ font-size:1rem; }
+.rbtn2:hover{ border-color:var(--primary); color:var(--primary); }
+.rbtn2.active{
+  background:var(--primary-l);
+  border-color:var(--primary);
+  color:var(--primary);
+}

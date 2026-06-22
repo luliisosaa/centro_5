@@ -49,44 +49,7 @@
   Crear Usuario
 </button>
 
-<div id="registro-box" style="display:none; margin-top:15px;">
 
-  <input
-    id="reg-dni"
-    class="form-control mb-2"
-    placeholder="DNI">
-
-  <input
-    id="reg-usuario"
-    class="form-control mb-2"
-    placeholder="Usuario">
-
-  <input
-    id="reg-nombre"
-    class="form-control mb-2"
-    placeholder="Nombre completo">
-
-  <input
-    id="reg-email"
-    class="form-control mb-2"
-    placeholder="Email">
-
-  <input
-    id="reg-carrera"
-    class="form-control mb-2"
-    placeholder="Carrera ID">
-
-  <button
-    type="button"
-    class="w-100"
-    id="btn-registrar"
-    onclick="registrarUsuario()">
-
-    Registrarme
-
-  </button>
-
-</div>
     <button class="btns" onclick="doLogin()">Entrar</button>
   </div>
 </div>
@@ -880,5 +843,31 @@ onclick="addReglamentoItem()">Subir</button>
     </div>
   </div>
 </div>
+<!-- MODAL REGISTRO -->
+<div class="reg-overlay" id="reg-overlay">
+  <div class="reg-card">
+    <button class="reg-close" onclick="cerrarRegistro()"><i class="bi bi-x-lg"></i></button>
+    <h4 class="reg-title">Crear Usuario</h4>
+
+    <input id="reg-dni" class="finput mb-2" placeholder="DNI">
+    <input id="reg-usuario" class="finput mb-2" placeholder="Usuario">
+    <input id="reg-nombre" class="finput mb-2" placeholder="Nombre completo">
+    <input id="reg-email" class="finput mb-2" placeholder="Email">
+    <input id="reg-carrera" class="finput mb-2" placeholder="Carrera ID">
+
+    <label class="flabel">Perfil</label>
+    <div class="role-sel" id="reg-rsel">
+      <div class="rbtn2 active" data-r="estudiante"><i class="bi bi-person"></i><br>Estudiante</div>
+      <div class="rbtn2" data-r="docente"><i class="bi bi-book"></i><br>Profesor</div>
+      <div class="rbtn2" data-r="centro"><i class="bi bi-people"></i><br>Centro</div>
+      <div class="rbtn2" data-r="directivo"><i class="bi bi-shield"></i><br>Directivo</div>
+    </div>
+
+    <button type="button" class="btnp mt-3" id="btn-registrar" onclick="registrarUsuario()">
+      Registrarme
+    </button>
+  </div>
+</div>
+
 </body>
 </html>

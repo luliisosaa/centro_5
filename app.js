@@ -100,6 +100,14 @@ document.querySelectorAll('.rbtn').forEach(b=>b.addEventListener('click',()=>{
   b.classList.add('active');role=b.dataset.r;
 }));
 
+// ════════════════ ROLE SELECTOR (MODAL REGISTRO) ════════════════
+document.addEventListener('click', (e)=>{
+  const b = e.target.closest('.rbtn2');
+  if(!b) return;
+  document.querySelectorAll('.rbtn2').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+});
+
 // ════════════════ LOGIN ════════════════
 async function doLogin() {
   const usuarioInput = document.getElementById("l-user").value.trim();
@@ -1814,13 +1822,11 @@ async function cargarPreguntasFrecuentes() {
   applyRole();
 }
 function mostrarRegistro() {
-  const box = document.getElementById("registro-box");
+  document.getElementById("reg-overlay").classList.add("open");
+}
 
-  if (box.style.display === "none") {
-    box.style.display = "block";
-  } else {
-    box.style.display = "none";
-  }
+function cerrarRegistro() {
+  document.getElementById("reg-overlay").classList.remove("open");
 }
 
 async function registrarUsuario() {
@@ -1830,7 +1836,7 @@ async function registrarUsuario() {
   const email = document.getElementById("reg-email").value.trim();
   const carrera = document.getElementById("reg-carrera").value.trim();
 
-  const rolSeleccionado = document.querySelector(".rbtn.active").dataset.r;
+  const rolSeleccionado = document.querySelector(".rbtn2.active").dataset.r;
 
   const perfiles = {
     estudiante: 1,
@@ -1862,6 +1868,13 @@ async function registrarUsuario() {
     console.log("Usuario creado:", usuarioCreado);
 
     alert("Usuario creado correctamente. Ahora puedes iniciar sesión con tu DNI y usuario.");
+
+    document.getElementById("reg-dni").value = "";
+    document.getElementById("reg-usuario").value = "";
+    document.getElementById("reg-nombre").value = "";
+    document.getElementById("reg-email").value = "";
+    document.getElementById("reg-carrera").value = "";
+    cerrarRegistro();
 
   } catch (error) {
     console.error(error);
