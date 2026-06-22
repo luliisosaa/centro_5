@@ -106,7 +106,20 @@ document.addEventListener('click', (e)=>{
   if(!b) return;
   document.querySelectorAll('.rbtn2').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
+  actualizarCampoCarrera(b.dataset.r);
 });
+
+function actualizarCampoCarrera(rol){
+  const wrap = document.getElementById('reg-carrera-wrap');
+  const sel = document.getElementById('reg-carrera');
+  if(!wrap || !sel) return;
+  if(rol === 'estudiante'){
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+    sel.value = '';
+  }
+}
 
 // ════════════════ LOGIN ════════════════
 async function doLogin() {
@@ -1847,7 +1860,7 @@ async function registrarUsuario() {
 
   const perfilID = perfiles[rolSeleccionado];
 
-  if (!dni || !usuario || !nombre || !email || !carrera) {
+  if (!dni || !usuario || !nombre || !email || (rolSeleccionado === "estudiante" && !carrera)) {
     alert("Completa todos los campos");
     return;
   }
@@ -1858,7 +1871,7 @@ async function registrarUsuario() {
     usuario: usuario,
     email: email,
     perfil_id: perfilID,
-    carrera_id: Number(carrera),
+    carrera_id: rolSeleccionado === "estudiante" ? Number(carrera) : null,
     activo: true
   };
 
